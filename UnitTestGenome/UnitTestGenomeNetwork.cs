@@ -3,8 +3,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Araneam;
 using VectorSpace;
 using GenomeNeuralNetwork;
+using MyParallel;
 using System.IO;
 using System.Threading;
+
 
 namespace UnitTestGenome
 {
@@ -57,7 +59,7 @@ namespace UnitTestGenome
 
             double e = 10;
 
-            Thread t = new Thread(() =>
+            new Thread(() =>
                 {
                     try
                     {
@@ -71,10 +73,7 @@ namespace UnitTestGenome
                     {
                         Console.WriteLine("Сообщение: {0}, Стек: {1}", exp.Message, exp.StackTrace);
                     }
-                });
-            t.SetApartmentState(ApartmentState.MTA);
-            t.Start();
-            t.Join();
+                }).InMTA();
 
             Assert.AreEqual(0, e, 0.3,"Не обучается");
         }

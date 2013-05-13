@@ -78,6 +78,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Araneam\MyParallel\MyParallel\MyParallel.csproj">
+      <Project>{458ccdbc-bf99-4b55-8044-926c317943a0}</Project>
+      <Name>MyParallel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Araneam\NeuralNetwork\NeuralNetwork\Araneam.csproj">
       <Project>{46fc5442-371e-4cbb-8e3c-05aeef639b5c}</Project>
       <Name>Araneam</Name>

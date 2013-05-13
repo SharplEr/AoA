@@ -11,6 +11,7 @@ using System.Threading;
 using VectorSpace;
 using Araneam;
 using GenomeNeuralNetwork;
+using MyParallel;
 
 namespace WindowsFormsRuner
 {
@@ -59,9 +60,8 @@ namespace WindowsFormsRuner
 
             if (network.Reload(files))
             {
-                Thread t = new Thread(() => network.EarlyStoppingLearn());
-                t.Start();
-                t.Join();
+                new Thread(() => network.EarlyStoppingLearn()).InMTA();
+                
                 Check.Enabled = true;
             }
         }
@@ -77,9 +77,10 @@ namespace WindowsFormsRuner
             Vector[] result = null;
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                Thread t = new Thread(() => result = network.Calculation(dlg.FileName));
-                t.Start();
-                t.Join();
+                new Thread(() => result = network.Calculation(dlg.FileName)).InMTA();
+
+                for (int i = 0; i < result.Length; i++)
+                    resultList.Items.Add(result[i].ToString());
             }
         }
     }

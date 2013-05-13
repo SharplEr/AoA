@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.testList = new System.Windows.Forms.ListView();
-            this.listView2 = new System.Windows.Forms.ListView();
+            this.resultList = new System.Windows.Forms.ListView();
             this.StartLearn = new System.Windows.Forms.Button();
             this.AddFile = new System.Windows.Forms.Button();
             this.Check = new System.Windows.Forms.Button();
@@ -44,14 +44,14 @@
             this.testList.UseCompatibleStateImageBehavior = false;
             this.testList.View = System.Windows.Forms.View.List;
             // 
-            // listView2
+            // resultList
             // 
-            this.listView2.Location = new System.Drawing.Point(308, 36);
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(239, 277);
-            this.listView2.TabIndex = 0;
-            this.listView2.UseCompatibleStateImageBehavior = false;
-            this.listView2.View = System.Windows.Forms.View.List;
+            this.resultList.Location = new System.Drawing.Point(308, 36);
+            this.resultList.Name = "resultList";
+            this.resultList.Size = new System.Drawing.Size(239, 277);
+            this.resultList.TabIndex = 0;
+            this.resultList.UseCompatibleStateImageBehavior = false;
+            this.resultList.View = System.Windows.Forms.View.List;
             // 
             // StartLearn
             // 
@@ -92,7 +92,7 @@
             this.Controls.Add(this.AddFile);
             this.Controls.Add(this.Check);
             this.Controls.Add(this.StartLearn);
-            this.Controls.Add(this.listView2);
+            this.Controls.Add(this.resultList);
             this.Controls.Add(this.testList);
             this.Name = "Home";
             this.Text = "Home";
@@ -103,7 +103,7 @@
         #endregion
 
         private System.Windows.Forms.ListView testList;
-        private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.ListView resultList;
         private System.Windows.Forms.Button StartLearn;
         private System.Windows.Forms.Button AddFile;
         private System.Windows.Forms.Button Check;
