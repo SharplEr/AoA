@@ -43,7 +43,6 @@ namespace UnitTestGenome
             {
                 Assert.Fail("Сообщение: <" + e.Message + ">. Источник: <" + e.Source + ">. Стек вызовов: <" + e.StackTrace + ">");
             }
-            Console.WriteLine("all ok");
         }
 
         [TestMethod]
@@ -60,7 +59,6 @@ namespace UnitTestGenome
 
             CSVReader reader = new CSVReader(name);
             Assert.IsTrue(reader.Test(), "Определяет как некорректный корректный файл");
-            Console.WriteLine("all ok");
         }
 
 
@@ -80,7 +78,6 @@ namespace UnitTestGenome
 
             CSVReader reader = new CSVReader(name);
             Assert.IsFalse(reader.Test(), "Определяет как корректный некорректный файл");
-            Console.WriteLine("all ok");
         }
     }
 }

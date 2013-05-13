@@ -67,11 +67,6 @@ namespace GenomeNeuralNetwork
             }
             ans.Add(add);
 
-            for (int i = 0; i < ans.Count; i++)
-                if (ans[i]==".")
-                    Console.WriteLine("Жопа {0}", i);
-
-
             return ans.ToArray();
         }
 

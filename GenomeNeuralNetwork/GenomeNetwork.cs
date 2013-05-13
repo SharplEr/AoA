@@ -111,6 +111,20 @@ namespace GenomeNeuralNetwork
             return ans;
         }
 
+        public Vector[] Calculation(String name)
+        {
+            CSVReader reader = new CSVReader(name);
+            Vector[] ans = new Vector[reader.countLine];
+
+            for (int i = 0; i < ans.Length; i++)
+            {
+                
+                ans[i] = Calculation(new Vector(TestTags.Length, (j) => { return ToDouble(reader[i, TestTags[j]]); }, 0.5));
+            }
+
+            return ans;
+        }
+
         static double ToDouble(string s)
         {
             double ans;

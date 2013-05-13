@@ -38,8 +38,6 @@ namespace UnitTestGenome
             {
                 Assert.AreEqual(v1[i], date[0][i], 0.00001,"Не совпал {0}-й элемент");
             }
-
-            Console.WriteLine("all ok");
         }
 
         [TestMethod]
@@ -65,27 +63,20 @@ namespace UnitTestGenome
                     {
                         GenomeNetwork nw = new GenomeNetwork(0.5, 1000);
 
-                        Console.WriteLine("старт обучения");
-
                         nw.Reload(new string[]{name});
 
                         e = nw.FullLearn(0.3);
-
-                        Console.WriteLine("обучение прошло");
                     }
-                    catch
+                    catch(SystemException exp)
                     {
-                        Console.WriteLine("Исключение");
+                        Console.WriteLine("Сообщение: {0}, Стек: {1}", exp.Message, exp.StackTrace);
                     }
                 });
             t.SetApartmentState(ApartmentState.MTA);
             t.Start();
             t.Join();
 
-            
             Assert.AreEqual(0, e, 0.3,"Не обучается");
-
-            Console.WriteLine("all ok");
         }
     }
 }
