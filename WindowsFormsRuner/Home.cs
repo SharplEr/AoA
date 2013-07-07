@@ -24,14 +24,7 @@ namespace WindowsFormsRuner
             InitializeComponent();
             this.FormClosing += (o, e) =>
             {
-                Thread t = new Thread(() => network.Dispose());
-                t.SetApartmentState(ApartmentState.MTA);
-                t.Start();
-                this.Text = "Завершение...";
-                this.AddFile.Enabled = false;
-                this.StartLearn.Enabled = false;
-                this.Check.Enabled = false;
-                t.Join();
+                new Thread(() => network.Dispose()).InMTA();
             };
         }
 

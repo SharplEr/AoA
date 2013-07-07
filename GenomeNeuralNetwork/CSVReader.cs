@@ -86,7 +86,8 @@ namespace GenomeNeuralNetwork
         {
             get 
             {
-                return allElement[i][map[key.ToUpper()]];
+                string s = allElement[i][map[key.ToUpper()]];
+                return s;
             }
         }
     }
