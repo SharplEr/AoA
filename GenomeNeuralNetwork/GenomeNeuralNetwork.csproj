@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CSVReader.cs" />
     <Compile Include="GenomeNetwork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -59,6 +58,10 @@
     <ProjectReference Include="..\Araneam\MyParallel\MyParallel\MyParallel.csproj">
       <Project>{458ccdbc-bf99-4b55-8044-926c317943a0}</Project>
       <Name>MyParallel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Araneam\NeuralNetwork\IODate\IODate.csproj">
+      <Project>{8471fc16-ba93-417c-adbc-637139501cc8}</Project>
+      <Name>IODate</Name>
     </ProjectReference>
     <ProjectReference Include="..\Araneam\NeuralNetwork\NeuralNetwork\Araneam.csproj">
       <Project>{46fc5442-371e-4cbb-8e3c-05aeef639b5c}</Project>

@@ -6,6 +6,7 @@ using GenomeNeuralNetwork;
 using MyParallel;
 using System.IO;
 using System.Threading;
+using IODate;
 
 
 namespace UnitTestGenome
@@ -13,6 +14,7 @@ namespace UnitTestGenome
     [TestClass]
     public class UnitTestGenomeNetwork
     {
+        /*
         [TestMethod]
         public void TestGenomeBaseLoad()
         {
@@ -41,7 +43,7 @@ namespace UnitTestGenome
                 Assert.AreEqual(v1[i], date[0][i], 0.00001,"Не совпал {0}-й элемент");
             }
         }
-
+        */
         [TestMethod]
         public void TestGenomeLearn()
         {

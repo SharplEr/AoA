@@ -5,6 +5,7 @@ using GenomeNeuralNetwork;
 using Araneam;
 using System.IO;
 using System.Collections.Generic;
+using IODate;
 
 namespace UnitTestGenome
 {

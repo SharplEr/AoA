@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VectorSpace;
 using Araneam;
 using MyParallel;
+using IODate;
 
 namespace GenomeNeuralNetwork
 {
@@ -14,6 +15,11 @@ namespace GenomeNeuralNetwork
         readonly static string[] TestTags = new string[] {"Возраст", 
             "Ожирение", "Курение", "Алкоголь", 
             "FV", "FII", "AGTR", "AGT_174", "AGT_235", "PAI1", "MTHFR", "ACE", "NOS", "APOE", 
+            "LPL+73in6", "LPL+82in6", "LPL_HindIII", "LPL_S447X", "LIPC(-514)", "LIPCV155V", 
+            "CETP_taq", "CETP_I405V"};
+        readonly static string[] FenTags = new string[] {"Возраст", 
+            "Ожирение", "Курение", "Алкоголь"};
+        readonly static string[] GenTags = new string[] {"FV", "FII", "AGTR", "AGT_174", "AGT_235", "PAI1", "MTHFR", "ACE", "NOS", "APOE", 
             "LPL+73in6", "LPL+82in6", "LPL_HindIII", "LPL_S447X", "LIPC(-514)", "LIPCV155V", 
             "CETP_taq", "CETP_I405V"};
         readonly static string[] ResultTags = new string[]{
@@ -32,11 +38,10 @@ namespace GenomeNeuralNetwork
             }
         }
 
+        DateInfo info;
+
         public GenomeNetwork(double r, double t) : base(r, t, 3)
-        {
-            //TestTags.Length=22
-            
-            
+        {           
             hidden[0] = new NeuronLayer(9, TestTags.Length+1, true, "tanh", a, b);
             hidden[0].NormalInitialize();            
             hidden[1] = new NeuronLayer(2, 9+1, true,"tanh", a, b);
@@ -46,31 +51,6 @@ namespace GenomeNeuralNetwork
              
             hidden[1].CalcInvers(hidden[0].WithThreshold);
             hidden[2].CalcInvers(hidden[1].WithThreshold);
-            
-
-            /*
-            hidden[0] = new NeuronLayer(50, TestTags.Length + 1, true, "tanh", a/9, b);
-            hidden[0].NormalInitialize();
-            hidden[1] = new NeuronLayer(40, 50 + 1, true, "tanh", a/9, b);
-            hidden[1].NormalInitialize();
-            hidden[2] = new NeuronLayer(30, 40 + 1, true, "tanh", a / 4, b);
-            hidden[2].NormalInitialize();
-            hidden[3] = new NeuronLayer(20, 30 + 1, true, "tanh", a / 4, b);
-            hidden[3].NormalInitialize();
-            hidden[4] = new NeuronLayer(10, 20 + 1, true, "tanh", a/2 , b);
-            hidden[4].NormalInitialize();
-            hidden[5] = new NeuronLayer(5, 10 + 1, true, "tanh", a, b);
-            hidden[5].NormalInitialize();
-            hidden[6] = new NeuronLayer(ResultTags.Length, 5 + 1, false, "tanh", a, b);
-            hidden[6].NormalInitialize();
-
-            hidden[1].CalcInvers(hidden[0].WithThreshold);
-            hidden[2].CalcInvers(hidden[1].WithThreshold);
-            hidden[3].CalcInvers(hidden[2].WithThreshold);
-            hidden[4].CalcInvers(hidden[3].WithThreshold);
-            hidden[5].CalcInvers(hidden[4].WithThreshold);
-            hidden[6].CalcInvers(hidden[5].WithThreshold);
-            */
         }
 
         public bool Reload(string[] names)
@@ -80,19 +60,36 @@ namespace GenomeNeuralNetwork
             try
             {
                 CSVReader reader;
-                
-                List<Vector> nTests = new List<Vector>();
-                List<Vector> nResult = new List<Vector>();
-                for (int i = 0; i < names.Length; i++)
-                {
-                    reader = new CSVReader(names[i]);
-                    if (!reader.Test()) return false;
 
-                    nTests.AddRange(LoadTestDate(reader));
-                    nResult.AddRange(LoadResultDate(reader));
+                List<Vector> nTests = new List<Vector>();
+                //List<Vector> nResult = new List<Vector>();
+                List<string> t = ResultTags.ToList();
+                t.AddRange(TestTags);
+                reader = new CSVReader(t.ToArray(), names);
+                if (!reader.Test()) return false;
+
+                info = new DateInfo(reader, GenTags, ResultTags, (s) =>
+                {
+                    if (s[0] == "отрицат") return -1.0;
+                    else return 1.0;
+                });
+
+                
+                for (int i = 0; i < reader.countLine; i++)
+                {
+                    nTests.Add(new Vector(TestTags.Length, (j) =>
+                    {
+                        if (j<FenTags.Length)
+                            return ToDouble(reader[i, TestTags[j]]);
+                        else
+                            return info[TestTags[j], reader[i, TestTags[j]]];
+                    }, 1.0));
                 }
+                
+
+             //   testDate = LoadTestDate(reader);
                 testDate = nTests.ToArray();
-                resultDate = nResult.ToArray();
+                resultDate = LoadResultDate(reader);
 
                 testCount = new int[testDate.Length];
 
@@ -125,6 +122,7 @@ namespace GenomeNeuralNetwork
             return base.FullLearn(minError);
         }
 
+        /*
         public static Vector[] LoadTestDate(CSVReader reader)
         {
             Vector[] ans = new Vector[reader.countLine];
@@ -133,7 +131,7 @@ namespace GenomeNeuralNetwork
                 ans[i] = new Vector(TestTags.Length, (j) => { return ToDouble(reader[i, TestTags[j]]); }, 1.0);
             }
             return ans;
-        }
+        }*/
 
         public static Vector[] LoadResultDate(CSVReader reader)
         {
@@ -147,12 +145,17 @@ namespace GenomeNeuralNetwork
         {
             CSVReader reader = new CSVReader(name);
             Vector[] answer = new Vector[reader.countLine];
-            //Vector[] answer2 = new Vector[reader.countLine];
             Vector v;
             Vector t = null;
             for (int i = 0; i < answer.Length; i++)
             {
-                v = new Vector(TestTags.Length, (j) => { return ToDouble(reader[i, TestTags[j]]); }, 0.5);
+                v = new Vector(TestTags.Length, (j) =>
+                {
+                    if (j < FenTags.Length)
+                        return ToDouble(reader[i, TestTags[j]]);
+                    else
+                        return info[TestTags[j], reader[i, TestTags[j]]];
+                }, 1.0);
 
                 t = v;
                 convert(v);
