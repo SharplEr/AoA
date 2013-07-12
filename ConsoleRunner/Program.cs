@@ -37,26 +37,6 @@ namespace ConsoleRunner
             string name1test = @"..\..\..\Data\data_Test1.csv";
             string name2test = @"..\..\..\Data\data_Test2.csv";
 
-            /*
-            CSVReader reader = new CSVReader(new string[] {"Диагноз", "Возраст", 
-            "Ожирение", "Курение", "Алкоголь", 
-            "FV", "FII", "AGTR", "AGT_174", "AGT_235", "PAI1", "MTHFR", "ACE", "NOS", "APOE", 
-            "LPL+73in6", "LPL+82in6", "LPL_HindIII", "LPL_S447X", "LIPC(-514)", "LIPCV155V", 
-            "CETP_taq", "CETP_I405V"}
-                , name1, name2);
-            DateInfo inf = new DateInfo(reader, new string[] {"FV", "FII", "AGTR", "AGT_174", "AGT_235", "PAI1", "MTHFR", "ACE", "NOS", "APOE", 
-            "LPL+73in6", "LPL+82in6", "LPL_HindIII", "LPL_S447X", "LIPC(-514)", "LIPCV155V", 
-            "CETP_taq", "CETP_I405V"}, new string[] { "Диагноз" }, (s) =>
-            {
-                if (s[0] == "отрицат") return -1.0;
-                else return 1.0;
-            });
-
-            string[] str = inf["AGTR"];
-            for (int i = 0; i < str.Length; i++)
-                Console.WriteLine(str[i]);
-            */
-
             bool ok;
             int p = -1;
             do

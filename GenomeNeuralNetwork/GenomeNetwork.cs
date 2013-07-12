@@ -38,7 +38,6 @@ namespace GenomeNeuralNetwork
             }
         }
 
-        DateInfo info;
         DateReader Reader;
 
         public GenomeNetwork(double r, double t) : base(r, t, 3)
@@ -93,7 +92,7 @@ namespace GenomeNeuralNetwork
         {
             return base.FullLearn(minError);
         }
-
+        
         public static Vector[] LoadResultDate(CSVReader reader)
         {
             Vector[] ans = new Vector[reader.countLine];
