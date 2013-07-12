@@ -69,7 +69,7 @@ namespace UnitTestGenome
 
                         nw.Reload(new string[]{name});
 
-                        e = nw.FullLearn(0.3);
+                        e = nw.FullLearn(0.3).Error;
                     }
                     catch(SystemException exp)
                     {

@@ -39,6 +39,7 @@ namespace GenomeNeuralNetwork
         }
 
         DateInfo info;
+        DateReader Reader;
 
         public GenomeNetwork(double r, double t) : base(r, t, 3)
         {           
@@ -59,40 +60,17 @@ namespace GenomeNeuralNetwork
             if (names.Length == 0) return true;
             try
             {
-                CSVReader reader;
-
-                List<Vector> nTests = new List<Vector>();
-                //List<Vector> nResult = new List<Vector>();
-                List<string> t = ResultTags.ToList();
-                t.AddRange(TestTags);
-                reader = new CSVReader(t.ToArray(), names);
-                if (!reader.Test()) return false;
-
-                info = new DateInfo(reader, GenTags, ResultTags, (s) =>
+                DateAnalysis analysis = new DateAnalysis(names, TestTags, ResultTags, FenTags, (s) =>
                 {
                     if (s[0] == "отрицат") return -1.0;
                     else return 1.0;
-                });
+                }, ToDouble);
 
-                
-                for (int i = 0; i < reader.countLine; i++)
-                {
-                    nTests.Add(new Vector(TestTags.Length, (j) =>
-                    {
-                        if (j<FenTags.Length)
-                            return ToDouble(reader[i, TestTags[j]]);
-                        else
-                            return info[TestTags[j], reader[i, TestTags[j]]];
-                    }, 1.0));
-                }
-                
-
-             //   testDate = LoadTestDate(reader);
-                testDate = nTests.ToArray();
-                resultDate = LoadResultDate(reader);
-
+                resultDate = analysis.ResultDate;
+                testDate = analysis.TestDate;
+                convert = analysis.Convert;
+                Reader = analysis.Reader;
                 testCount = new int[testDate.Length];
-
                 return true;
             }
             catch
@@ -101,37 +79,20 @@ namespace GenomeNeuralNetwork
             }
         }
 
-        public override void EarlyStoppingLearn()
+        public override LearnLog EarlyStoppingLearn()
         {
-            convert = testDate.Normalization();
-
-            base.EarlyStoppingLearn();
+            return base.EarlyStoppingLearn();
         }
 
-        public override double FullLearn()
+        public override LearnLog FullLearn()
         {
-            convert = testDate.Normalization();
-
             return base.FullLearn();
         }
 
-        public override double FullLearn(double minError)
+        public override LearnLog FullLearn(double minError)
         {
-            convert = testDate.Normalization();
-
             return base.FullLearn(minError);
         }
-
-        /*
-        public static Vector[] LoadTestDate(CSVReader reader)
-        {
-            Vector[] ans = new Vector[reader.countLine];
-            for (int i = 0; i < ans.Length; i++)
-            {
-                ans[i] = new Vector(TestTags.Length, (j) => { return ToDouble(reader[i, TestTags[j]]); }, 1.0);
-            }
-            return ans;
-        }*/
 
         public static Vector[] LoadResultDate(CSVReader reader)
         {
@@ -143,25 +104,13 @@ namespace GenomeNeuralNetwork
 
         public Vector[] Calculation(String name)
         {
-            CSVReader reader = new CSVReader(name);
-            Vector[] answer = new Vector[reader.countLine];
-            Vector v;
-            Vector t = null;
+            Reader.Read(name);
+            Vector[] answer = new Vector[Reader.TestDate.Length];
+            
             for (int i = 0; i < answer.Length; i++)
             {
-                v = new Vector(TestTags.Length, (j) =>
-                {
-                    if (j < FenTags.Length)
-                        return ToDouble(reader[i, TestTags[j]]);
-                    else
-                        return info[TestTags[j], reader[i, TestTags[j]]];
-                }, 1.0);
 
-                t = v;
-                convert(v);
-
-                answer[i] = (Vector)Calculation(v).Clone();
-                
+                answer[i] = (Vector)Calculation(Reader.TestDate[i]).Clone();
             }
 
             return answer;
@@ -187,39 +136,11 @@ namespace GenomeNeuralNetwork
 
             if (!Double.TryParse(s, out ans))
             {
-                ans = (double)(ToInt(s[0]) * 7 + ToInt(s[1])) / 48.0;
-
-                if (ans < 1.0/6.0)
-                {
-                    if (s == "отрицат") ans = -1.0;
-                    else ans = 1.0;
-                }
+                if (s == "отрицат") ans = -1.0;
+                else ans = 1.0;
             }
 
             return ans;
-        }
-
-        static int ToInt(char c)
-        {
-            switch (c)
-            {
-                    /*
-                case 'A': return 1;
-                case 'C': return 2;
-                case 'D': return 3;
-                case 'T': return 4;
-                case 'G': return 5;
-                case 'I': return 6;
-                default: return -1;
-                     */ 
-                case 'A': return 1;
-                case 'C': return 2;
-                case 'D': return 3;
-                case 'I': return 4;
-                case 'G': return 5;
-                case 'T': return 6;
-                default: return -1;
-            }
         }
     }
 }
