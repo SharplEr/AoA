@@ -42,8 +42,6 @@ namespace ConsoleRunner
             do
             {
                 network = new GenomeNetwork(0.1, 3000);
-               // GC.Collect();
-
 
                 if (!new FileInfo(name1).Exists) Console.WriteLine("Первый файл не существует");
                 if (!new FileInfo(name2).Exists) Console.WriteLine("Второй файл не существует");

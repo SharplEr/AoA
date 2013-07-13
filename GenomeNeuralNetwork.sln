@@ -11,56 +11,38 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorSpace", "Araneam\Vect
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestVector", "Araneam\VectorSpace\UnitTestVector\UnitTestVector.csproj", "{9031B90A-537C-4A33-BF3D-6FCF54E08079}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestNetwork", "Araneam\NeuralNetwork\UnitTestNetwork\UnitTestNetwork.csproj", "{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araneam", "Araneam\NeuralNetwork\NeuralNetwork\Araneam.csproj", "{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsRuner", "WindowsFormsRuner\WindowsFormsRuner.csproj", "{82917789-4C7E-4044-88BB-736CDC262DC6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleRunner", "ConsoleRunner\ConsoleRunner.csproj", "{C915DACA-5C5E-442C-A808-9860D97EAE42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IODate", "Araneam\NeuralNetwork\IODate\IODate.csproj", "{8471FC16-BA93-417C-ADBC-637139501CC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araneam", "Araneam\Araneam\Araneam\Araneam.csproj", "{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestNetwork", "Araneam\Araneam\UnitTestNetwork\UnitTestNetwork.csproj", "{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestIODate", "Araneam\IODate\UnitTestIODate\UnitTestIODate.csproj", "{52C608BD-51E9-4016-ADE5-004A6DE681C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IODate", "Araneam\IODate\IODate\IODate.csproj", "{8471FC16-BA93-417C-ADBC-637139501CC8}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://mephigenomeproject.visualstudio.com/defaultcollection
-		SccProjectUniqueName0 = Araneam\\MyParallel\\MyParallel\\MyParallel.csproj
-		SccProjectName0 = Araneam/MyParallel/MyParallel
+		SccProjectUniqueName0 = Araneam\\Araneam\\Araneam\\Araneam.csproj
+		SccProjectName0 = Araneam/Araneam/Araneam
 		SccAuxPath0 = https://mephigenomeproject.visualstudio.com/defaultcollection
-		SccLocalPath0 = Araneam\\MyParallel\\MyParallel
+		SccLocalPath0 = Araneam\\Araneam\\Araneam
 		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName1 = Araneam\\VectorSpace\\VectorSpace\\VectorSpace.csproj
-		SccProjectName1 = Araneam/VectorSpace/VectorSpace
+		SccProjectUniqueName1 = GenomeNeuralNetwork\\GenomeNeuralNetwork.csproj
+		SccProjectName1 = GenomeNeuralNetwork
 		SccAuxPath1 = https://mephigenomeproject.visualstudio.com/defaultcollection
-		SccLocalPath1 = Araneam\\VectorSpace\\VectorSpace
+		SccLocalPath1 = GenomeNeuralNetwork
 		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName2 = Araneam\\NeuralNetwork\\NeuralNetwork\\Araneam.csproj
-		SccProjectName2 = Araneam/NeuralNetwork/NeuralNetwork
+		SccProjectUniqueName2 = UnitTestGenome\\UnitTestGenome.csproj
+		SccProjectName2 = UnitTestGenome
 		SccAuxPath2 = https://mephigenomeproject.visualstudio.com/defaultcollection
-		SccLocalPath2 = Araneam\\NeuralNetwork\\NeuralNetwork
+		SccLocalPath2 = UnitTestGenome
 		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName3 = GenomeNeuralNetwork\\GenomeNeuralNetwork.csproj
-		SccProjectName3 = GenomeNeuralNetwork
-		SccAuxPath3 = https://mephigenomeproject.visualstudio.com/defaultcollection
-		SccLocalPath3 = GenomeNeuralNetwork
-		SccProvider3 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName4 = UnitTestGenome\\UnitTestGenome.csproj
-		SccProjectName4 = UnitTestGenome
-		SccAuxPath4 = https://mephigenomeproject.visualstudio.com/defaultcollection
-		SccLocalPath4 = UnitTestGenome
-		SccProvider4 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName5 = Araneam\\VectorSpace\\UnitTestVector\\UnitTestVector.csproj
-		SccProjectName5 = Araneam/VectorSpace/UnitTestVector
-		SccAuxPath5 = https://mephigenomeproject.visualstudio.com/defaultcollection
-		SccLocalPath5 = Araneam\\VectorSpace\\UnitTestVector
-		SccProvider5 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName6 = Araneam\\NeuralNetwork\\UnitTestNetwork\\UnitTestNetwork.csproj
-		SccProjectName6 = Araneam/NeuralNetwork/UnitTestNetwork
-		SccAuxPath6 = https://mephigenomeproject.visualstudio.com/defaultcollection
-		SccLocalPath6 = Araneam\\NeuralNetwork\\UnitTestNetwork
-		SccProvider6 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,22 +89,6 @@ Global
 		{9031B90A-537C-4A33-BF3D-6FCF54E08079}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9031B90A-537C-4A33-BF3D-6FCF54E08079}.Release|x64.ActiveCfg = Release|x64
 		{9031B90A-537C-4A33-BF3D-6FCF54E08079}.Release|x64.Build.0 = Release|x64
-		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Debug|x64.ActiveCfg = Debug|x64
-		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Debug|x64.Build.0 = Debug|x64
-		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Release|x64.ActiveCfg = Release|x64
-		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Release|x64.Build.0 = Release|x64
-		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Debug|x64.ActiveCfg = Debug|x64
-		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Debug|x64.Build.0 = Debug|x64
-		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Release|x64.ActiveCfg = Release|x64
-		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Release|x64.Build.0 = Release|x64
 		{82917789-4C7E-4044-88BB-736CDC262DC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{82917789-4C7E-4044-88BB-736CDC262DC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82917789-4C7E-4044-88BB-736CDC262DC6}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -135,6 +101,28 @@ Global
 		{C915DACA-5C5E-442C-A808-9860D97EAE42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C915DACA-5C5E-442C-A808-9860D97EAE42}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C915DACA-5C5E-442C-A808-9860D97EAE42}.Release|x64.ActiveCfg = Release|Any CPU
+		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Debug|x64.ActiveCfg = Debug|x64
+		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Debug|x64.Build.0 = Debug|x64
+		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Release|x64.ActiveCfg = Release|x64
+		{46FC5442-371E-4CBB-8E3C-05AEEF639B5C}.Release|x64.Build.0 = Release|x64
+		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Debug|x64.ActiveCfg = Debug|x64
+		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Debug|x64.Build.0 = Debug|x64
+		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Release|x64.ActiveCfg = Release|x64
+		{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}.Release|x64.Build.0 = Release|x64
+		{52C608BD-51E9-4016-ADE5-004A6DE681C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52C608BD-51E9-4016-ADE5-004A6DE681C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52C608BD-51E9-4016-ADE5-004A6DE681C4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{52C608BD-51E9-4016-ADE5-004A6DE681C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52C608BD-51E9-4016-ADE5-004A6DE681C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52C608BD-51E9-4016-ADE5-004A6DE681C4}.Release|x64.ActiveCfg = Release|Any CPU
 		{8471FC16-BA93-417C-ADBC-637139501CC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8471FC16-BA93-417C-ADBC-637139501CC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8471FC16-BA93-417C-ADBC-637139501CC8}.Debug|x64.ActiveCfg = Debug|Any CPU
