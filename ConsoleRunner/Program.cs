@@ -39,6 +39,8 @@ namespace ConsoleRunner
 
             bool ok;
             int p = -1;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             do
             {
                 network = new GenomeNetwork(0.1, 3000);
@@ -57,7 +59,7 @@ namespace ConsoleRunner
                     return;
                 }
 
-                network.EarlyStoppingLearn();
+                network.EarlyStoppingLearn(false);
 
                 int countP = 0;
                 int countN = 0;
@@ -162,6 +164,7 @@ namespace ConsoleRunner
                     Console.WriteLine("Завершено: {0} %", p);
                 }
             } while (globalI < n);
+            sw.Stop();
             Console.WriteLine("Все запуски завершены!");
 
             List<int> LTestP     = new List<int>();
@@ -268,6 +271,7 @@ namespace ConsoleRunner
 
             Console.WriteLine("Коэффициент корреляции между процентом угадывания обучающих примеров и контрольных: {0}", r);
 
+            Console.WriteLine("Время: {0}(с)", sw.ElapsedMilliseconds/1000);
             Console.WriteLine("Все ок, нажмите <Enter>");
             Console.ReadLine();
         }

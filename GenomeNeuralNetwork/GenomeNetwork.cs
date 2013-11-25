@@ -12,17 +12,17 @@ namespace GenomeNeuralNetwork
 {
     public class GenomeNetwork: BackPropagationNetwork
     {
-        readonly static string[] TestTags = new string[] {"Возраст", 
+        public readonly static string[] TestTags = new string[] {"Возраст", 
             "Ожирение", "Курение", "Алкоголь", 
             "FV", "FII", "AGTR", "AGT_174", "AGT_235", "PAI1", "MTHFR", "ACE", "NOS", "APOE", 
             "LPL+73in6", "LPL+82in6", "LPL_HindIII", "LPL_S447X", "LIPC(-514)", "LIPCV155V", 
             "CETP_taq", "CETP_I405V"};
-        readonly static string[] FenTags = new string[] {"Возраст", 
+        public readonly static string[] FenTags = new string[] {"Возраст", 
             "Ожирение", "Курение", "Алкоголь"};
-        readonly static string[] GenTags = new string[] {"FV", "FII", "AGTR", "AGT_174", "AGT_235", "PAI1", "MTHFR", "ACE", "NOS", "APOE", 
+        public readonly static string[] GenTags = new string[] {"FV", "FII", "AGTR", "AGT_174", "AGT_235", "PAI1", "MTHFR", "ACE", "NOS", "APOE", 
             "LPL+73in6", "LPL+82in6", "LPL_HindIII", "LPL_S447X", "LIPC(-514)", "LIPCV155V", 
             "CETP_taq", "CETP_I405V"};
-        readonly static string[] ResultTags = new string[]{
+        public readonly static string[] ResultTags = new string[]{
             "Диагноз"
         };
 
@@ -39,18 +39,28 @@ namespace GenomeNeuralNetwork
         }
 
         DateReader Reader;
-
-        public GenomeNetwork(double r, double t) : base(r, t, 3)
-        {           
-            hidden[0] = new NeuronLayer(9, TestTags.Length+1, true, "tanh", a, b);
-            hidden[0].NormalInitialize();            
-            hidden[1] = new NeuronLayer(2, 9+1, true,"tanh", a, b);
+        //9-2
+        public GenomeNetwork(double r, double t) : base(r, t, 2)
+        {
+            /*
+            hidden[0] = new NeuronLayer(9, TestTags.Length + 1, true, "tanh", a, b);
+            hidden[0].NormalInitialize();
+            hidden[1] = new NeuronLayer(2, 9 + 1, true, "tanh", a, b);
             hidden[1].NormalInitialize();
             hidden[2] = new NeuronLayer(ResultTags.Length, 2 + 1, false, "tanh", a, b);
             hidden[2].NormalInitialize();
-             
+
             hidden[1].CalcInvers(hidden[0].WithThreshold);
             hidden[2].CalcInvers(hidden[1].WithThreshold);
+              */
+            
+            hidden[0] = new NeuronLayer(10, TestTags.Length + 1, true, "tanh", a, b);
+            hidden[0].NormalInitialize();
+            hidden[1] = new NeuronLayer(ResultTags.Length, 10 + 1, false, "tanh", a, b);
+            hidden[1].NormalInitialize();
+
+            hidden[1].CalcInvers(hidden[0].WithThreshold);
+            
         }
 
         public bool Reload(string[] names)
@@ -69,7 +79,7 @@ namespace GenomeNeuralNetwork
                 testDate = analysis.TestDate;
                 convert = analysis.Convert;
                 Reader = analysis.Reader;
-                testCount = new int[testDate.Length];
+                testCount = new double[testDate.Length];
                 return true;
             }
             catch
@@ -78,9 +88,9 @@ namespace GenomeNeuralNetwork
             }
         }
 
-        public override LearnLog EarlyStoppingLearn()
+        public override LearnLog EarlyStoppingLearn(bool flag)
         {
-            return base.EarlyStoppingLearn();
+            return base.EarlyStoppingLearn(flag);
         }
 
         public override LearnLog FullLearn()
@@ -115,7 +125,7 @@ namespace GenomeNeuralNetwork
             return answer;
         }
 
-        static double ToDouble(string s)
+        public static double ToDouble(string s)
         {
             double ans;
 
@@ -140,6 +150,11 @@ namespace GenomeNeuralNetwork
             }
 
             return ans;
+        }
+
+        public NeuronLayer[] getHidden()
+        {
+            return hidden;
         }
     }
 }
