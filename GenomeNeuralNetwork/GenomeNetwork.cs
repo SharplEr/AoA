@@ -42,16 +42,15 @@ namespace GenomeNeuralNetwork
         //9-2
         public GenomeNetwork(double r, double t) : base(r, t, 3)
         {
-            hidden[0] = new NeuronLayer(9, TestTags.Length + 1, true, "tanh", a, b);
+            hidden[0] = new NeuronLayer(9, TestTags.Length + 1, true, 1, "tanh", a, b);
             hidden[0].NormalInitialize();
-            hidden[1] = new NeuronLayer(2, 9 + 1, true, "tanh", a, b);
+            hidden[1] = new NeuronLayer(2, 9 + 1, true, 1, "tanh", a, b);
             hidden[1].NormalInitialize();
-            hidden[2] = new NeuronLayer(ResultTags.Length, 2 + 1, false, "tanh", a, b);
+            hidden[2] = new NeuronLayer(ResultTags.Length, 2 + 1, false, 1, "tanh", a, b);
             hidden[2].NormalInitialize();
 
             hidden[1].CalcInvers(hidden[0].WithThreshold);
             hidden[2].CalcInvers(hidden[1].WithThreshold);
-
         }
 
         public bool Reload(string[] names)
