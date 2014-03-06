@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using IODate;
+using VectorSpace;
+using AoA;
+using Araneam;
+using GenomeNeuralNetwork;
+
+namespace AoARun
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+            DateAnalysis analysis = new DateAnalysis(
+                new string[] { @"..\..\..\Data\data_1.csv", @"..\..\..\Data\data_2.csv" }
+                , GenomeNetwork.TestTags, GenomeNetwork.ResultTags, GenomeNetwork.FenTags, (s) =>
+            {
+                if (s[0] == "отрицат") return -1.0;
+                else return 1.0;
+            }, GenomeNetwork.ToDouble);
+
+            Vector[] input = analysis.TestDate;
+            Vector[] output = analysis.ResultDate;
+
+            //Experiments experiment = new Experiments(input.Length, () => new AGN(0.1, 1500));
+            Experiments experiment = new Experiments(input.Length, () => new AGN(0.1, 1500));
+
+            //!Здесь вы можете присвоить другой классификатор - раскоментировать одну строчку и закомментировать другую! (если выбрали AGN - надо вызвать dispose в конце как внизу)
+            //experiment.algorithm = new AGN(0.1, 1500);
+            //experiment.algorithm = new RndA();
+            //experiment.algorithm = new Regression(0.1, 3000);
+            //experiment.Run(input, output, (x) => { Console.WriteLine("Завершено {0}%", x * 100); });
+            experiment.RunP(input, output);
+            //, (x) => { Console.WriteLine("Завершено {0}%", x * 100); }
+            if (experiment.WriteLog(@"log.txt")) Console.WriteLine("Отчет сформирован");
+            else Console.WriteLine("Не удалось");
+
+            Console.ReadKey();
+        }
+    }
+}

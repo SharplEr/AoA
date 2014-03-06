@@ -66,10 +66,9 @@ namespace GenomeNeuralNetwork
                 }, ToDouble);
 
                 resultDate = analysis.ResultDate;
-                testDate = analysis.TestDate;
+                inputDate = analysis.TestDate;
                 convert = analysis.Convert;
                 Reader = analysis.Reader;
-                testCount = new double[testDate.Length];
                 return true;
             }
             catch
@@ -109,7 +108,7 @@ namespace GenomeNeuralNetwork
             for (int i = 0; i < answer.Length; i++)
             {
 
-                answer[i] = (Vector)Calculation(Reader.TestDate[i]).Clone();
+                answer[i] = Calculation(Reader.TestDate[i]).CloneOk();
             }
 
             return answer;

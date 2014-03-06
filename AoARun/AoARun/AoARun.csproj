@@ -4,23 +4,24 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{82917789-4C7E-4044-88BB-736CDC262DC6}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{2424A84E-843E-4568-B41E-41E9E5EE02B2}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindowsFormsRuner</RootNamespace>
-    <AssemblyName>WindowsFormsRuner</AssemblyName>
+    <RootNamespace>AoARun</RootNamespace>
+    <AssemblyName>AoARun</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -38,63 +40,40 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Home.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Home.Designer.cs">
-      <DependentUpon>Home.cs</DependentUpon>
-    </Compile>
+    <Compile Include="AGN.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Home.resx">
-      <DependentUpon>Home.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
+    <Compile Include="Regression.cs" />
+    <Compile Include="RndA.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Araneam\Araneam\Araneam\Araneam.csproj">
+    <ProjectReference Include="..\..\AoA\AoA\AoA.csproj">
+      <Project>{90108c34-6c5b-4ae2-83c1-1933c9ef77f0}</Project>
+      <Name>AoA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Araneam\Araneam\Araneam\Araneam.csproj">
       <Project>{46fc5442-371e-4cbb-8e3c-05aeef639b5c}</Project>
       <Name>Araneam</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Araneam\IODate\IODate\IODate.csproj">
+    <ProjectReference Include="..\..\Araneam\IODate\IODate\IODate.csproj">
       <Project>{8471fc16-ba93-417c-adbc-637139501cc8}</Project>
       <Name>IODate</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Araneam\MyParallel\MyParallel\MyParallel.csproj">
+    <ProjectReference Include="..\..\Araneam\MyParallel\MyParallel\MyParallel.csproj">
       <Project>{458ccdbc-bf99-4b55-8044-926c317943a0}</Project>
       <Name>MyParallel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Araneam\VectorSpace\VectorSpace\VectorSpace.csproj">
+    <ProjectReference Include="..\..\Araneam\VectorSpace\VectorSpace\VectorSpace.csproj">
       <Project>{82c4c097-83df-4c8a-acf7-bd4cd7fbdbc9}</Project>
       <Name>VectorSpace</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GenomeNeuralNetwork\GenomeNeuralNetwork.csproj">
+    <ProjectReference Include="..\..\GenomeNeuralNetwork\GenomeNeuralNetwork.csproj">
       <Project>{8ed3c145-b2f8-45bb-80f9-0411e2347322}</Project>
       <Name>GenomeNeuralNetwork</Name>
     </ProjectReference>
