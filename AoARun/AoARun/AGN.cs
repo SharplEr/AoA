@@ -72,14 +72,14 @@ namespace AoARun
 
         public override void ChangeThreshold(double th)
         {
-            NeuronLayer[] nls = network.getHidden();
+            NeuronLayer[] nls = network.getLayers();
             Neuron n = nls[nls.Length - 1].neuros[nls[nls.Length - 1].neuros.Length - 1];
             n.weight[n.Length - 1]  = th / n.synapse[n.Length - 1];
         }
 
         public override double GetThreshold()
         {
-            NeuronLayer[] nls = network.getHidden();
+            NeuronLayer[] nls = network.getLayers();
             Neuron n = nls[nls.Length - 1].neuros[nls[nls.Length - 1].neuros.Length - 1];
             return n.weight[n.Length-1]*n.synapse[n.Length-1];
         }

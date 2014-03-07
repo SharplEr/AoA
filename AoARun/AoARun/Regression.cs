@@ -70,14 +70,14 @@ namespace AoARun
 
         public override void ChangeThreshold(double th)
         {
-            NeuronLayer[] nls = network.getHidden();
+            NeuronLayer[] nls = network.getLayers();
             Neuron n = nls[nls.Length - 1].neuros[nls[nls.Length - 1].neuros.Length - 1];
             n.weight[n.Length - 1] = th / n.synapse[n.Length - 1];
         }
 
         public override double GetThreshold()
         {
-            NeuronLayer[] nls = network.getHidden();
+            NeuronLayer[] nls = network.getLayers();
             Neuron n = nls[nls.Length - 1].neuros[nls[nls.Length - 1].neuros.Length - 1];
             return n.weight[n.Length - 1] * n.synapse[n.Length - 1];
         }
@@ -91,9 +91,9 @@ namespace AoARun
         class reg : LMSNetwork
         {
             public reg(double r, double t, int n, int m, string name, params Double[] p) : base(r, t, n, m, name, p) { }
-            public NeuronLayer[] getHidden()
+            public NeuronLayer[] getLayers()
             {
-                return hidden;
+                return layers;
             }
         }
     }

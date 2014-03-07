@@ -30,9 +30,9 @@ namespace AoARun
             Experiments experiment = new Experiments(input.Length, () => new AGN(0.1, 1500));
 
             //!Здесь вы можете присвоить другой классификатор - раскоментировать одну строчку и закомментировать другую! (если выбрали AGN - надо вызвать dispose в конце как внизу)
-            //experiment.algorithm = new AGN(0.1, 1500);
-            //experiment.algorithm = new RndA();
-            //experiment.algorithm = new Regression(0.1, 3000);
+            //new AGN(0.1, 1500);
+            //new RndA();
+            //new Regression(0.1, 3000);
             //experiment.Run(input, output, (x) => { Console.WriteLine("Завершено {0}%", x * 100); });
             experiment.Run(input, output);
             //, (x) => { Console.WriteLine("Завершено {0}%", x * 100); }
