@@ -108,129 +108,13 @@ namespace AoA
                 testDate[j] = t;
             }
         }
-        
+
         /// <summary>
         /// Запуск тестирования
         /// </summary>
-        /// <param name="dateIn">Входные данные</param>
-        /// <param name="dateOut">Соответствующие им выходные "ожидаемые" значения</param>
-        /// <param name="f">Функция которой будет возвращаться текущий процент (где 1 = 100%) завершонности тестирования</param>
-        public void Run(Vector[] dateIn, Vector[] dateOut, Action<double> f)
-        {
-            if ((dateIn == null) || (dateIn.Length == 0) || (dateOut == null) || (dateOut.Length == 0) || (f == null)) return;
-
-            Algorithm algorithm = getAlgorithm();
-
-            dem = dateOut[0].Length;
-            int i;
-            for (i = 0; i < info.Length; i++)
-            {
-                int ncl = 0;
-                int p = 1;
-                for (int j = 0; j < dem; j++)
-                {
-                    ncl += p * (int)((dateOut[i][j] + 1.0) / 2.0);
-                    p *= 2;
-                }
-                info[i].nClass = ncl;
-            }
-
-            //Статистическая информация по исходным данным
-            List<Vector> plv = new List<Vector>();
-            List<Vector> nlv = new List<Vector>();
-            for (i = 0; i < info.Length; i++)
-                if (info[i].nClass == 0) nlv.Add(dateIn[i]);
-                else plv.Add(dateIn[i]);
-
-            Vector[] pv = plv.ToArray();
-            Vector[] nv = nlv.ToArray();
-            pinfo = new SpaceInfo(pv);
-            ninfo = new SpaceInfo(nv);
-            i = 0;
-
-            while (i < m)
-            {
-                Next();
-                Vector[] li = new Vector[testDate.Length];
-                Vector[] lo = new Vector[testDate.Length];
-                Vector[] ci = new Vector[controlDate.Length];
-                Vector[] co = new Vector[controlDate.Length];
-                for (int j = 0; j < testDate.Length; j++)
-                {
-                    li[j] = dateIn[testDate[j]];
-                    lo[j] = dateOut[testDate[j]];
-                }
-
-                for (int j = 0; j < controlDate.Length; j++)
-                {
-                    ci[j] = dateIn[controlDate[j]];
-                    co[j] = dateOut[controlDate[j]];
-                }
-
-                int ncount = 0, pcount = 0;
-                
-                for (int j = 0; j < controlDate.Length; j++)
-                {
-                    if (co[j][0] < 0)
-                        ncount++;
-                    else
-                        pcount++;
-                }
-
-                if ((double)Math.Max(pcount, ncount) / Math.Min(pcount, ncount) > 1.5) continue;
-
-                algorithm.Learn(li, lo);
-
-                foundThreshold[i] = algorithm.GetThreshold();
-
-                Vector[] CalcedTest = algorithm.Calc(li);
-
-                for (int j = 0; j < testDate.Length; j++)
-                {
-                    info[testDate[j]].errorLearn.Add(Math.Sqrt((double)(lo[j] - CalcedTest[j])));
-                }
-
-                Vector[] CalcedControl = algorithm.Calc(ci);
-                for (int j = 0; j < controlDate.Length; j++)
-                {
-                    info[controlDate[j]].errorControl.Add(Math.Sqrt((double)(co[j] - CalcedControl[j])));
-                }
-
-               
-                double th = -1;
-
-                for (int k = 0; k < rocs.Length; k++)
-                {
-                    algorithm.ChangeThreshold(1.7159 * th);
-                    CalcedControl = algorithm.Calc(ci);
-
-                    int fpr = 0, tpr = 0;
-                    for (int j = 0; j < controlDate.Length; j++)
-                    {
-                        if (co[j][0] < 0)
-                        {
-                            if (CalcedControl[j][0] > 0) fpr++;
-                        }
-                        else
-                        {
-                            if (CalcedControl[j][0] > 0) tpr++;
-                        }
-                    }
-
-                        rocs[k].FPR.Add((double)fpr / ncount);
-                        rocs[k].TPR.Add((double)tpr / pcount);
-                    
-                    th += 2.0 / ROCn;
-                }
-                
-                f((double)(i + 1) / m);
-                i++;
-            }
-            CalcTotalInfo();
-            algorithm.Dispose();
-        }
-
-        public void RunP(Vector[] di, Vector[] doo)
+        /// <param name="di">Входные данные</param>
+        /// <param name="doo">Соответствующие им выходные "ожидаемые" значения</param>
+        public void Run(Vector[] di, Vector[] doo)
         {
             int i;
             dateIn = di;
@@ -315,7 +199,7 @@ namespace AoA
                 allControlDate[i] = controlDate.CloneOk<int[]>();
                 i++;
             }
-            //Environment.ProcessorCount
+            
             worker = new ExperimentWorker(Environment.ProcessorCount, m, info);
             worker.Run(dateIn, dateOut, getAlgorithm, allTestDate, allControlDate, ROCn);
 

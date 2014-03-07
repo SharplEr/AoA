@@ -15,7 +15,6 @@ namespace AoARun
     {
         static void Main(string[] args)
         {
-
             DateAnalysis analysis = new DateAnalysis(
                 new string[] { @"..\..\..\Data\data_1.csv", @"..\..\..\Data\data_2.csv" }
                 , GenomeNetwork.TestTags, GenomeNetwork.ResultTags, GenomeNetwork.FenTags, (s) =>
@@ -35,7 +34,7 @@ namespace AoARun
             //experiment.algorithm = new RndA();
             //experiment.algorithm = new Regression(0.1, 3000);
             //experiment.Run(input, output, (x) => { Console.WriteLine("Завершено {0}%", x * 100); });
-            experiment.RunP(input, output);
+            experiment.Run(input, output);
             //, (x) => { Console.WriteLine("Завершено {0}%", x * 100); }
             if (experiment.WriteLog(@"log.txt")) Console.WriteLine("Отчет сформирован");
             else Console.WriteLine("Не удалось");
