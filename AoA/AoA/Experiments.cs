@@ -120,17 +120,6 @@ namespace AoA
             dateIn = di;
             dateOut = doo;
 
-            Vector[] testShit1 = new Vector[di.Length];
-            Vector[] testShit2 = new Vector[doo.Length];
-            for (i = 0; i < testShit1.Length; i++ )
-            {
-                testShit1[i] = di[i].CloneOk();
-            }
-            for (i = 0; i < testShit2.Length; i++)
-            {
-                testShit2[i] = doo[i].CloneOk();
-            }
-
             if ((dateIn == null) || (dateIn.Length == 0) || (dateOut == null) || (dateOut.Length == 0)) return;
 
             dem = dateOut[0].Length;
@@ -208,19 +197,6 @@ namespace AoA
             foundThreshold = worker.foundThreshold;
             CalcTotalInfo();
             worker.Dispose();
-
-            bool flag = true;
-            for (i = 0; i < testShit1.Length; i++)
-            {
-                for (int j = 0; j < testShit1[i].Length; j++)
-                    flag = flag && (testShit1[i][j] == dateIn[i][j]);
-            }
-            for (i = 0; i < testShit2.Length; i++)
-            {
-                for (int j = 0; j < testShit2[i].Length; j++)
-                    flag = flag && (testShit2[i][j] == dateOut[i][j]);
-            }
-            Console.WriteLine(flag);
         }
 
         void CalcTotalInfo()
