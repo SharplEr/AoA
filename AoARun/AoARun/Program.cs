@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using IODate;
 using VectorSpace;
 using AoA;
-using Araneam;
 using GenomeNeuralNetwork;
 
 namespace AoARun
@@ -34,7 +29,7 @@ namespace AoARun
             //new RndA();
             //new Regression(0.1, 3000);
             //experiment.Run(input, output, (x) => { Console.WriteLine("Завершено {0}%", x * 100); });
-            experiment.Run(input, output);
+            experiment.Run(input, output, (x) => { Console.WriteLine("Завершено {0}%", x * 100); });
             //, (x) => { Console.WriteLine("Завершено {0}%", x * 100); }
             if (experiment.WriteLog(@"log.txt")) Console.WriteLine("Отчет сформирован");
             else Console.WriteLine("Не удалось");

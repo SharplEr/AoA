@@ -1,15 +1,11 @@
 ﻿ using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VectorSpace;
 using MyParallel;
 using IODate;
 
 namespace AoA
 {
-    class ExperimentWorker: ParallelWorker
+    class ExperimentWorker : ParallelWorkerWithProgress
     {
         Vector[] dateIn;
         Vector[] dateOut;
@@ -24,8 +20,8 @@ namespace AoA
         
         public ROC[] rocs;
 
-        public ExperimentWorker(int threadCount, int nn, Info[] inf)
-            : base(threadCount, nn, @"ExperimentWorker№")
+        public ExperimentWorker(int threadCount, int nn, Info[] inf, Action<double> ff)
+            : base(threadCount, nn, @"ExperimentWorker№", ff)
         {
             info = inf;
             foundThreshold = new double[nn];
@@ -41,10 +37,10 @@ namespace AoA
             rocs = new ROC[ROCn];
             rocs.done();
 
-            Run();
+            Run(100, 1000);
         }
         
-        override protected void DoFromTo(int start, int finish)
+        override protected void DoFromTo(int start, int finish, Action<double> progr)
         {
             Algorithm alg;
             lock (getAlgorithms)
@@ -121,6 +117,7 @@ namespace AoA
 
                     th += 2.0 / rocs.Length;
                 }
+                progr((double)(i - start + 1) / (finish - start));
             }
             alg.Dispose();
         }

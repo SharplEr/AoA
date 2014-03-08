@@ -25,7 +25,7 @@ namespace AoA
         int[] testDate;
         int[] controlDate;
         //Магическая константа, вывод содержится в пояснительной записке
-        const int m = 180;
+        const int m = 1000;
         //Какая часть пойдет на контрольное множество от всех данных
         const double part = 0.25;
         //Точек для ROC кривых
@@ -46,10 +46,12 @@ namespace AoA
         #region Информация для отчета
         public double avgErrorAtControl;
         double avgErrorAtTest;
+        double errorOfAvgErrorAtControl;
         double errorDispAtControl;
         double errorDispAtTest;
         double avgOverLearning;
         double overLearningDisp;
+        double errorOfAvgOverLearning;
         double[] foundThreshold = new double[m];
         double avgThreshold;
         double dispThreshold;
@@ -66,7 +68,11 @@ namespace AoA
         double[] errorOfOverLearnings;
 
         ROC[] rocs;
+        double AUC;
+        double errorOfAUC;
 
+        int countOfHard;
+        public double pOfHard;
         SpaceInfo pinfo, ninfo;
         #endregion
 
@@ -114,13 +120,13 @@ namespace AoA
         /// </summary>
         /// <param name="di">Входные данные</param>
         /// <param name="doo">Соответствующие им выходные "ожидаемые" значения</param>
-        public void Run(Vector[] di, Vector[] doo)
+        public CVlog Run(Vector[] di, Vector[] doo, Action<double> f)
         {
             int i;
             dateIn = di;
             dateOut = doo;
 
-            if ((dateIn == null) || (dateIn.Length == 0) || (dateOut == null) || (dateOut.Length == 0)) return;
+            if ((dateIn == null) || (dateIn.Length == 0) || (dateOut == null) || (dateOut.Length == 0)) throw new ArgumentNullException();
 
             dem = dateOut[0].Length;
             
@@ -189,17 +195,17 @@ namespace AoA
                 i++;
             }
             
-            worker = new ExperimentWorker(Environment.ProcessorCount, m, info);
+            worker = new ExperimentWorker(Environment.ProcessorCount, m, info, f);
             worker.Run(dateIn, dateOut, getAlgorithm, allTestDate, allControlDate, ROCn);
 
             info = worker.info;
             rocs = worker.rocs;
             foundThreshold = worker.foundThreshold;
-            CalcTotalInfo();
             worker.Dispose();
+            return CalcTotalInfo();
         }
 
-        void CalcTotalInfo()
+        CVlog CalcTotalInfo()
         {
             double a = 0.95;
             avgErrorAtControl = 0.0;
@@ -358,6 +364,19 @@ namespace AoA
                 errorOfOverLearnings[i] = Statist.CalcError(l, overLearningDisps[i], a);
             }
 
+            errorOfAvgErrorAtControl = 0.0;
+            for (int i = 0; i < info.Length; i++)
+                errorOfAvgErrorAtControl += info[i].errorOfErrorControl * info[i].errorOfErrorControl;
+            errorOfAvgErrorAtControl = Math.Sqrt(errorOfAvgErrorAtControl) / info.Length;
+
+            countOfHard = 0;
+
+            for (int i = 0; i < info.Length; i++)
+                if (info[i].avgErrorControl - info[i].errorOfErrorControl >= Math.Sqrt(dem))
+                    countOfHard++;
+            pOfHard = countOfHard / info.Length;
+
+            errorOfAvgOverLearning = Statist.CalcError(info.Length, overLearningDisp, a);
             //Для ROC кривых
             for (int i = 0; i < rocs.Length; i++)
             {
@@ -394,6 +413,56 @@ namespace AoA
                 }
                 rocs[i].dispTPR /= rocs[i].TPRa.Length - 1;
             }
+
+            AUC = 0.0;
+
+            for (int i = 1; i < rocs.Length - 1; i++)
+                AUC += rocs[i].avgTPR * (rocs[i + 1].avgFPR - rocs[i - 1].avgFPR);
+
+            AUC += rocs[0].avgTPR * (rocs[1].avgFPR - rocs[0].avgFPR) + rocs[rocs.Length - 1].avgTPR * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length - 2].avgFPR);
+
+            AUC *= 0.5;
+
+            errorOfAUC = Statist.CalcQError(rocs[0].TPR.Count, rocs[0].dispTPR, a) * (rocs[1].avgFPR - rocs[0].avgFPR) * (rocs[1].avgFPR - rocs[0].avgFPR);
+            errorOfAUC += Statist.CalcQError(rocs[rocs.Length - 1].TPR.Count, rocs[rocs.Length - 1].dispTPR, a) * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length - 2].avgFPR) * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length - 2].avgFPR);
+            errorOfAUC += Statist.CalcQError(rocs[0].FPR.Count, rocs[0].dispFPR, a) * (rocs[1].avgTPR - rocs[0].avgTPR) * (rocs[1].avgTPR - rocs[0].avgTPR) + Statist.CalcQError(rocs[1].FPR.Count, rocs[1].dispFPR, a) * (rocs[2].avgTPR + rocs[0].avgTPR) * (rocs[2].avgTPR + rocs[0].avgTPR);
+            errorOfAUC += Statist.CalcQError(rocs[rocs.Length - 1].FPR.Count, rocs[rocs.Length - 1].dispFPR, a) * (rocs[rocs.Length - 2].avgTPR + rocs[rocs.Length - 1].avgTPR) * (rocs[rocs.Length - 2].avgTPR + rocs[rocs.Length - 1].avgTPR) + Statist.CalcQError(rocs[rocs.Length - 2].FPR.Count, rocs[rocs.Length - 2].dispFPR, a) * (rocs[rocs.Length - 3].avgTPR - rocs[rocs.Length - 1].avgTPR) * (rocs[rocs.Length - 3].avgTPR - rocs[rocs.Length - 1].avgTPR);
+            for (int i = 1; i < rocs.Length - 1; i++)
+                errorOfAUC += Statist.CalcQError(rocs[i].TPR.Count, rocs[i].dispTPR, a) * (rocs[i + 1].avgFPR - rocs[i - 1].avgFPR) * (rocs[i + 1].avgFPR - rocs[i - 1].avgFPR);
+
+            for (int i = 2; i < rocs.Length - 2; i++)
+                errorOfAUC += Statist.CalcQError(rocs[i].FPR.Count, rocs[i].dispFPR, a) * (rocs[i - 1].avgTPR - rocs[i + 1].avgTPR) * (rocs[i - 1].avgTPR - rocs[i + 1].avgTPR);
+
+            errorOfAUC = 0.5 * Math.Sqrt(errorOfAUC);
+
+            CVlog log;
+            log.avgErrorAtControl = avgErrorAtControl;
+            log.errorOfAvgErrorAtControl = errorOfAvgErrorAtControl;
+            log.avgErrorAtTest = avgErrorAtTest;
+            log.errorDispAtControl = errorDispAtControl;
+            log.errorDispAtTest = errorDispAtTest;
+            log.avgOverLearning = avgOverLearning;
+            log.overLearningDisp = overLearningDisp;
+            log.errorOfAvgOverLearning = errorOfAvgOverLearning;
+
+            log.avgErrorAtControls = avgErrorAtControls.CloneOk<double[]>();
+            log.avgErrorAtTests = avgErrorAtTests.CloneOk<double[]>();
+            log.errorDispAtControls = errorDispAtControls.CloneOk<double[]>();
+            log.errorDispAtTests = errorDispAtTests.CloneOk<double[]>();
+            log.avgOverLearnings = avgOverLearnings.CloneOk<double[]>();
+            log.overLearningDisps = overLearningDisps.CloneOk<double[]>();
+
+            log.errorOfErrorAtControls = errorOfErrorAtControls.CloneOk<double[]>();
+            log.errorOfErrorAtTests = errorOfErrorAtTests.CloneOk<double[]>();
+            log.errorOfOverLearnings = errorOfOverLearnings.CloneOk<double[]>();
+
+            log.pOfHard = pOfHard;
+
+            log.rocs = rocs.CloneOk<ROC[]>();
+
+            log.AUC = AUC;
+            log.errorOfAUC = errorOfAUC;
+            return log;
         }
 
         public bool WriteLog(string name)
@@ -429,7 +498,7 @@ namespace AoA
                 t = Math.Sqrt(t) / info.Length;
                 writer.WriteLine("Средняя ошибка (на множестве обучения) для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgErrorAtTest, errorDispAtTest, t);
 
-                writer.WriteLine("Средняя переобученность для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgOverLearning, overLearningDisp, Statist.CalcError(info.Length, overLearningDisp, a));
+                writer.WriteLine("Средняя переобученность для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgOverLearning, overLearningDisp, errorOfAvgOverLearning);
                 writer.WriteLine();
                 for (int i = 0; i < errorDispAtControls.Length; i++)
                 {
@@ -439,15 +508,12 @@ namespace AoA
                     writer.WriteLine();
                 }
                 writer.WriteLine("Cписок трудных объектов (вбросов с точки зрения алгоритма):");
-                int count = 0;
 
                 for (int i = 0; i < info.Length; i++)
                     if (info[i].avgErrorControl-info[i].errorOfErrorControl >= Math.Sqrt(dem))
-                    {
                         writer.WriteLine(i);
-                        count++;
-                    }
-                writer.WriteLine("колличество трудных объектов: {0} - что составляет {1}% от общего числа.", count, (float)count/(testDate.Length+controlDate.Length)*100.0);
+
+                writer.WriteLine("колличество трудных объектов: {0} - что составляет {1}% от общего числа.", countOfHard, pOfHard * 100.0);
                 writer.WriteLine("Конец списка трудных объектв.");
                 writer.WriteLine("Средний порог найденный алгоритмом: {0} и его дисперсия {1}", avgThreshold, dispThreshold);
                 if (3 * Math.Sqrt(dispThreshold) >= avgThreshold+1.0) writer.WriteLine("!!! Порог для алгоритма неуслойчив");
@@ -466,29 +532,9 @@ namespace AoA
                 for (int i = 0; i < rocs.Length; i++)
                     writer.WriteLine(rocs[i].avgTPR);
 
-                t = 0.0;
+                writer.WriteLine("AUC: {0}", AUC);
 
-                for (int i = 1; i < rocs.Length-1; i++)
-                    t += rocs[i].avgTPR * (rocs[i+1].avgFPR - rocs[i - 1].avgFPR);
-
-                t += rocs[0].avgTPR * (rocs[1].avgFPR - rocs[0].avgFPR) + rocs[rocs.Length - 1].avgTPR * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length-2].avgFPR);
-                
-                t *= 0.5;
-                writer.WriteLine("AUC: {0}", t);
-
-
-
-                t = Statist.CalcQError(rocs[0].TPR.Count, rocs[0].dispTPR, a) * (rocs[1].avgFPR - rocs[0].avgFPR) * (rocs[1].avgFPR - rocs[0].avgFPR);
-                t += Statist.CalcQError(rocs[rocs.Length - 1].TPR.Count, rocs[rocs.Length - 1].dispTPR, a) * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length - 2].avgFPR) * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length - 2].avgFPR);
-                t += Statist.CalcQError(rocs[0].FPR.Count, rocs[0].dispFPR, a) * (rocs[1].avgTPR - rocs[0].avgTPR) * (rocs[1].avgTPR - rocs[0].avgTPR) + Statist.CalcQError(rocs[1].FPR.Count, rocs[1].dispFPR, a) * (rocs[2].avgTPR + rocs[0].avgTPR) * (rocs[2].avgTPR + rocs[0].avgTPR);
-                t += Statist.CalcQError(rocs[rocs.Length - 1].FPR.Count, rocs[rocs.Length - 1].dispFPR, a) * (rocs[rocs.Length - 2].avgTPR + rocs[rocs.Length - 1].avgTPR) * (rocs[rocs.Length - 2].avgTPR + rocs[rocs.Length - 1].avgTPR) + Statist.CalcQError(rocs[rocs.Length - 2].FPR.Count, rocs[rocs.Length - 2].dispFPR, a) * (rocs[rocs.Length - 3].avgTPR - rocs[rocs.Length - 1].avgTPR) * (rocs[rocs.Length - 3].avgTPR - rocs[rocs.Length - 1].avgTPR);
-                for (int i = 1; i < rocs.Length-1; i++)
-                    t += Statist.CalcQError(rocs[i].TPR.Count, rocs[i].dispTPR, a) * (rocs[i + 1].avgFPR - rocs[i - 1].avgFPR) * (rocs[i + 1].avgFPR - rocs[i - 1].avgFPR);
-
-                for (int i = 2; i < rocs.Length - 2; i++)
-                    t += Statist.CalcQError(rocs[i].FPR.Count, rocs[i].dispFPR, a) * (rocs[i - 1].avgTPR - rocs[i + 1].avgTPR) * (rocs[i - 1].avgTPR - rocs[i + 1].avgTPR);
-                t = 0.5 * Math.Sqrt(t);
-                writer.WriteLine("Ошибка AUC: {0}", t);
+                writer.WriteLine("Ошибка AUC: {0}", errorOfAUC);
 
                 writer.WriteLine("Конец отчета.");
                 writer.Close();
