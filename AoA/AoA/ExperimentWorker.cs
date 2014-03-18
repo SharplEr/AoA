@@ -1,7 +1,7 @@
 ﻿ using System;
 using VectorSpace;
 using MyParallel;
-using IODate;
+using IOData;
 
 namespace AoA
 {
@@ -96,7 +96,7 @@ namespace AoA
 
                 for (int k = 0; k < rocs.Length; k++)
                 {
-                    alg.ChangeThreshold(1.7159 * th);
+                    alg.ChangeThreshold(2.5 * th);
                     CalcedControl = alg.Calc(controlInput.CloneOk());
 
                     int fpr = 0, tpr = 0;

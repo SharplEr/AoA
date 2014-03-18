@@ -13,10 +13,13 @@ namespace AoARun
         object naming = new object();
         GenomeNetwork network;
         double r, tm;
-        public AGN(double rr, double tt)
+        int max;
+
+        public AGN(double rr, double tt, int mmax)
         {
             r = rr;
             tm = tt;
+            max = mmax;
             lock (naming)
             {
                 globalcount++;
@@ -62,8 +65,8 @@ namespace AoARun
             int[] counts = new int[] { count, resultDate.Length - count };
             network = new GenomeNetwork(r, tm);
             network.AddTestDate(pvsi.ToArray(), pvso.ToArray(), counts);
-            //network.NewLearn();
-            network.EarlyStoppingLearn(false);
+            network.NewLearn(false, max);
+            //network.EarlyStoppingLearn(false);
         }
 
         public override void ChangeThreshold(double th)

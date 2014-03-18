@@ -2,7 +2,7 @@
 using VectorSpace;
 using Araneam;
 using MyParallel;
-using IODate;
+using IOData;
 
 namespace GenomeNeuralNetwork
 {
@@ -34,7 +34,6 @@ namespace GenomeNeuralNetwork
             }
         }
 
-        DateReader Reader;
         //9-2
         public GenomeNetwork(double r, double t) : base(r, t, 3)
         {
@@ -49,33 +48,14 @@ namespace GenomeNeuralNetwork
             layers[2].CalcInvers(layers[1].WithThreshold);
         }
 
-        public bool Reload(string[] names)
-        {
-            if (names == null) return false;
-            if (names.Length == 0) return true;
-            try
-            {
-                DateAnalysis analysis = new DateAnalysis(names, TestTags, ResultTags, FenTags, (s) =>
-                {
-                    if (s[0] == "отрицат") return -1.0;
-                    else return 1.0;
-                }, ToDouble);
-
-                resultDate = analysis.ResultDate;
-                inputDate = analysis.TestDate;
-                convert = analysis.Convert;
-                Reader = analysis.Reader;
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public override LearnLog EarlyStoppingLearn(bool flag)
         {
             return base.EarlyStoppingLearn(flag);
+        }
+
+        public override LearnLog NewLearn(bool flag, int max)
+        {
+            return base.NewLearn(flag, max);
         }
 
         public override LearnLog FullLearn()
@@ -94,20 +74,6 @@ namespace GenomeNeuralNetwork
             for (int i = 0; i < ans.Length; i++)
                 ans[i] = new Vector(ResultTags.Length, (j) => { return ToDouble(reader[i, ResultTags[j]]); });
             return ans;
-        }
-
-        public Vector[] Calculation(String name)
-        {
-            Reader.Read(name);
-            Vector[] answer = new Vector[Reader.TestDate.Length];
-            
-            for (int i = 0; i < answer.Length; i++)
-            {
-
-                answer[i] = Calculation(Reader.TestDate[i]).CloneOk();
-            }
-
-            return answer;
         }
 
         public static double ToDouble(string s)

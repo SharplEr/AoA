@@ -61,9 +61,9 @@
       <Project>{46fc5442-371e-4cbb-8e3c-05aeef639b5c}</Project>
       <Name>Araneam</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Araneam\IODate\IODate\IODate.csproj">
+    <ProjectReference Include="..\Araneam\IODate\IODate\IOData.csproj">
       <Project>{8471fc16-ba93-417c-adbc-637139501cc8}</Project>
-      <Name>IODate</Name>
+      <Name>IOData</Name>
     </ProjectReference>
     <ProjectReference Include="..\Araneam\MyParallel\MyParallel\MyParallel.csproj">
       <Project>{458ccdbc-bf99-4b55-8044-926c317943a0}</Project>

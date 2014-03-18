@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Threading.Tasks;
-using IODate;
+using IOData;
 using VectorSpace;
 using System.Threading;
 using MyParallel;
@@ -24,7 +24,7 @@ namespace AoA
     {
         int[] testDate;
         int[] controlDate;
-        //Магическая константа, вывод содержится в пояснительной записке
+        //Число экспериментов (оптимальные значения 180-32000)
         const int m = 1000;
         //Какая часть пойдет на контрольное множество от всех данных
         const double part = 0.25;
@@ -374,7 +374,7 @@ namespace AoA
             for (int i = 0; i < info.Length; i++)
                 if (info[i].avgErrorControl - info[i].errorOfErrorControl >= Math.Sqrt(dem))
                     countOfHard++;
-            pOfHard = countOfHard / info.Length;
+            pOfHard = (double) countOfHard / info.Length;
 
             errorOfAvgOverLearning = Statist.CalcError(info.Length, overLearningDisp, a);
             //Для ROC кривых

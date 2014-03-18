@@ -1,4 +1,4 @@
-﻿using IODate;
+﻿using IOData;
 
 namespace AoA
 {
@@ -35,11 +35,11 @@ namespace AoA
         {
             double t = Statist.ExactDifference(log1.AUC, log1.errorOfAUC, log2.AUC, log2.errorOfAUC);
             if (t != 0.0) return t;
-            t = log1.pOfHard - log2.pOfHard;
+            t = log2.pOfHard - log1.pOfHard;
             if (t != 0.0) return t;
-            t = Statist.ExactDifference(log1.avgErrorAtControl, log1.errorOfAvgErrorAtControl, log2.avgErrorAtControl, log2.errorOfAvgErrorAtControl);
+            t = Statist.ExactDifference(log2.avgErrorAtControl, log2.errorOfAvgErrorAtControl, log1.avgErrorAtControl, log1.errorOfAvgErrorAtControl);
             if (t != 0.0) return t;
-            t = Statist.ExactDifference(log1.avgOverLearning, log1.errorOfAvgOverLearning, log2.avgOverLearning, log2.errorOfAvgOverLearning);
+            t = Statist.ExactDifference(log2.avgOverLearning, log2.errorOfAvgOverLearning, log1.avgOverLearning, log1.errorOfAvgOverLearning);
             if (t != 0.0) return t;
 
             return 0.0;
