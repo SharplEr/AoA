@@ -17,9 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestVector", "..\Aranea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestNetwork", "..\Araneam\Araneam\UnitTestNetwork\UnitTestNetwork.csproj", "{B441FE24-C224-4C72-8B3B-8DF0BE97A3CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOData", "..\Araneam\IODate\IODate\IOData.csproj", "{8471FC16-BA93-417C-ADBC-637139501CC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOData", "..\Araneam\IOData\IOData\IOData.csproj", "{8471FC16-BA93-417C-ADBC-637139501CC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestIODate", "..\Araneam\IODate\UnitTestIODate\UnitTestIODate.csproj", "{52C608BD-51E9-4016-ADE5-004A6DE681C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestIOData", "..\Araneam\IOData\UnitTestIOData\UnitTestIOData.csproj", "{52C608BD-51E9-4016-ADE5-004A6DE681C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenomeNeuralNetwork", "..\GenomeNeuralNetwork\GenomeNeuralNetwork.csproj", "{8ED3C145-B2F8-45BB-80F9-0411E2347322}"
 EndProject
