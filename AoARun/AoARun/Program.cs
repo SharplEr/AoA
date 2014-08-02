@@ -11,6 +11,7 @@ namespace AoARun
     {
         static void Main(string[] args)
         {
+            /*
             var data = DataFile.getСontinuous(
                 new string[] { @"..\..\..\Data\data_1.csv", @"..\..\..\Data\data_2.csv" }
                 , GenomeNetwork.TestTags, GenomeNetwork.ResultTags, GenomeNetwork.FenTags,
@@ -19,22 +20,30 @@ namespace AoARun
 
             Vector[] input = data.Item1;
             Vector[] output = data.Item2;
+            */
 
-            /*
-            Experiments experiment = new Experiments(input.Length, () => new AGN(0.19, 4750, 31));
-            experiment.Run(input, output, (x) => { Console.WriteLine("Завершено {0}%", x * 100); });
+            FullData data = new FullData(new string[] { @"..\..\..\Data\data_1.csv", @"..\..\..\Data\data_2.csv" },
+                GenomeNetwork.TestTags,
+                GenomeNetwork.ResultTags[0],
+                GenomeNetwork.FenTags,
+                GenomeNetwork.ToDouble);
+
+            Experiments experiment = new Experiments(data.Length, () => new AGN(0.1, 5500, 49));
+            experiment.Run(data, (x) => { Console.WriteLine("Завершено {0}%", x * 100); });
             if (experiment.WriteLog(@"log.txt")) Console.WriteLine("Отчет сформирован");
             else Console.WriteLine("Не удалось");
-            */ 
+
             
+            /*
             CVlog max = default(CVlog);
-            //int mmax = -1;
             
             bool flag = true;
             List<Tuple<double, double, int>> cools = new List<Tuple<double, double, int>>();
-            for (double r = 0.1; r <= 0.5; r+=0.1 )
-                for (double tm = 1000; tm <= 6000; tm += 1000)
-                    for (int m = 30; m <= 40; m+=1)
+            //for (double r = 0.01; r <= 0.31; r+=0.1 )
+            double r = 0.1;
+            double tm = 5500;
+                //for (double tm = 5000; tm <= 6000; tm += 500)
+                    for (int m = 48; m <= 70; m+=1)
                     {
                         Experiments experiment = new Experiments(input.Length, () => new AGN(r, tm, m));
 
@@ -46,7 +55,6 @@ namespace AoARun
                         if (flag)
                         {
                             max = t;
-                            //mmax = m;
                             cools.Add(new Tuple<double, double, int>(r, tm, m));
                             flag = false;
                         }
@@ -74,7 +82,7 @@ namespace AoARun
             Console.WriteLine("Список хороших:");
             foreach (Tuple<double, double, int> tuple in cools)
                 Console.WriteLine("r={0}; t = {1}; m = {2}", tuple.Item1, tuple.Item2, tuple.Item3);
-
+            */
             Console.ReadKey();
         }
     }

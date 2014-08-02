@@ -8,6 +8,7 @@ using IOData;
 using VectorSpace;
 using System.Threading;
 using MyParallel;
+using ArrayHelper;
 
 namespace AoA
 {
@@ -29,7 +30,7 @@ namespace AoA
         //Какая часть пойдет на контрольное множество от всех данных
         const double part = 0.25;
         //Точек для ROC кривых
-        const int ROCn = 100;
+        const int ROCn = 150;
         //Инициализируем константой для того что бы результат вычислений был повторим
         Random r = new Random(271828314);
         //обёртка вокруг оцениваемого алгоритма
@@ -37,7 +38,7 @@ namespace AoA
         //информация о том, какова была величина ошибки для каждого элемента, когда он был в контрольном и когда в тестовом множества
         public Info[] info;
         //Размерность множества ответов
-        public int dem;
+        //public int dem; data.output.max
 
         Func<Algorithm> getAlgorithm;
 
@@ -73,11 +74,11 @@ namespace AoA
 
         int countOfHard;
         public double pOfHard;
-        SpaceInfo pinfo, ninfo;
+        //SpaceInfo pinfo, ninfo; // Не уверен в необходимости
         #endregion
 
-        Vector[] dateIn;
-        Vector[] dateOut;
+        //Vector[] dateIn;
+        //Vector[] dateOut;
 
         public Experiments(int n, Func<Algorithm> getAlg)
         {
@@ -94,9 +95,10 @@ namespace AoA
                 testDate[i]=i;
             }
 
-            for (int i = 0; i < k; i++)
+            //Мне кажется или тут надо от n-k до n, не? что за нах, поцаны?
+            for (int i = n - k; i < n; i++)
             {
-                controlDate[i] = i;
+                controlDate[i-n+k] = i;
             }
         }
 
@@ -115,6 +117,7 @@ namespace AoA
             }
         }
 
+        /*
         /// <summary>
         /// Запуск тестирования
         /// </summary>
@@ -163,15 +166,15 @@ namespace AoA
             while (i < m)
             {
                 Next();
-                Vector[] li = new Vector[testDate.Length];
-                Vector[] lo = new Vector[testDate.Length];
+                //Vector[] li = new Vector[testDate.Length];
+                //Vector[] lo = new Vector[testDate.Length];
                 Vector[] ci = new Vector[controlDate.Length];
                 Vector[] co = new Vector[controlDate.Length];
-                for (int j = 0; j < testDate.Length; j++)
-                {
-                    li[j] = dateIn[testDate[j]];
-                    lo[j] = dateOut[testDate[j]];
-                }
+                //for (int j = 0; j < testDate.Length; j++)
+                //{
+                //    li[j] = dateIn[testDate[j]];
+                //    lo[j] = dateOut[testDate[j]];
+                //}
 
                 for (int j = 0; j < controlDate.Length; j++)
                 {
@@ -203,8 +206,137 @@ namespace AoA
             foundThreshold = worker.foundThreshold;
             worker.Dispose();
             return CalcTotalInfo();
+        }*/
+
+        FullData data;
+
+        /// <summary>
+        /// Запуск тестирования
+        /// </summary>
+        /// <param name="di">Входные данные</param>
+        /// <param name="doo">Соответствующие им выходные "ожидаемые" значения</param>
+        public CVlog Run(FullData d, Action<double> f)
+        {
+            int i;
+            data = d;
+
+            if (data == null) throw new ArgumentNullException();
+
+            for (i = 0; i < info.Length; i++)
+                info[i].nClass = data.Output[i].Number;
+
+            i = 0;
+
+            int[][] allLearnDate = new int[m][];
+            int[][] allControlDate = new int[m][];
+
+            while (i < m)
+            {
+                Next();
+
+                SigmentData tempdata = new SigmentData(data, controlDate);
+
+                if (tempdata.GetResults().Equable>1.5) continue;
+                allLearnDate[i] = testDate.CloneOk<int[]>();
+                allControlDate[i] = controlDate.CloneOk<int[]>();
+                i++;
+            }
+
+            worker = new ExperimentWorker(Environment.ProcessorCount, m, info, f);
+            worker.Run(data, getAlgorithm, allLearnDate, allControlDate, ROCn);
+
+            //info = worker.info;//Странная команда, а нахуя она тут?
+            rocs = worker.rocs;
+            foundThreshold = worker.foundThreshold;
+            worker.Dispose();
+            return CalcTotalInfo();
         }
 
+        /*
+        public CVlog Run(Vector[] di, Vector[] doo, Action<double> f, double[] rating)
+        {
+            int i;
+            dateIn = di;
+            dateOut = doo;
+
+            if ((dateIn == null) || (dateIn.Length == 0) || (dateOut == null) || (dateOut.Length == 0)) throw new ArgumentNullException();
+
+            dem = dateOut[0].Length;
+
+            for (i = 0; i < info.Length; i++)
+            {
+                int ncl = 0;
+                int p = 1;
+                for (int j = 0; j < dem; j++)
+                {
+                    ncl += p * (int)((dateOut[i][j] + 1.0) / 2.0);
+                    p *= 2;
+                }
+                info[i].nClass = ncl;
+            }
+
+            //Статистическая информация по исходным данным
+            List<Vector> plv = new List<Vector>();
+            List<Vector> nlv = new List<Vector>();
+            for (i = 0; i < info.Length; i++)
+                if (info[i].nClass == 0) nlv.Add(dateIn[i]);
+                else plv.Add(dateIn[i]);
+
+            Vector[] pv = plv.ToArray();
+            Vector[] nv = nlv.ToArray();
+            pinfo = new SpaceInfo(pv);
+            ninfo = new SpaceInfo(nv);
+            //
+
+            i = 0;
+
+            int[][] allLearnDate = new int[m][];
+            int[][] allControlDate = new int[m][];
+
+            while (i < m)
+            {
+                Next();
+                Vector[] li = new Vector[testDate.Length];
+                Vector[] lo = new Vector[testDate.Length];
+                Vector[] ci = new Vector[controlDate.Length];
+                Vector[] co = new Vector[controlDate.Length];
+                for (int j = 0; j < testDate.Length; j++)
+                {
+                    li[j] = dateIn[testDate[j]];
+                    lo[j] = dateOut[testDate[j]];
+                }
+
+                for (int j = 0; j < controlDate.Length; j++)
+                {
+                    ci[j] = dateIn[controlDate[j]];
+                    co[j] = dateOut[controlDate[j]];
+                }
+
+                int ncount = 0, pcount = 0;
+
+                for (int j = 0; j < controlDate.Length; j++)
+                {
+                    if (co[j][0] < 0)
+                        ncount++;
+                    else
+                        pcount++;
+                }
+
+                if ((double)Math.Max(pcount, ncount) / Math.Min(pcount, ncount) > 1.5) continue;
+                allLearnDate[i] = testDate.CloneOk<int[]>();
+                allControlDate[i] = controlDate.CloneOk<int[]>();
+                i++;
+            }
+
+            worker = new ExperimentWorker(Environment.ProcessorCount, m, info, f);
+            worker.Run(dateIn, dateOut, getAlgorithm, allLearnDate, allControlDate, ROCn, rating);
+
+            info = worker.info;
+            rocs = worker.rocs;
+            foundThreshold = worker.foundThreshold;
+            worker.Dispose();
+            return CalcTotalInfo();
+        }*/
         CVlog CalcTotalInfo()
         {
             double a = 0.95;
@@ -293,7 +425,7 @@ namespace AoA
 
             dispThreshold /= m - 1;
 
-            int nnn = Statist.Power(2, dem);
+            int nnn = data.Output.MaxNumber;
 
             //Для отдельных классов
             avgErrorAtControls = new double[nnn];
@@ -315,7 +447,7 @@ namespace AoA
 
                 errorOfErrorAtControls[i] = 0.0;
                 errorOfErrorAtTests[i] = 0.0;
-
+                
                 int l = 0;
 
                 for (int j = 0; j < info.Length; j++)
@@ -371,8 +503,9 @@ namespace AoA
 
             countOfHard = 0;
 
+            //Раньше тут было >=1 но теперь вроде как надо писать так, хуй знает точно
             for (int i = 0; i < info.Length; i++)
-                if (info[i].avgErrorControl - info[i].errorOfErrorControl >= Math.Sqrt(dem))
+                if (info[i].avgErrorControl - info[i].errorOfErrorControl >= 0.5)
                     countOfHard++;
             pOfHard = (double) countOfHard / info.Length;
 
@@ -475,6 +608,7 @@ namespace AoA
                 double t;
                 writer = new StreamWriter(name, false);
                 //writer.WriteLine("Отчет об экспериментах над алгоритмом \"{0}\":", algorithm.name);
+                /*
                 writer.WriteLine("Информация об исходных данных:");
                 writer.WriteLine("Расстояние между центрами: {0}", Math.Sqrt((double)(ninfo.Center-pinfo.Center)));
                 writer.WriteLine("Отрицательные примеры:");
@@ -485,6 +619,7 @@ namespace AoA
                 writer.WriteLine("Центр: " + pinfo.Center.ToString());
                 writer.WriteLine("Максимальное расстояние от центра: {0}", pinfo.MaxDistanceOfCenter);
                 writer.WriteLine("Среднее расстояние от центра: {0}", pinfo.AvgDistanceOfCenter);
+                */
 
                 t = 0.0;
                 for (int i = 0; i < info.Length; i++)
@@ -510,7 +645,7 @@ namespace AoA
                 writer.WriteLine("Cписок трудных объектов (вбросов с точки зрения алгоритма):");
 
                 for (int i = 0; i < info.Length; i++)
-                    if (info[i].avgErrorControl-info[i].errorOfErrorControl >= Math.Sqrt(dem))
+                    if (info[i].avgErrorControl-info[i].errorOfErrorControl >= 0.5)
                         writer.WriteLine(i);
 
                 writer.WriteLine("колличество трудных объектов: {0} - что составляет {1}% от общего числа.", countOfHard, pOfHard * 100.0);

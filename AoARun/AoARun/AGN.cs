@@ -4,6 +4,7 @@ using VectorSpace;
 using AoA;
 using Araneam;
 using GenomeNeuralNetwork;
+using IOData;
 
 namespace AoARun
 {
@@ -14,6 +15,8 @@ namespace AoARun
         GenomeNetwork network;
         double r, tm;
         int max;
+
+        double threshold = 0;
 
         public AGN(double rr, double tt, int mmax)
         {
@@ -27,15 +30,30 @@ namespace AoARun
             }
         }
 
-        public override Vector[] Calc(Vector[] date)
+        public override Results Calc(SigmentInputData data)
         {
             if (network == null) throw new NullReferenceException("Сперва должно пройти обучение");
 
-            return network.Calculation(date);
-        }
+            Vector[] ans = network.Calculation(data.GetСontinuousArray());
 
-        public override void Learn(Vector[] inputDate, Vector[] resultDate)
+            
+            Vector m = new Vector(2);
+            m[0] = threshold * 0.5;
+            m[1] = -threshold * 0.5;
+
+            for (int i = 0; i < ans.Length; i++)
+                ans[i].Addication(m);
+            return new Results((i) => new Result(ans[i]), ans.Length);
+             
+            //return new Results((i) => new Result((ans[i][0]-ans[i][1]+threshold)>0?0:1, 2), ans.Length);
+        }
+        
+        public override void Learn(SigmentData data)
         {
+            threshold = 0;
+            Vector[] inputDate = data.GetСontinuousArray();
+            Vector[] resultDate = data.GetResults().ToSpectrums();
+
             if (network != null) network.Dispose();
 
             List<Vector> pvso = new List<Vector>();
@@ -69,18 +87,25 @@ namespace AoARun
             //network.EarlyStoppingLearn(false);
         }
 
+        //трешолд делается иначе, он существует вне сети и по умолчанию равен 0.5
         public override void ChangeThreshold(double th)
         {
+            threshold = 1.7159*2.0*th;
+            /*
             NeuronLayer[] nls = network.getLayers();
             Neuron n = nls[nls.Length - 1].neuros[nls[nls.Length - 1].neuros.Length - 1];
             n.weight[n.Length - 1]  = th / n.synapse[n.Length - 1];
+             */ 
         }
 
         public override double GetThreshold()
         {
+            return threshold;
+            /*
             NeuronLayer[] nls = network.getLayers();
             Neuron n = nls[nls.Length - 1].neuros[nls[nls.Length - 1].neuros.Length - 1];
             return n.weight[n.Length-1]*n.synapse[n.Length-1];
+             */ 
         }
 
         public override void Dispose()

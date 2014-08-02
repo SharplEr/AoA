@@ -2,13 +2,13 @@
 using VectorSpace;
 using MyParallel;
 using IOData;
+using ArrayHelper;
 
 namespace AoA
 {
     class ExperimentWorker : ParallelWorkerWithProgress
     {
-        Vector[] dateIn;
-        Vector[] dateOut;
+        FullData data;
         Func<Algorithm> getAlgorithms;
 
         int[][] learnDate;
@@ -27,10 +27,9 @@ namespace AoA
             foundThreshold = new double[nn];
         }
 
-        public void Run(Vector[] di, Vector[] doo, Func<Algorithm> algs, int[][] dl, int[][] dc, int ROCn)
+        public void Run(FullData fd, Func<Algorithm> algs, int[][] dl, int[][] dc, int ROCn)
         {
-            dateIn = di;
-            dateOut = doo;
+            data = fd;
             getAlgorithms = algs;
             learnDate = dl;
             controlDate = dc;
@@ -49,71 +48,42 @@ namespace AoA
             }
             for (int i = start; i < finish; i++)
             {
-                Vector[] learnInput = new Vector[learnDate[i].Length];
-                Vector[] learnOutput = new Vector[learnDate[i].Length];
-                Vector[] controlInput = new Vector[controlDate[i].Length];
-                Vector[] controlOutput = new Vector[controlDate[i].Length];
-                for (int j = 0; j < learnDate[i].Length; j++)
-                {
-                    learnInput[j] = dateIn[learnDate[i][j]];
-                    learnOutput[j] = dateOut[learnDate[i][j]];
-                }
+                SigmentData learnSigmentData = new SigmentData(data, learnDate[i]);
+                SigmentData controlSigmentData = new SigmentData(data, controlDate[i]);
 
-                for (int j = 0; j < controlDate[i].Length; j++)
-                {
-                    controlInput[j] = dateIn[controlDate[i][j]];
-                    controlOutput[j] = dateOut[controlDate[i][j]];
-                }
-
-                int ncount = 0, pcount = 0;
-
-                for (int j = 0; j < controlDate[i].Length; j++)
-                {
-                    if (controlOutput[j][0] < 0)
-                        ncount++;
-                    else
-                        pcount++;
-                }
-
-                alg.Learn(learnInput.CloneOk(), learnOutput.CloneOk());
+                alg.Learn(learnSigmentData);
 
                 foundThreshold[i] = alg.GetThreshold();
 
-                Vector[] CalcedLearn = alg.Calc(learnInput.CloneOk());
+                Results CalcedLearn = alg.Calc(learnSigmentData);
 
-                for (int j = 0; j < learnDate[i].Length; j++)
-                {
-                    info[learnDate[i][j]].errorLearn.Add(Math.Sqrt((double)(learnOutput[j] - CalcedLearn[j])));
-                }
+                Results CalcedControl = alg.Calc(controlSigmentData);
 
-                Vector[] CalcedControl = alg.Calc(controlInput.CloneOk());
-                for (int j = 0; j < controlDate[i].Length; j++)
-                {
-                    info[controlDate[i][j]].errorControl.Add(Math.Sqrt((double)(controlOutput[j] - CalcedControl[j])));
-                }
+                learnSigmentData.AddLearnError(CalcedLearn, info);
+                controlSigmentData.AddControlError(CalcedControl, info);
 
                 double th = -1;
 
                 for (int k = 0; k < rocs.Length; k++)
                 {
-                    alg.ChangeThreshold(2.5 * th);
-                    CalcedControl = alg.Calc(controlInput.CloneOk());
+                    alg.ChangeThreshold(th);
+                    CalcedControl = alg.Calc(controlSigmentData);
 
                     int fpr = 0, tpr = 0;
-                    for (int j = 0; j < controlDate[i].Length; j++)
+                    for (int j = 0; j < controlSigmentData.Length; j++)
                     {
-                        if (controlOutput[j][0] < 0)
+                        if (controlSigmentData.GetResults()[j].Number == 1)
                         {
-                            if (CalcedControl[j][0] > 0) fpr++;
+                            if (CalcedControl[j].Number == 0) fpr++;
                         }
                         else
                         {
-                            if (CalcedControl[j][0] > 0) tpr++;
+                            if (CalcedControl[j].Number == 0) tpr++;
                         }
                     }
 
-                    rocs[k].FPR.Add((double)fpr / ncount);
-                    rocs[k].TPR.Add((double)tpr / pcount);
+                    rocs[k].FPR.Add((double)fpr / controlSigmentData.GetResults().Counts[1]);
+                    rocs[k].TPR.Add((double)tpr / controlSigmentData.GetResults().Counts[0]);
 
                     th += 2.0 / rocs.Length;
                 }

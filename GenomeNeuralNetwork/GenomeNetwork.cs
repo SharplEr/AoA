@@ -41,7 +41,7 @@ namespace GenomeNeuralNetwork
             layers[0].NormalInitialize();
             layers[1] = new NeuronLayer(2, 9 + 1, true, 1, "tanh", a, b);
             layers[1].NormalInitialize();
-            layers[2] = new NeuronLayer(ResultTags.Length, 2 + 1, false, 1, "tanh", a, b);
+            layers[2] = new NeuronLayer(2, 2 + 1, false, 1, "tanh", a, b);
             layers[2].NormalInitialize();
 
             layers[1].CalcInvers(layers[0].WithThreshold);

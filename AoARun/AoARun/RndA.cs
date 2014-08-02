@@ -1,9 +1,11 @@
 ﻿using System;
 using AoA;
 using VectorSpace;
+using IOData;
 
 namespace AoARun
 {
+    /*
     public class RndA : Algorithm
     {
         Random r = new Random(1578943);
@@ -13,19 +15,14 @@ namespace AoARun
         double th = 0.0;
         int dem;
 
-        public override Vector[] Calc(Vector[] date)
+        public override Vector Calc(Vector date)
         {
-            Vector[] ans = new Vector[date.Length];
-
-            for (int i = 0; i < ans.Length; i++)
-                ans[i] = new Vector(dem).SetRandom(-1 + th, 1 + th);
-
-            return ans;
+            return new Vector(dem).SetRandom(-1 + th, 1 + th);
         }
 
-        public override void Learn(Vector[] inputDate, Vector[] resultDate)
+        public override void Learn(SigmentData data)
         {
-            dem = resultDate[0].Length;
+            dem = data.Dimension;
         }
 
         public override double GetThreshold()
@@ -37,5 +34,5 @@ namespace AoARun
         {
             th = t;
         }
-    }
+    }*/
 }

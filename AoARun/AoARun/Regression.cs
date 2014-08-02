@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VectorSpace;
 using AoA;
-using MyParallel;
 using Araneam;
 using GenomeNeuralNetwork;
+using IOData;
 
 namespace AoARun
 {
+    /*
     public class Regression: Algorithm
     {
         reg network;
@@ -22,15 +19,18 @@ namespace AoARun
             name = "Линейная регрессия";
         }
 
-        public override Vector[] Calc(Vector[] date)
+        public override Vector Calc(Vector date)
         {
             if (network == null) throw new NullReferenceException("Сперва должно пройти обучение");
 
             return network.Calculation(date);
         }
 
-        public override void Learn(Vector[] inputDate, Vector[] resultDate)
+        public override void Learn(SigmentData data)
         {
+            Vector[] inputDate = data.GetСontinuousArray();
+            Vector[] resultDate = data.GetResults().ToSpectrums();
+
             if (network != null) network.Dispose();
 
             int count=0;
@@ -62,6 +62,7 @@ namespace AoARun
 
             int [] counts = new int[]{count, resultDate.Length-count};
             */
+    /*
             network = new reg(r, tm, 1, GenomeNetwork.TestTags.Length + 1, "no");
             for(int j = 0; j<500; j++)
             for(int i = 0; i<inputDate.Length; i++)
@@ -96,5 +97,5 @@ namespace AoARun
                 return layers;
             }
         }
-    }
+    }*/
 }
