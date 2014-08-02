@@ -33,12 +33,9 @@ namespace AoA
         const int ROCn = 150;
         //Инициализируем константой для того что бы результат вычислений был повторим
         Random r = new Random(271828314);
-        //обёртка вокруг оцениваемого алгоритма
-        //public Algorithm algorithm;
+        
         //информация о том, какова была величина ошибки для каждого элемента, когда он был в контрольном и когда в тестовом множества
         public Info[] info;
-        //Размерность множества ответов
-        //public int dem; data.output.max
 
         Func<Algorithm> getAlgorithm;
 
@@ -77,9 +74,6 @@ namespace AoA
         //SpaceInfo pinfo, ninfo; // Не уверен в необходимости
         #endregion
 
-        //Vector[] dateIn;
-        //Vector[] dateOut;
-
         public Experiments(int n, Func<Algorithm> getAlg)
         {
             getAlgorithm = getAlg;
@@ -95,7 +89,6 @@ namespace AoA
                 testDate[i]=i;
             }
 
-            //Мне кажется или тут надо от n-k до n, не? что за нах, поцаны?
             for (int i = n - k; i < n; i++)
             {
                 controlDate[i-n+k] = i;
@@ -213,8 +206,7 @@ namespace AoA
         /// <summary>
         /// Запуск тестирования
         /// </summary>
-        /// <param name="di">Входные данные</param>
-        /// <param name="doo">Соответствующие им выходные "ожидаемые" значения</param>
+        /// <param name="FullData">Данные</param>
         public CVlog Run(FullData d, Action<double> f)
         {
             int i;
@@ -245,7 +237,6 @@ namespace AoA
             worker = new ExperimentWorker(Environment.ProcessorCount, m, info, f);
             worker.Run(data, getAlgorithm, allLearnDate, allControlDate, ROCn);
 
-            //info = worker.info;//Странная команда, а нахуя она тут?
             rocs = worker.rocs;
             foundThreshold = worker.foundThreshold;
             worker.Dispose();
@@ -503,7 +494,7 @@ namespace AoA
 
             countOfHard = 0;
 
-            //Раньше тут было >=1 но теперь вроде как надо писать так, хуй знает точно
+            //Раньше тут было >=1 но теперь вроде как надо писать так
             for (int i = 0; i < info.Length; i++)
                 if (info[i].avgErrorControl - info[i].errorOfErrorControl >= 0.5)
                     countOfHard++;

@@ -22,8 +22,7 @@ namespace AoA
         /// <summary>
         /// Метод проводит полное обучение данного алгоритма на входных данных
         /// </summary>
-        /// <param name="inputDate">Входные данные обучения</param>
-        /// <param name="resultDate">Ожидаемые ответы</param>
+        /// <param name="data">Данные обучения</param>
         public abstract void Learn(SigmentData data);
 
         public virtual void Learn(SigmentData data, double[] rating)
@@ -32,20 +31,6 @@ namespace AoA
         }
 
         public abstract Results Calc(SigmentInputData date);
-
-        /*
-        /// <summary>
-        /// Обработка данных
-        /// </summary>
-        /// <param name="date">Входные данные</param>
-        /// <returns>Результат обработки</returns>
-        public virtual Results Calc(SigmentInputData data)
-        {
-            Vector[] ans = new Vector[data.Length];
-            for (int i = 0; i < ans.Length; i++)
-                ans[i] = Calc(data[i]);
-            return ans;
-        }*/
 
         /// <summary>
         /// Метод варьирующий порог для алгоритма
@@ -57,8 +42,14 @@ namespace AoA
         /// Метод возвращающий текущий порог выбранный алгоритмом
         /// </summary>
         /// <returns></returns>
-        public abstract double GetThreshold();
+        public virtual double GetThreshold()
+        {
+            return 0.0;
+        }
 
+        /// <summary>
+        /// Высвобождение ресурсов
+        /// </summary>
         public virtual void Dispose()
         { }
     }

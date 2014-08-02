@@ -11,17 +11,6 @@ namespace AoARun
     {
         static void Main(string[] args)
         {
-            /*
-            var data = DataFile.getСontinuous(
-                new string[] { @"..\..\..\Data\data_1.csv", @"..\..\..\Data\data_2.csv" }
-                , GenomeNetwork.TestTags, GenomeNetwork.ResultTags, GenomeNetwork.FenTags,
-                GenomeNetwork.ToDouble, (x)=>x[0]
-                );
-
-            Vector[] input = data.Item1;
-            Vector[] output = data.Item2;
-            */
-
             FullData data = new FullData(new string[] { @"..\..\..\Data\data_1.csv", @"..\..\..\Data\data_2.csv" },
                 GenomeNetwork.TestTags,
                 GenomeNetwork.ResultTags[0],

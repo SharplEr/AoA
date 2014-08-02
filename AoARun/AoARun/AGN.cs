@@ -36,7 +36,6 @@ namespace AoARun
 
             Vector[] ans = network.Calculation(data.GetСontinuousArray());
 
-            
             Vector m = new Vector(2);
             m[0] = threshold * 0.5;
             m[1] = -threshold * 0.5;
@@ -44,8 +43,6 @@ namespace AoARun
             for (int i = 0; i < ans.Length; i++)
                 ans[i].Addication(m);
             return new Results((i) => new Result(ans[i]), ans.Length);
-             
-            //return new Results((i) => new Result((ans[i][0]-ans[i][1]+threshold)>0?0:1, 2), ans.Length);
         }
         
         public override void Learn(SigmentData data)
@@ -77,9 +74,7 @@ namespace AoARun
             int count = pvso.Count;
             pvso.AddRange(nvso);
             pvsi.AddRange(nvsi);
-            //resultDate = pvso.ToArray();
-            //inputDate = pvsi.ToArray();
-
+ 
             int[] counts = new int[] { count, resultDate.Length - count };
             network = new GenomeNetwork(r, tm);
             network.AddTestDate(pvsi.ToArray(), pvso.ToArray(), counts);
@@ -87,25 +82,9 @@ namespace AoARun
             //network.EarlyStoppingLearn(false);
         }
 
-        //трешолд делается иначе, он существует вне сети и по умолчанию равен 0.5
         public override void ChangeThreshold(double th)
         {
             threshold = 1.7159*2.0*th;
-            /*
-            NeuronLayer[] nls = network.getLayers();
-            Neuron n = nls[nls.Length - 1].neuros[nls[nls.Length - 1].neuros.Length - 1];
-            n.weight[n.Length - 1]  = th / n.synapse[n.Length - 1];
-             */ 
-        }
-
-        public override double GetThreshold()
-        {
-            return threshold;
-            /*
-            NeuronLayer[] nls = network.getLayers();
-            Neuron n = nls[nls.Length - 1].neuros[nls[nls.Length - 1].neuros.Length - 1];
-            return n.weight[n.Length-1]*n.synapse[n.Length-1];
-             */ 
         }
 
         public override void Dispose()
