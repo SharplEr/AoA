@@ -49,7 +49,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ROC.cs" />
     <Compile Include="SigmentData.cs" />
-    <Compile Include="SigmentInputData.cs" />
     <Compile Include="SpaceInfo.cs" />
     <Compile Include="Triple.cs" />
   </ItemGroup>
