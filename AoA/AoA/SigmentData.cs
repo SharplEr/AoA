@@ -14,9 +14,15 @@ namespace AoA
     {   
         public SigmentData(FullData d, int[] ind): base(d, ind) {}
 
+        Results results = null;
+        Object resultslock = new Object();
+
         public Results GetResults()
         {
-            return new Results((i) => data.Output[indexer[i]], Length);
+            lock (resultslock)
+                if (results == null) results = new Results((i) => data.Output[indexer[i]], Length);
+
+            return results;
         }
 
         public void AddControlError(Results rs, Info[] info)
