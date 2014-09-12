@@ -11,32 +11,41 @@ using System.Collections.Concurrent;
 namespace AoA
 {
     public class SigmentData: SigmentInputData
-    {   
-        public SigmentData(FullData d, int[] ind): base(d, ind) {}
-
-        Results results = null;
-        Object resultslock = new Object();
+    {
+        protected int[] indexer;
+        public SigmentData(FullData d, int[] ind)
+            : base(d, ind)
+        {
+            indexer = ind;
+        }
 
         public Results GetResults()
         {
-            lock (resultslock)
-                if (results == null) results = new Results((i) => data.Output[indexer[i]], Length);
 
-            return results;
+            return data.Output;
         }
 
         public void AddControlError(Results rs, Info[] info)
         {
-            for (int i = 0; i < indexer.Length; i++)
-                if (rs[i] == data.Output[indexer[i]]) info[indexer[i]].errorControl.Add(0);
+            if (indexer.Length != Length) throw new ArgumentOutOfRangeException();
+
+            for (int i = 0; i < Length; i++)
+                if (rs[i] == data.Output[i]) info[indexer[i]].errorControl.Add(0);
                 else info[indexer[i]].errorControl.Add(1);
         }
 
         public void AddLearnError(Results rs, Info[] info)
         {
+            if (indexer.Length != Length) throw new ArgumentOutOfRangeException();
+
             for (int i = 0; i < indexer.Length; i++)
-                if (rs[i] == data.Output[indexer[i]]) info[indexer[i]].errorLearn.Add(0);
+                if (rs[i] == data.Output[i]) info[indexer[i]].errorLearn.Add(0);
                 else info[indexer[i]].errorLearn.Add(1);
+        }
+
+        public int[] getMaxDiscretePath()
+        {
+            return data.maxdiscretePart;
         }
     }
 }

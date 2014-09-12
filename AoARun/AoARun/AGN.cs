@@ -16,13 +16,17 @@ namespace AoARun
         double r, tm;
         int max;
 
+        int one, two;
+
         double threshold = 0;
 
-        public AGN(double rr, double tt, int mmax)
+        public AGN(double rr, double tt, int mmax, int one,int two)
         {
             r = rr;
             tm = tt;
             max = mmax;
+            this.one = one;
+            this.two = two;
             lock (naming)
             {
                 globalcount++;
@@ -37,11 +41,18 @@ namespace AoARun
             Vector[] ans = network.Calculation(data.GetСontinuousArray());
 
             Vector m = new Vector(2);
+            /*
             m[0] = threshold * 0.5;
             m[1] = -threshold * 0.5;
+            */
 
             for (int i = 0; i < ans.Length; i++)
+            {
+                m[0] = (Math.Sign(threshold) - ans[i][0]) * Math.Abs(threshold);
+                m[1] = (-Math.Sign(threshold) - ans[i][1]) * Math.Abs(threshold);
+
                 ans[i].Addication(m);
+            }
             return new Results((i) => new Result(ans[i]), ans.Length);
         }
         
@@ -76,15 +87,17 @@ namespace AoARun
             pvsi.AddRange(nvsi);
  
             int[] counts = new int[] { count, resultDate.Length - count };
-            network = new GenomeNetwork(r, tm);
+            network = new GenomeNetwork(r, tm, one, two);
             network.AddTestDate(pvsi.ToArray(), pvso.ToArray(), counts);
             network.NewLearn(false, max);
             //network.EarlyStoppingLearn(false);
+            //if (network.haveNaN()) throw new ArithmeticException("Была ошибка в вычислениях");
         }
 
         public override void ChangeThreshold(double th)
         {
-            threshold = 1.7159*2.0*th;
+            //threshold = 1.7159*2.0*th;
+            threshold = th;
         }
 
         public override void Dispose()

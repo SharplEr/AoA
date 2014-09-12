@@ -13,9 +13,8 @@ namespace GenomeNeuralNetwork
             "FV", "FII", "AGTR", "AGT_174", "AGT_235", "PAI1", "MTHFR", "ACE", "NOS", "APOE", 
             "LPL+73in6", "LPL+82in6", "LPL_HindIII", "LPL_S447X", "LIPC(-514)", "LIPCV155V", 
             "CETP_taq", "CETP_I405V"};
-        public readonly static string[] FenTags = new string[] {"Возраст", 
-            "Ожирение", "Курение", "Алкоголь"};
-        public readonly static string[] GenTags = new string[] {"FV", "FII", "AGTR", "AGT_174", "AGT_235", "PAI1", "MTHFR", "ACE", "NOS", "APOE", 
+        public readonly static string[] FenTags = new string[] {"Возраст"};
+        public readonly static string[] GenTags = new string[] {"Ожирение", "Курение", "Алкоголь", "FV", "FII", "AGTR", "AGT_174", "AGT_235", "PAI1", "MTHFR", "ACE", "NOS", "APOE", 
             "LPL+73in6", "LPL+82in6", "LPL_HindIII", "LPL_S447X", "LIPC(-514)", "LIPCV155V", 
             "CETP_taq", "CETP_I405V"};
         public readonly static string[] ResultTags = new string[]{
@@ -35,13 +34,21 @@ namespace GenomeNeuralNetwork
         }
 
         //9-2
-        public GenomeNetwork(double r, double t) : base(r, t, 3)
+        public GenomeNetwork(double r, double t, int one, int two) : base(r, t, 3)
         {
-            layers[0] = new NeuronLayer(9, TestTags.Length + 1, true, 1, "tanh", a, b);
+            /*
+            layers[0] = new NeuronLayer(one, TestTags.Length + 1, true, 1, "tanh", a, b);
             layers[0].NormalInitialize();
-            layers[1] = new NeuronLayer(2, 9 + 1, true, 1, "tanh", a, b);
+            layers[1] = new NeuronLayer(2, one + 1, false, 1, "tanh", a, b);
             layers[1].NormalInitialize();
-            layers[2] = new NeuronLayer(2, 2 + 1, false, 1, "tanh", a, b);
+
+            layers[1].CalcInvers(layers[0].WithThreshold);*/
+            
+            layers[0] = new NeuronLayer(one, TestTags.Length + 1, true, 1, "tanh", a/2, b);
+            layers[0].NormalInitialize();
+            layers[1] = new NeuronLayer(two, one + 1, true, 1, "tanh", a, b);
+            layers[1].NormalInitialize();
+            layers[2] = new NeuronLayer(2, two + 1, false, 1, "tanh", a, b);
             layers[2].NormalInitialize();
 
             layers[1].CalcInvers(layers[0].WithThreshold);

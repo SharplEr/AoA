@@ -2,7 +2,6 @@
 М,30,Контроль,отрицат,русский,0,0,0,GG,GG,AA,CT,CT,44,CT,DD,GT,33,GT,GG,AC,CC,AA,CA,AG,AA
 М,46,Контроль,отрицат,русский,0,2,2,GG,GG,AA,CT,CT,44,CC,DD,TT,33,TT,GG,AA,CC,GG,CC,AG,GG
 М,60,Контроль,отрицат,русский,0,2,2,GG,GG,AC,CC,CC,45,CT,ID,GT,33,TT,GG,AA,CC,AA,AA,GG,AG
-М,55,Контроль,отрицат,русский,1,-,0,GG,GG,AA,CC,TT,55,CT,ID,GG,23,TT,GG,AC,GC,GG,CA,AA,AA
 М,54,Контроль,отрицат,русский,0,0,0,GG,GG,AC,CC,CC,44,CT,II,GT,34,TT,GG,CC,GC,GG,CC,AA,AA
 М,60,Контроль,отрицат,русский,0,0,0,GG,GG,AA,CC,CC,55,TT,ID,GT,34,TT,GT,AA,CC,GG,AA,GG,AA
 М,54,Контроль,отрицат,русский,0,0,0,GG,GG,AA,CC,CT,45,CT,ID,GT,33,TT,GG,AA,CC,GG,CA,AG,AG
@@ -19,7 +18,6 @@
 М,61,Контроль,отрицат,русский,0,2,0,GG,GG,AA,CC,TT,44,CT,II,GG,33,TT,GT,AA,CC,AG,CA,GG,AG
 М,60,Контроль,отрицат,русский,2,0,2,GG,AG,AA,CT,CT,44,CT,ID,GG,33,GG,GG,CC,GG,AG,CA,AG,AA
 М,40,Контроль,отрицат,русский,0,0,0,GG,GG,AA,CT,CT,44,CC,DD,GG,33,TT,GG,AC,CC,AG,CC,GG,AA
-М,40,Контроль,отрицат,русский,2,-,-,GG,GG,AC,CC,CT,55,CC,II,GG,33,TT,GT,AA,CC,GG,AA,GG,AG
 М,48,Контроль,отрицат,русский,0,1,0,GG,GG,CC,CC,CT,45,CC,ID,GG,33,TT,GT,AA,CC,GG,CA,AG,AA
 М,44,Контроль,отрицат,русский,1,0,0,GG,GG,AC,TT,CC,44,CC,DD,GG,34,TT,GG,CC,CC,GG,AA,AG,AA
 М,46,Контроль,отрицат,русский,0,2,2,GG,GG,AA,CT,CT,44,CC,DD,TT,33,TT,GG,AA,CC,GG,CC,AG,GG

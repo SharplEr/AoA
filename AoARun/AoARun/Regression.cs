@@ -94,7 +94,7 @@ namespace AoARun
             public reg(double r, double t, int n, int m, string name, params Double[] p) : base(r, t, n, m, name, p) { }
             public NeuronLayer[] getLayers()
             {
-                return layers;
+                return RLayers;
             }
         }
     }*/

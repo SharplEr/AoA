@@ -26,7 +26,7 @@ namespace AoA
         int[] testDate;
         int[] controlDate;
         //Число экспериментов (оптимальные значения 180-32000)
-        int m = 1000;
+        const int m = 50;
         //Какая часть пойдет на контрольное множество от всех данных
         const double part = 0.25;
         //Точек для ROC кривых
@@ -39,6 +39,8 @@ namespace AoA
 
         Func<Algorithm> getAlgorithm;
 
+        ExperimentWorker worker;
+
         #region Информация для отчета
         public double avgErrorAtControl;
         double avgErrorAtTest;
@@ -48,7 +50,7 @@ namespace AoA
         double avgOverLearning;
         double overLearningDisp;
         double errorOfAvgOverLearning;
-        double[] foundThreshold;
+        double[] foundThreshold = new double[m];
         double avgThreshold;
         double dispThreshold;
 
@@ -72,36 +74,25 @@ namespace AoA
         //SpaceInfo pinfo, ninfo; // Не уверен в необходимости
         #endregion
 
-        public Experiments(Func<Algorithm> getAlg, int mmm)
+        public Experiments(int n, Func<Algorithm> getAlg)
         {
-            m = mmm;
-            foundThreshold = new double[m];
             getAlgorithm = getAlg;
-            
-        }
-
-        public Experiments(Func<Algorithm> getAlg)
-        {
-            foundThreshold = new double[m];
-            getAlgorithm = getAlg;
-            /*
             info = new Info[n];
             info.done();
 
-            int k = (int)Math.Round(n * part);
-            learnDate = new int[n - k];
+            int k = (int)Math.Round(n*part);
+            testDate = new int[n - k];
             controlDate = new int[k];
 
-            for (int i = 0; i < n - k; i++)
+            for (int i = 0; i < n-k; i++)
             {
-                learnDate[i] = i;
+                testDate[i]=i;
             }
 
             for (int i = n - k; i < n; i++)
             {
-                controlDate[i - n + k] = i;
+                controlDate[i-n+k] = i;
             }
-             */
         }
 
         /// <summary>
@@ -168,14 +159,14 @@ namespace AoA
             while (i < m)
             {
                 Next();
-                //Vector[] li = new Vector[learnDate.Length];
-                //Vector[] lo = new Vector[learnDate.Length];
+                //Vector[] li = new Vector[testDate.Length];
+                //Vector[] lo = new Vector[testDate.Length];
                 Vector[] ci = new Vector[controlDate.Length];
                 Vector[] co = new Vector[controlDate.Length];
-                //for (int j = 0; j < learnDate.Length; j++)
+                //for (int j = 0; j < testDate.Length; j++)
                 //{
-                //    li[j] = dateIn[learnDate[j]];
-                //    lo[j] = dateOut[learnDate[j]];
+                //    li[j] = dateIn[testDate[j]];
+                //    lo[j] = dateOut[testDate[j]];
                 //}
 
                 for (int j = 0; j < controlDate.Length; j++)
@@ -195,7 +186,7 @@ namespace AoA
                 }
 
                 if ((double)Math.Max(pcount, ncount) / Math.Min(pcount, ncount) > 1.5) continue;
-                allTestDate[i] = learnDate.CloneOk<int[]>();
+                allTestDate[i] = testDate.CloneOk<int[]>();
                 allControlDate[i] = controlDate.CloneOk<int[]>();
                 i++;
             }
@@ -221,23 +212,6 @@ namespace AoA
             int i;
             data = d;
 
-            info = new Info[data.Length];
-            info.done();
-
-            int k = (int)Math.Round(data.Length * part);
-            testDate = new int[data.Length - k];
-            controlDate = new int[k];
-
-            for (i = 0; i < data.Length - k; i++)
-            {
-                testDate[i] = i;
-            }
-
-            for (i = data.Length - k; i < data.Length; i++)
-            {
-                controlDate[i - data.Length + k] = i;
-            }
-
             if (data == null) throw new ArgumentNullException();
 
             for (i = 0; i < info.Length; i++)
@@ -260,43 +234,8 @@ namespace AoA
                 i++;
             }
 
-            ExperimentWorkerOld worker;
-
-            #if DEBUG
-            worker = new ExperimentWorkerOld(1/*Environment.ProcessorCount*/, m, info, f);
-            #else
-            worker = new ExperimentWorkerOld(Environment.ProcessorCount, m, info, f);
-            #endif
-
+            worker = new ExperimentWorker(/*1*/Environment.ProcessorCount, m, info, f);
             worker.Run(data, getAlgorithm, allLearnDate, allControlDate, ROCn);
-
-            rocs = worker.rocs;
-            foundThreshold = worker.foundThreshold;
-            worker.Dispose();
-            return CalcTotalInfo();
-        }
-
-        public CVlog Run(FullData d, Action<double> f, SigmentData[] learnDate, SigmentData[] controlDate)
-        {
-            int i;
-            data = d;
-
-            info = new Info[data.Length];
-            info.done();
-
-            if (data == null) throw new ArgumentNullException();
-
-            for (i = 0; i < info.Length; i++)
-                info[i].nClass = data.Output[i].Number;
-
-            ExperimentWorker worker;
-            #if DEBUG
-            worker = new ExperimentWorker(1/*Environment.ProcessorCount*/, m, info, f);
-            #else
-            worker = new ExperimentWorker(Environment.ProcessorCount, m, info, f);
-            #endif
-
-            worker.Run(data, getAlgorithm, learnDate, controlDate, ROCn);
 
             rocs = worker.rocs;
             foundThreshold = worker.foundThreshold;
@@ -348,14 +287,14 @@ namespace AoA
             while (i < m)
             {
                 Next();
-                Vector[] li = new Vector[learnDate.Length];
-                Vector[] lo = new Vector[learnDate.Length];
+                Vector[] li = new Vector[testDate.Length];
+                Vector[] lo = new Vector[testDate.Length];
                 Vector[] ci = new Vector[controlDate.Length];
                 Vector[] co = new Vector[controlDate.Length];
-                for (int j = 0; j < learnDate.Length; j++)
+                for (int j = 0; j < testDate.Length; j++)
                 {
-                    li[j] = dateIn[learnDate[j]];
-                    lo[j] = dateOut[learnDate[j]];
+                    li[j] = dateIn[testDate[j]];
+                    lo[j] = dateOut[testDate[j]];
                 }
 
                 for (int j = 0; j < controlDate.Length; j++)
@@ -375,7 +314,7 @@ namespace AoA
                 }
 
                 if ((double)Math.Max(pcount, ncount) / Math.Min(pcount, ncount) > 1.5) continue;
-                allLearnDate[i] = learnDate.CloneOk<int[]>();
+                allLearnDate[i] = testDate.CloneOk<int[]>();
                 allControlDate[i] = controlDate.CloneOk<int[]>();
                 i++;
             }
@@ -694,23 +633,13 @@ namespace AoA
                     writer.WriteLine("Средняя переобученность для класса {2}: {0}. Дисперсия: {1}. Отклонение: {3}", avgOverLearnings[i], overLearningDisps[i], i, errorOfOverLearnings[i]);
                     writer.WriteLine();
                 }
-                writer.WriteLine("Cписок трудных объектов (вбросов с точки зрения алгоритма) оценка с низу:");
+                writer.WriteLine("Cписок трудных объектов (вбросов с точки зрения алгоритма):");
 
                 for (int i = 0; i < info.Length; i++)
                     if (info[i].avgErrorControl-info[i].errorOfErrorControl >= 0.5)
                         writer.WriteLine(i);
 
                 writer.WriteLine("колличество трудных объектов: {0} - что составляет {1}% от общего числа.", countOfHard, pOfHard * 100.0);
-
-                writer.WriteLine("Cписок трудных объектов (вбросов с точки зрения алгоритма) оценка с верху:");
-
-
-                for (int i = 0; i < info.Length; i++)
-                    if (info[i].avgErrorControl + info[i].errorOfErrorControl >= 0.5)
-                        writer.WriteLine(i);
-
-                //writer.WriteLine("колличество трудных объектов: {0} - что составляет {1}% от общего числа.", countOfHard, pOfHard * 100.0);
-
                 writer.WriteLine("Конец списка трудных объектв.");
                 writer.WriteLine("Средний порог найденный алгоритмом: {0} и его дисперсия {1}", avgThreshold, dispThreshold);
                 if (3 * Math.Sqrt(dispThreshold) >= avgThreshold+1.0) writer.WriteLine("!!! Порог для алгоритма неуслойчив");

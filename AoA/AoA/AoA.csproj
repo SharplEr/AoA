@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,13 +42,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CVlog.cs" />
+    <Compile Include="DataManager.cs" />
     <Compile Include="Experiments.cs" />
     <Compile Include="Algorithm.cs" />
     <Compile Include="ExperimentWorker.cs" />
+    <Compile Include="ExperimentWorkerOld.cs" />
     <Compile Include="Info.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ROC.cs" />
     <Compile Include="SigmentData.cs" />
+    <Compile Include="SigmentInputData.cs" />
     <Compile Include="SpaceInfo.cs" />
     <Compile Include="Triple.cs" />
   </ItemGroup>
