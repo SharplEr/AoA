@@ -39,9 +39,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnnealingFinder.cs" />
+    <Compile Include="AnnealingJump.cs" />
     <Compile Include="Finder.cs" />
+    <Compile Include="FinderCustom.cs" />
+    <Compile Include="IGoStart.cs" />
+    <Compile Include="IDontStop.cs" />
+    <Compile Include="IJump.cs" />
+    <Compile Include="INeighborhood.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomNeighborhood.cs" />
+    <Compile Include="RandomStart.cs" />
+    <Compile Include="SmartStoper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
