@@ -12,6 +12,7 @@ namespace Metaheuristics
     public abstract class AnnealingFinder:FinderCustom
     {
         Random random = new Random();
+
         AnnealingFinder(Parameter[] p, int m): base(p)
         {
             starter = new RandomStart(random, p);
@@ -20,11 +21,9 @@ namespace Metaheuristics
                 () => stepWithoutBest,
                 m
                 );
-
             jumper = new AnnealingJump(random,
                 () => 1.0 / step
                 );
-
             neighbor = new RandomNeighborhood(random, p);
         }
     }

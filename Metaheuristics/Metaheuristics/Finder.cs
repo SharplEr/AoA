@@ -66,7 +66,7 @@ namespace Metaheuristics
             return stepWithoutBest < 10;
         }
 
-        public virtual int[] Find()
+        protected virtual int[] FindRaw()
         {
             GoStart();
 
@@ -76,7 +76,12 @@ namespace Metaheuristics
                 step++;
             }
 
-            return position;
+            return bestPosition;
+        }
+
+        public virtual object[] Find()
+        {
+            return Convert(FindRaw());
         }
 
         /// <summary>
@@ -87,17 +92,22 @@ namespace Metaheuristics
         //Реализация должна знать какой object что значит и как его юзать
         protected abstract double Quality(object[] x);
 
-        /// <summary>
-        /// Полезность точки x
-        /// </summary>
-        protected double Quality(int[] x)
+        protected object[] Convert(int[] x)
         {
             object[] y = new object[x.Length];
 
             for (int i = 0; i < x.Length; i++)
                 y[i] = parameters[i].convert(x[i]);
 
-            return Quality(y);
+            return y;
+        }
+
+        /// <summary>
+        /// Полезность точки x
+        /// </summary>
+        protected double Quality(int[] x)
+        {
+            return Quality(Convert(x));
         }
 
         /// <summary>
