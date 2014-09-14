@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System;
 
 namespace AoA
 {
@@ -6,6 +7,7 @@ namespace AoA
     /// <summary>
     /// Одна точка для рок кривой
     /// </summary>
+    [Serializable]
     public class ROC
     {
         public BlockingCollection<double> FPR = new BlockingCollection<double>();

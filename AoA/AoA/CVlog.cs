@@ -1,9 +1,14 @@
 ﻿using IOData;
+using System;
+using System.IO;
 
 namespace AoA
 {
+    [Serializable]
     public struct CVlog
     {
+        public string name;
+
         public double avgErrorAtControl;
         public double errorOfAvgErrorAtControl;
         public double avgErrorAtTest;
@@ -45,5 +50,17 @@ namespace AoA
             return 0.0;
         }
 
+        public bool Save(Stream s)
+        {
+            try
+            {
+                //Don't work
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

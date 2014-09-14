@@ -70,38 +70,29 @@ namespace AoA
         int countOfHard;
         public double pOfHard;
         //SpaceInfo pinfo, ninfo; // Не уверен в необходимости
+
+        string name = null;
         #endregion
+
+        public Experiments(Func<Algorithm> getAlg, int mmm, string AlgName)
+        {
+            m = mmm;
+            foundThreshold = new double[m];
+            getAlgorithm = getAlg;
+            name = AlgName;
+        }
 
         public Experiments(Func<Algorithm> getAlg, int mmm)
         {
             m = mmm;
             foundThreshold = new double[m];
             getAlgorithm = getAlg;
-            
         }
 
         public Experiments(Func<Algorithm> getAlg)
         {
             foundThreshold = new double[m];
             getAlgorithm = getAlg;
-            /*
-            info = new Info[n];
-            info.done();
-
-            int k = (int)Math.Round(n * part);
-            learnDate = new int[n - k];
-            controlDate = new int[k];
-
-            for (int i = 0; i < n - k; i++)
-            {
-                learnDate[i] = i;
-            }
-
-            for (int i = n - k; i < n; i++)
-            {
-                controlDate[i - n + k] = i;
-            }
-             */
         }
 
         /// <summary>
@@ -647,6 +638,7 @@ namespace AoA
 
             log.AUC = AUC;
             log.errorOfAUC = errorOfAUC;
+            log.name = name;
             return log;
         }
 
