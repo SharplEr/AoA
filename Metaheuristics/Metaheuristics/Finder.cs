@@ -9,12 +9,12 @@ namespace Metaheuristics
     /// <summary>
     /// Базовый класс для одного метаэвристического агента
     /// </summary>
-    public abstract class Finder
+    public abstract class Finder<T> where T : IQuality<T>
     {
         protected Parameter[] parameters;
         protected int[] position;
         protected int[] bestPosition;
-        protected double bestResult;
+        protected T bestResult;
 
         protected int step;
         protected int stepWithoutBest;
@@ -42,14 +42,14 @@ namespace Metaheuristics
         {
             int[] newPosition = Neighborhood(position);
 
-            double x = Quality(position);
-            double y = Quality(newPosition);
+            T x = Quality(position);
+            T y = Quality(newPosition);
 
             if (Jump(x, y))
                 position = newPosition;
 
             //Мало ли не во всех алгоритмах будет переход к лучшему решению. Может иногда будет создатьваться другой Finder для того что бы там посмотреть
-            if (y > bestResult)
+            if (y.CompareTo(bestResult)>0)
             {
                 bestPosition = (int[])newPosition.Clone();
                 bestResult = y;
@@ -89,8 +89,11 @@ namespace Metaheuristics
         /// </summary>
         protected abstract int[] Neighborhood(int[] x);
 
+        //Сука нееет, надо сравнивать две точки. супер хуята. 
+        //Quality -- должен возвращать I
+        
         //Реализация должна знать какой object что значит и как его юзать
-        protected abstract double Quality(object[] x);
+        protected abstract T Quality(object[] x);
 
         protected object[] Convert(int[] x)
         {
@@ -105,7 +108,7 @@ namespace Metaheuristics
         /// <summary>
         /// Полезность точки x
         /// </summary>
-        protected double Quality(int[] x)
+        protected T Quality(int[] x)
         {
             return Quality(Convert(x));
         }
@@ -113,11 +116,11 @@ namespace Metaheuristics
         /// <summary>
         /// Совершать ли переход?
         /// </summary>
-        protected virtual bool Jump(double x, double y)
+        protected virtual bool Jump(T x, T y)
         {
             //По умолчанию выбираем лучший
-            if (y >= x) return true;
-            else return false;
+            if (y.CompareTo(x) < 0) return false;
+            else return true;
         }
     }
 }

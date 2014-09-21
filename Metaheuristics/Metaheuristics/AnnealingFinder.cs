@@ -9,7 +9,7 @@ namespace Metaheuristics
     /// <summary>
     /// Поиск алгоритмом имитации отжига
     /// </summary>
-    public abstract class AnnealingFinder:FinderCustom
+    public abstract class AnnealingFinder<T> : FinderCustom<T> where T : IQuality<T>
     {
         Random random = new Random();
 
@@ -21,7 +21,7 @@ namespace Metaheuristics
                 () => stepWithoutBest,
                 m
                 );
-            jumper = new AnnealingJump(random,
+            jumper = new AnnealingJump<T>(random,
                 () => 1.0 / step
                 );
             neighbor = new RandomNeighborhood(random, p);

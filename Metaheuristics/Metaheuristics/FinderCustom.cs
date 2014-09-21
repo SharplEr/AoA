@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Metaheuristics
 {
-    public abstract class FinderCustom: Finder
+    public abstract class FinderCustom<T> : Finder<T> where T : IQuality<T>
     {
         protected IGoStart starter;
         protected IDontStop stoper;
-        protected IJump jumper;
+        protected IJump<T> jumper;
         protected INeighborhood neighbor;
 
         public FinderCustom(Parameter[] p): base(p)
@@ -32,7 +32,7 @@ namespace Metaheuristics
             return stoper.DontStop();
         }
 
-        protected override bool Jump(double x, double y)
+        protected override bool Jump(T x, T y)
         {
             return jumper.Jump(x, y);
         }

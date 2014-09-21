@@ -43,6 +43,7 @@
     <Compile Include="AnnealingJump.cs" />
     <Compile Include="Finder.cs" />
     <Compile Include="FinderCustom.cs" />
+    <Compile Include="IQuality.cs" />
     <Compile Include="IGoStart.cs" />
     <Compile Include="IDontStop.cs" />
     <Compile Include="IJump.cs" />

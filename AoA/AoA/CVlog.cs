@@ -1,11 +1,12 @@
 ﻿using IOData;
 using System;
 using System.IO;
+using Metaheuristics;
 
 namespace AoA
 {
     [Serializable]
-    public struct CVlog
+    public struct CVlog : IQuality<CVlog>
     {
         public string name;
 
@@ -45,6 +46,19 @@ namespace AoA
             t = Statist.ExactDifference(log2.avgErrorAtControl, log2.errorOfAvgErrorAtControl, log1.avgErrorAtControl, log1.errorOfAvgErrorAtControl);
             if (t != 0.0) return t;
             t = Statist.ExactDifference(log2.avgOverLearning, log2.errorOfAvgOverLearning, log1.avgOverLearning, log1.errorOfAvgOverLearning);
+            if (t != 0.0) return t;
+
+            return 0.0;
+        }
+
+        public double CompareTo(CVlog log2)
+        {
+            double t = Statist.ExactDifference(AUC, errorOfAUC, log2.AUC, log2.errorOfAUC);
+            if (t != 0.0) return t;
+
+            t = Statist.ExactDifference(log2.avgErrorAtControl, log2.errorOfAvgErrorAtControl, avgErrorAtControl, errorOfAvgErrorAtControl);
+            if (t != 0.0) return t;
+            t = Statist.ExactDifference(log2.avgOverLearning, log2.errorOfAvgOverLearning, avgOverLearning, errorOfAvgOverLearning);
             if (t != 0.0) return t;
 
             return 0.0;

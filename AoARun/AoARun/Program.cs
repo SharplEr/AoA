@@ -5,6 +5,7 @@ using VectorSpace;
 using AoA;
 using GenomeNeuralNetwork;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace AoARun
 {
@@ -12,7 +13,6 @@ namespace AoARun
     {
         static void Main(string[] args)
         {
-            
             FullData data = new FullData(new string[] { @"..\..\..\Data\data_1.csv", @"..\..\..\Data\data_2.csv" },
                 GenomeNetwork.TestTags,
                 GenomeNetwork.ResultTags[0],
@@ -29,13 +29,16 @@ namespace AoARun
             //21,30,11-0,641+0,005
             //35-24-9-0,664-лучшее, при 0.1, 5500
             //
-            
-            Experiments experiment = new Experiments(() => new AGN(0.21, 500, 29, 24, 9));
+            const int mmm = 1000;
+            Experiments experiment = new Experiments(() => new AGN(0.21, 500, 29, 24, 9), mmm);
             //Experiments experiment = new Experiments(() => new AGRNN(3,1, 2, 2));
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             experiment.Run(data, (x) => { Console.WriteLine("Завершено {0}%", x * 100); });
+            sw.Stop();
             if (experiment.WriteLog(@"log.txt")) Console.WriteLine("Отчет сформирован");
             else Console.WriteLine("Не удалось");
-   
+            Console.WriteLine("Время: {0} (мс/обучение)", (double)sw.ElapsedMilliseconds/mmm);
             /*
             CVlog max = default(CVlog);
             

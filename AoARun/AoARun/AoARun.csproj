@@ -84,6 +84,10 @@
       <Project>{8ed3c145-b2f8-45bb-80f9-0411e2347322}</Project>
       <Name>GenomeNeuralNetwork</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Metaheuristics\Metaheuristics\Metaheuristics.csproj">
+      <Project>{6a5b5aed-b183-429e-9657-c10c25cf7e96}</Project>
+      <Name>Metaheuristics</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

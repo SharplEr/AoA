@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Metaheuristics
 {
-    public interface IJump<T> where T : IQuality<T>
+    public interface IQuality<T> where T : IQuality<T>
     {
-        bool Jump(T x, T y);
+        double CompareTo(T o);
     }
 }
