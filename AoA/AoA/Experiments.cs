@@ -91,7 +91,7 @@ namespace AoA
 
         public Experiments(Func<Algorithm> getAlg)
         {
-            foundThreshold = new double[m];
+            //foundThreshold = new double[m];
             getAlgorithm = getAlg;
         }
 
@@ -110,97 +110,6 @@ namespace AoA
             }
         }
 
-        /*
-        /// <summary>
-        /// Запуск тестирования
-        /// </summary>
-        /// <param name="di">Входные данные</param>
-        /// <param name="doo">Соответствующие им выходные "ожидаемые" значения</param>
-        public CVlog Run(Vector[] di, Vector[] doo, Action<double> f)
-        {
-            int i;
-            dateIn = di;
-            dateOut = doo;
-
-            if ((dateIn == null) || (dateIn.Length == 0) || (dateOut == null) || (dateOut.Length == 0)) throw new ArgumentNullException();
-
-            dem = dateOut[0].Length;
-            
-            for (i = 0; i < info.Length; i++)
-            {
-                int ncl = 0;
-                int p = 1;
-                for (int j = 0; j < dem; j++)
-                {
-                    ncl += p * (int)((dateOut[i][j] + 1.0) / 2.0);
-                    p *= 2;
-                }
-                info[i].nClass = ncl;
-            }
-
-            //Статистическая информация по исходным данным
-            List<Vector> plv = new List<Vector>();
-            List<Vector> nlv = new List<Vector>();
-            for (i = 0; i < info.Length; i++)
-                if (info[i].nClass == 0) nlv.Add(dateIn[i]);
-                else plv.Add(dateIn[i]);
-
-            Vector[] pv = plv.ToArray();
-            Vector[] nv = nlv.ToArray();
-            pinfo = new SpaceInfo(pv);
-            ninfo = new SpaceInfo(nv);
-            //
-
-            i = 0;
-
-            int[][] allTestDate = new int[m][];
-            int[][] allControlDate = new int[m][];
-
-            while (i < m)
-            {
-                Next();
-                //Vector[] li = new Vector[learnDate.Length];
-                //Vector[] lo = new Vector[learnDate.Length];
-                Vector[] ci = new Vector[controlDate.Length];
-                Vector[] co = new Vector[controlDate.Length];
-                //for (int j = 0; j < learnDate.Length; j++)
-                //{
-                //    li[j] = dateIn[learnDate[j]];
-                //    lo[j] = dateOut[learnDate[j]];
-                //}
-
-                for (int j = 0; j < controlDate.Length; j++)
-                {
-                    ci[j] = dateIn[controlDate[j]];
-                    co[j] = dateOut[controlDate[j]];
-                }
-
-                int ncount = 0, pcount = 0;
-
-                for (int j = 0; j < controlDate.Length; j++)
-                {
-                    if (co[j][0] < 0)
-                        ncount++;
-                    else
-                        pcount++;
-                }
-
-                if ((double)Math.Max(pcount, ncount) / Math.Min(pcount, ncount) > 1.5) continue;
-                allTestDate[i] = learnDate.CloneOk<int[]>();
-                allControlDate[i] = controlDate.CloneOk<int[]>();
-                i++;
-            }
-            
-            worker = new ExperimentWorker(Environment.ProcessorCount, m, info, f);
-            worker.Run(dateIn, dateOut, getAlgorithm, allTestDate, allControlDate, ROCn);
-
-            info = worker.info;
-            rocs = worker.rocs;
-            foundThreshold = worker.foundThreshold;
-            worker.Dispose();
-            return CalcTotalInfo();
-        }*/
-
         FullData data;
 
         /// <summary>
@@ -209,6 +118,7 @@ namespace AoA
         /// <param name="FullData">Данные</param>
         public CVlog Run(FullData d, Action<double> f)
         {
+            if(foundThreshold==null) foundThreshold = new double[m];
             int i;
             data = d;
 
@@ -269,9 +179,10 @@ namespace AoA
 
         public CVlog Run(FullData d, Action<double> f, SigmentData[] learnDate, SigmentData[] controlDate)
         {
+            m = learnDate.Length;
+            if (foundThreshold==null )foundThreshold = new double[m];
             int i;
             data = d;
-
             info = new Info[data.Length];
             info.done();
 
@@ -282,9 +193,9 @@ namespace AoA
 
             ExperimentWorker worker;
             #if DEBUG
-            worker = new ExperimentWorker(1/*Environment.ProcessorCount*/, m, info, f);
+            worker = new ExperimentWorker(1/*Environment.ProcessorCount*/, learnDate.Length, info, f);
             #else
-            worker = new ExperimentWorker(Environment.ProcessorCount, m, info, f);
+            worker = new ExperimentWorker(Environment.ProcessorCount, learnDate.Length, info, f);
             #endif
 
             worker.Run(data, getAlgorithm, learnDate, controlDate, ROCn);
@@ -295,91 +206,6 @@ namespace AoA
             return CalcTotalInfo();
         }
 
-        /*
-        public CVlog Run(Vector[] di, Vector[] doo, Action<double> f, double[] rating)
-        {
-            int i;
-            dateIn = di;
-            dateOut = doo;
-
-            if ((dateIn == null) || (dateIn.Length == 0) || (dateOut == null) || (dateOut.Length == 0)) throw new ArgumentNullException();
-
-            dem = dateOut[0].Length;
-
-            for (i = 0; i < info.Length; i++)
-            {
-                int ncl = 0;
-                int p = 1;
-                for (int j = 0; j < dem; j++)
-                {
-                    ncl += p * (int)((dateOut[i][j] + 1.0) / 2.0);
-                    p *= 2;
-                }
-                info[i].nClass = ncl;
-            }
-
-            //Статистическая информация по исходным данным
-            List<Vector> plv = new List<Vector>();
-            List<Vector> nlv = new List<Vector>();
-            for (i = 0; i < info.Length; i++)
-                if (info[i].nClass == 0) nlv.Add(dateIn[i]);
-                else plv.Add(dateIn[i]);
-
-            Vector[] pv = plv.ToArray();
-            Vector[] nv = nlv.ToArray();
-            pinfo = new SpaceInfo(pv);
-            ninfo = new SpaceInfo(nv);
-            //
-
-            i = 0;
-
-            int[][] allLearnDate = new int[m][];
-            int[][] allControlDate = new int[m][];
-
-            while (i < m)
-            {
-                Next();
-                Vector[] li = new Vector[learnDate.Length];
-                Vector[] lo = new Vector[learnDate.Length];
-                Vector[] ci = new Vector[controlDate.Length];
-                Vector[] co = new Vector[controlDate.Length];
-                for (int j = 0; j < learnDate.Length; j++)
-                {
-                    li[j] = dateIn[learnDate[j]];
-                    lo[j] = dateOut[learnDate[j]];
-                }
-
-                for (int j = 0; j < controlDate.Length; j++)
-                {
-                    ci[j] = dateIn[controlDate[j]];
-                    co[j] = dateOut[controlDate[j]];
-                }
-
-                int ncount = 0, pcount = 0;
-
-                for (int j = 0; j < controlDate.Length; j++)
-                {
-                    if (co[j][0] < 0)
-                        ncount++;
-                    else
-                        pcount++;
-                }
-
-                if ((double)Math.Max(pcount, ncount) / Math.Min(pcount, ncount) > 1.5) continue;
-                allLearnDate[i] = learnDate.CloneOk<int[]>();
-                allControlDate[i] = controlDate.CloneOk<int[]>();
-                i++;
-            }
-
-            worker = new ExperimentWorker(Environment.ProcessorCount, m, info, f);
-            worker.Run(dateIn, dateOut, getAlgorithm, allLearnDate, allControlDate, ROCn, rating);
-
-            info = worker.info;
-            rocs = worker.rocs;
-            foundThreshold = worker.foundThreshold;
-            worker.Dispose();
-            return CalcTotalInfo();
-        }*/
         CVlog CalcTotalInfo()
         {
             double a = 0.95;

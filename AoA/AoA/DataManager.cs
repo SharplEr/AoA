@@ -8,15 +8,24 @@ using VectorSpace;
 
 namespace AoA
 {
+    /// <summary>
+    /// Набор методов для перемешивания данных
+    /// </summary>
     public class DataManager
     {
-        public static Tuple<SigmentData[], SigmentData[]> getShuffleFrom(FullData data, int m, double part)
+        /// <summary>
+        /// Возвращает перемешиваные данные, разбитые на контрольную выборку и на обучающую
+        /// </summary>
+        /// <param name="data">Данные</param>
+        /// <param name="m">Число перестановок</param>
+        /// <param name="part">Доля идущая на контроль</param>
+        public static Tuple<SigmentData[], SigmentData[]> getShuffleFrom(FullData data, int m, double part, Random r)
         {
             //Первый пусть будет обучением, а второй контрольный
             Tuple<SigmentData[], SigmentData[]> ans = new Tuple<SigmentData[], SigmentData[]>(new SigmentData[m], new SigmentData[m]);
 
             int k = (int)Math.Round(data.Length * part);
-
+            if (k < 1) k = 1;
             int[] learnDate = new int[data.Length - k];
             int[] controlDate = new int[k];
 
@@ -32,8 +41,6 @@ namespace AoA
 
             int j = 0;
 
-            Random r = new Random(271828314);
-
             while (j < m)
             {
                 int l, t;
@@ -45,26 +52,25 @@ namespace AoA
                     learnDate[l] = t;
                 }
 
-                SigmentData tempdata = new SigmentData(data, controlDate);
+                ans.Item2[j] = new SigmentData(data, (int[])controlDate.Clone());
 
                 //Не самый лучший способ исключить плохие разбиения.
-                if (tempdata.GetResults().Equable > 1.5) continue;
+                if (ans.Item2[j].GetResults().Equable > 1.5) continue;
 
-                ans.Item2[j] = tempdata;
-                ans.Item1[j] = new SigmentData(data, learnDate);
-
+                ans.Item1[j] = new SigmentData(data, (int[])learnDate.Clone());
                 j++;
             }
 
             return ans;
         }
 
+        //Возможно эта функция не понадобится. В конце концов слишком уж много будет.
         public static Tuple<SigmentData[], SigmentData[]>[] getShuffleFrom(FullData[] data, int m, double part)
         {
             Tuple<SigmentData[], SigmentData[]>[] ans = new Tuple<SigmentData[],SigmentData[]>[data.Length];
 
             for (int i = 0; i < data.Length; i++)
-                ans[i] = getShuffleFrom(data[i], m, part);
+                ans[i] = getShuffleFrom(data[i], m, part, new Random(271828314));
 
             return ans;
         }

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AoA
 {
+    /// <summary>
+    /// Информация о выполненном тесте
+    /// </summary>
     [Serializable]
     public class Test
     {

@@ -13,7 +13,7 @@ namespace Metaheuristics
         protected IJump<T> jumper;
         protected INeighborhood neighbor;
 
-        public FinderCustom(Parameter[] p): base(p)
+        public FinderCustom(Parameter[] p, Action<int> w): base(p, w)
         {}
 
         protected override void GoStart()
@@ -23,6 +23,7 @@ namespace Metaheuristics
             //Дальнейший код дублируется -- когда-то придется его выносить, но как лучше?
             bestPosition = (int[])position.Clone();
             bestResult = Quality(bestPosition);
+            positionResult = bestResult;
             step = 0;
             stepWithoutBest = 0;
         }

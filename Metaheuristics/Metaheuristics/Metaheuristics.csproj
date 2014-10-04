@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="AnnealingFinder.cs" />
     <Compile Include="AnnealingJump.cs" />
+    <Compile Include="AnnealingNeighborhood.cs" />
     <Compile Include="Finder.cs" />
     <Compile Include="FinderCustom.cs" />
     <Compile Include="IQuality.cs" />

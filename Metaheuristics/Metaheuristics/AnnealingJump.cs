@@ -24,7 +24,7 @@ namespace Metaheuristics
             if (delta >= 0) return true;
 
             double test = random.NextDouble();
-
+            Console.WriteLine("Хей, йоу!");
             if (test < Math.Exp((delta) / Temp())) return true;
             else return false;
         }

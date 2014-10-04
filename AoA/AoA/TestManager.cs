@@ -11,18 +11,30 @@ using VectorSpace;
 
 namespace AoA
 {
+    /// <summary>
+    /// Класс реализующий тестирование алгоритмов
+    /// </summary>
+    /*
+     * Надо переписать, принимать набор алгоритмов и тестировать их на перемешиваниях, потом на других и т.д. А то памяти на запасешься. 
+    */ 
     public class TestManager
     {
         //Тесты уже взятые из файлов
         FullData[] TestData;
 
         //Взяли из файлов да ещё и перемешали
-        Tuple<SigmentData[], SigmentData[]>[] TestDataSigment;    //Такое может и в память не вместиться
+        Tuple<SigmentData[], SigmentData[]>[] TestDataSigment;    //Такое может и в память не вместиться - да,да.
 
         Test[] tests;
         int testing;
 
+        /// <summary>
+        /// Можно ли сохранить данные?
+        /// </summary>
         bool canSaveData = false;
+        /// <summary>
+        /// Можно ли сохранить прогресс выполненных тестов?
+        /// </summary>
         bool canSaveTest = false;
 
         [NonSerialized]
@@ -58,14 +70,17 @@ namespace AoA
             testing = 0;
         }
 
-        protected void Start(Func<object[], Algorithm> getAlg)
+        protected void Start(Parameter[] p, Func<object[], Algorithm> getAlg, Action<int> w)
         {
-            
             //Перед вызовом надо обязателньо найти последний выполненный тест!
-            for (int i = testing; i < tests.Length; i++)
+            for (; testing < tests.Length; testing++)
             {
-                //Тут надо создавать элементы класса хуй: FinderAlg, которые определяют лучший object для каждого заданьица.
-                //Он получает Func<object[], Algorithm> на вход и массив сигментов данных, возвращает object[] , и лог.
+                FindAlgorithm finder = new FindAlgorithm(p, w, getAlg, TestData[testing], TestDataSigment[testing].Item1, TestDataSigment[testing].Item2);
+
+                var o = finder.Find();
+                tests[testing].parameter = o.Item1;
+                tests[testing].log = o.Item2;
+                tests[testing].ready = true;
             }
         }
 
@@ -111,14 +126,6 @@ namespace AoA
             }
         }
 
-        /*
-         *Нихуя бля вообще
-         *Короче
-         *делаем принт лога еба, короче, с параметрами ебать, при которых это хуярит-с. И название ещё можно какое-нить заебенить)
-         *Такие пироги нормально зайдут.
-         *
-         * Ок, да, а хранить как? как востанавливать, ты об этом подумал, хуярий, вообще, а? Гений блядь.
-         * */
         protected bool SaveTest()
         {
             try

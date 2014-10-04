@@ -13,17 +13,24 @@ namespace Metaheuristics
     {
         protected Parameter[] parameters;
         protected int[] position;
+        protected T positionResult;
         protected int[] bestPosition;
         protected T bestResult;
 
         protected int step;
         protected int stepWithoutBest;
 
-        public Finder(Parameter[] p)
+        protected Action<int> Whatup;
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="p">Список параметров</param>
+        public Finder(Parameter[] p, Action<int> w)
         {
             parameters = p;
             
             position = new int[parameters.Length];
+            Whatup = w;
         }
 
         protected virtual void GoStart()
@@ -34,6 +41,7 @@ namespace Metaheuristics
 
             bestPosition = (int[])position.Clone();
             bestResult = Quality(bestPosition);
+            positionResult = bestResult;
             step = 0;
             stepWithoutBest = 0;
         }
@@ -42,15 +50,19 @@ namespace Metaheuristics
         {
             int[] newPosition = Neighborhood(position);
 
-            T x = Quality(position);
             T y = Quality(newPosition);
 
-            if (Jump(x, y))
+            if (Jump(positionResult, y))
+            {
                 position = newPosition;
+                positionResult = y;
+                step++;
+            }
 
             //Мало ли не во всех алгоритмах будет переход к лучшему решению. Может иногда будет создатьваться другой Finder для того что бы там посмотреть
             if (y.CompareTo(bestResult)>0)
             {
+                Console.WriteLine("ня, милота");
                 bestPosition = (int[])newPosition.Clone();
                 bestResult = y;
 
@@ -58,7 +70,7 @@ namespace Metaheuristics
             }
             else stepWithoutBest++;
 
-            step++;
+            Whatup(stepWithoutBest);
         }
 
         protected virtual bool DontStop()
@@ -73,15 +85,14 @@ namespace Metaheuristics
             while (DontStop())
             {
                 GoNext();
-                step++;
             }
 
             return bestPosition;
         }
 
-        public virtual object[] Find()
+        public virtual Tuple<object[], T> Find()
         {
-            return Convert(FindRaw());
+            return new Tuple<object[],T>(Convert(FindRaw()), bestResult);
         }
 
         /// <summary>

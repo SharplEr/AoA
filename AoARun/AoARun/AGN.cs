@@ -90,7 +90,15 @@ namespace AoARun
             network = new GenomeNetwork(r, tm, one, two);
             network.AddTestDate(pvsi.ToArray(), pvso.ToArray(), counts);
             network.NewLearn(false, max);
-            //network.EarlyStoppingLearn(false);
+            /*
+            int[] lalala = network.UnusedInput(1.0);
+            if (lalala == null || lalala.Length == 0) return;
+            Console.Write("Не используем:");
+            for (int i = 0; i < lalala.Length; i++)
+                Console.Write(" {0},", lalala[i]);
+            Console.WriteLine();
+            */
+            
             //if (network.haveNaN()) throw new ArithmeticException("Была ошибка в вычислениях");
         }
 

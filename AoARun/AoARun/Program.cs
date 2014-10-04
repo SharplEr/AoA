@@ -4,6 +4,7 @@ using IOData;
 using VectorSpace;
 using AoA;
 using GenomeNeuralNetwork;
+using Metaheuristics;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -13,48 +14,70 @@ namespace AoARun
     {
         static void Main(string[] args)
         {
+            
             FullData data = new FullData(new string[] { @"..\..\..\Data\data_1.csv", @"..\..\..\Data\data_2.csv" },
                 GenomeNetwork.TestTags,
                 GenomeNetwork.ResultTags[0],
                 GenomeNetwork.FenTags,
-                GenomeNetwork.ToDouble);
+                GenomeNetwork.ToDouble);            
             
             /*
-            FullData data = new FullData(new string[] { @"..\..\..\Data\lol.csv"},
-                new string[] { "x", "y", "z", "a", "b", "c" },
-                "h",
-                new string[] { "x", "y", "z"},
+            FullData data = new FullData(new string[] { @"..\..\..\Data\Iris.csv" },
+                new string[] { "Длинач", "Ширинач", "Длинал", "Ширинал"},
+                "Вид",
+                new string[] { "Длинач", "Ширинач", "Длинал", "Ширинал" },
                 GenomeNetwork.ToDouble);
               */
             //21,30,11-0,641+0,005
             //35-24-9-0,664-лучшее, при 0.1, 5500
             //
+            
             const int mmm = 1000;
-            Experiments experiment = new Experiments(() => new AGN(0.21, 500, 29, 24, 9), mmm);
-            //Experiments experiment = new Experiments(() => new AGRNN(3,1, 2, 2));
+
+            var tupleSigment = DataManager.getShuffleFrom(data, mmm, 0.05, new Random(271828314));
+            
+            //24-9
+            Experiments experiment = new Experiments(() => new AGN(0.21, 500, 5, 24, 9), mmm);
+            //Experiments experiment = new Experiments(() => new AGRNN(69,36, 6, 25));
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            experiment.Run(data, (x) => { Console.WriteLine("Завершено {0}%", x * 100); });
+            experiment.Run(data, (x) => { Console.WriteLine("Завершено {0}%", x * 100); }, tupleSigment.Item1, tupleSigment.Item2);
             sw.Stop();
             if (experiment.WriteLog(@"log.txt")) Console.WriteLine("Отчет сформирован");
             else Console.WriteLine("Не удалось");
             Console.WriteLine("Время: {0} (мс/обучение)", (double)sw.ElapsedMilliseconds/mmm);
+            
+            /*
+            Parameter[] p = new Parameter[5];
+            p[0] = new Parameter(100, 1, "Число в 1 слое", (x) => x);
+            p[1] = new Parameter(50, 2, "Число в 2 слое", (x) => x);
+            p[2] = new Parameter(20, 1, "Итерации обучения", (x) => x);
+            p[3] = new Parameter(100, 1, "время обучения", (x) => x*100.0);
+            p[4] = new Parameter(99, 1, "начальный коэффициент", (x) => x/100.0);
+            FindAlgorithm finder = new FindAlgorithm(p, (x) => Console.WriteLine("Step: {0}", x), (x) => new AGN((double)x[4], (double)x[3], (int)x[2], (int)x[0], (int)x[1]), data, tupleSigment.Item1, tupleSigment.Item2);
+            object[] os = finder.Find().Item1;
+
+            for (int i = 0; i < os.Length; i++ )
+                Console.WriteLine(p[i].name+":"+os[i].ToString());
+             */
             /*
             CVlog max = default(CVlog);
             
             bool flag = true;
             List<Tuple<double, double, int, int, int, int>> cools = new List<Tuple<double, double, int, int, int, int>>();
 
-            //int one = 24; int two = 9;
+            //int one = 24; 
+            int two = 9;
             double r = 0.21;
             double tm = 500;
             int s = 60;
+            int m = 5;
             //for (double r = 0.15; r <= 0.25; r+=0.01 )
               //  for (double tm = 400; tm <= 600; tm += 200)
-            for (int one = 10; one <= 20; one+=1)
-                for (int two = 3; two <= 9; two+=1 )
+            for (int one = 1; one <= 24; one+=1)
+              //  for (int two = 3; two <= 9; two+=1 )
             //for (int s = 2; s <= 20; s+=2 )
-                for (int m = 5; m <= 20; m += 5)
+                //for (int m = 1; m <= 101; m += 5)
                 {
                     Experiments experiment = new Experiments(() => new AGN(r, tm, m, one, two), 200);
                     //Experiments experiment = new Experiments(() => new AGRNN(one, two, m, s), 100);
