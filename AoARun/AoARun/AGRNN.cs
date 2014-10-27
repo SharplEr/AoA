@@ -78,7 +78,7 @@ namespace AoARun
             threshold = 0.0;
 
             network = new RNNetwork();
-            network.Learning(data.GetMixArray(), data.GetResults(), data.getMaxDiscretePath(), s, 0.9, one, two, m);
+            network.Learning(data.GetMixArray(), data.GetResults(), data.GetMaxDiscretePath(), s, 0.9, one, two, m);
 
             //if (network.haveNaN()) throw new ArithmeticException("Была ошибка в вычислениях");
         }

@@ -34,10 +34,10 @@ namespace AoARun
             
             const int mmm = 1000;
 
-            var tupleSigment = DataManager.getShuffleFrom(data, mmm, 0.05, new Random(271828314));
+            var tupleSigment = DataManager.getShuffleFrom(data, mmm, 0.25, new Random(271828314));
             
-            //24-9
-            Experiments experiment = new Experiments(() => new AGN(0.21, 500, 5, 24, 9), mmm);
+            //500-5-24-9
+            Experiments experiment = new Experiments(() => new AGN(0.21, 200*100, 200, 100, 50), mmm);
             //Experiments experiment = new Experiments(() => new AGRNN(69,36, 6, 25));
             Stopwatch sw = new Stopwatch();
             sw.Start();

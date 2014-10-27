@@ -43,7 +43,7 @@ namespace AoA
                 else info[indexer[i]].errorLearn.Add(1);
         }
 
-        public int[] getMaxDiscretePath()
+        public int[] GetMaxDiscretePath()
         {
             return data.maxdiscretePart;
         }

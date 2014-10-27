@@ -3,7 +3,7 @@ using IOData;
 using VectorSpace;
 using ArrayHelper;
 
-namespace IOData
+namespace AoA
 {
     public class SigmentInputData
     {
@@ -34,7 +34,6 @@ namespace IOData
         {
             return data.DiscreteInput;
         }
-
 
         public Vector[] GetСontinuousArray()
         {
