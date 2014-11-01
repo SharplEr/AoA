@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlgorithmFactory.cs" />
     <Compile Include="CVlog.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Experiments.cs" />

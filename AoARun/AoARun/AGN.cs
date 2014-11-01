@@ -20,7 +20,18 @@ namespace AoARun
 
         double threshold = 0;
 
-        public AGN(double rr, double tt, int mmax, int one,int two)
+        public AGN(params object[] p):base(p)
+        {
+            if (p.Length != 5) throw new ArgumentException("Длина не та");
+            Set((double)p[0], (double)p[1], (int)p[2], (int)p[3], (int)p[4]);
+        }
+
+        public AGN(double rr, double tt, int mmax, int one, int two)
+        {
+            Set(rr, tt, mmax, one, two);
+        }
+
+        protected virtual void Set(double rr, double tt, int mmax, int one, int two)
         {
             r = rr;
             tm = tt;

@@ -21,6 +21,7 @@ namespace Metaheuristics
         protected int stepWithoutBest;
 
         protected Action<int> Whatup;
+
         /// <summary>
         /// Конструктор
         /// </summary>
@@ -46,6 +47,8 @@ namespace Metaheuristics
             stepWithoutBest = 0;
         }
 
+
+        int count = 0;
         protected virtual void GoNext()
         {
             int[] newPosition = Neighborhood(position);
@@ -60,19 +63,29 @@ namespace Metaheuristics
             }
 
             //Мало ли не во всех алгоритмах будет переход к лучшему решению. Может иногда будет создатьваться другой Finder для того что бы там посмотреть
-            if (y.CompareTo(bestResult)>0)
+            double delta = y.CompareTo(bestResult);
+            if (delta > 0)
             {
-                Console.WriteLine("ня, милота");
+                Console.WriteLine("Нашли по лучше! {0}", ++count);
                 bestPosition = (int[])newPosition.Clone();
                 bestResult = y;
 
                 stepWithoutBest = 0;
             }
-            else stepWithoutBest++;
+            else
+            {
+                stepWithoutBest++;
+                Console.WriteLine("Не хватило: {0}", delta);
+            }
+
+            Console.WriteLine("Лучших найдено: {0}", count);
 
             Whatup(stepWithoutBest);
         }
 
+        /// <summary>
+        /// Не пора ли остановиться?
+        /// </summary>
         protected virtual bool DontStop()
         {
             return stepWithoutBest < 10;
@@ -80,6 +93,7 @@ namespace Metaheuristics
 
         protected virtual int[] FindRaw()
         {
+            //Ключевой код поиска
             GoStart();
 
             while (DontStop())
@@ -99,9 +113,6 @@ namespace Metaheuristics
         /// Окрестность точки x
         /// </summary>
         protected abstract int[] Neighborhood(int[] x);
-
-        //Сука нееет, надо сравнивать две точки. супер хуята. 
-        //Quality -- должен возвращать I
         
         //Реализация должна знать какой object что значит и как его юзать
         protected abstract T Quality(object[] x);

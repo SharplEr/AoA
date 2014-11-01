@@ -19,6 +19,11 @@ namespace AoA
         /// </summary>
         public string name;
 
+        public Algorithm(params object[] p)
+        {
+
+        }
+
         /// <summary>
         /// Метод проводит полное обучение данного алгоритма на входных данных
         /// </summary>

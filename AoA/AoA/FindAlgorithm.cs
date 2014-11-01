@@ -19,10 +19,24 @@ namespace AoA
         SigmentData[] TestDataSigmentLearn;
         SigmentData[] TestDataSigmentControl;
 
+        const double maxDelta = 0.1;
+        const int maxStep = 300;
+
         public FindAlgorithm(Parameter[] p, Action<int> w,Func<object[], Algorithm> ga, FullData td, SigmentData[] dsl, SigmentData[] dsc)
-            : base(p, w)
+            : base(p, w, maxDelta, maxStep)
         {
             getAlg = ga;
+
+            TestData = td;
+
+            TestDataSigmentLearn = dsl;
+            TestDataSigmentControl = dsc;
+        }
+
+        public FindAlgorithm(Parameter[] p, Action<int> w, Type algType, FullData td, SigmentData[] dsl, SigmentData[] dsc)
+            : base(p, w, maxDelta, maxStep)
+        {
+            getAlg = AlgorithmFactory.GetFactory(algType);
 
             TestData = td;
 
@@ -33,7 +47,6 @@ namespace AoA
         protected override CVlog Quality(object[] x)
         {
             Experiments exp = new Experiments(() => getAlg(x));
-            Console.WriteLine("температура: {0}", temp());
             return exp.Run(TestData, f, TestDataSigmentLearn, TestDataSigmentControl);
         }
 

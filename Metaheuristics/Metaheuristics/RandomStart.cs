@@ -20,7 +20,7 @@ namespace Metaheuristics
         public void GetStart(int[] p)
         {
             for (int i = 0; i < p.Length; i++)
-                p[i] = random.Next(parameters[i].min, parameters[i].max + 1);   //Верхний предел исключон.
+                p[i] = random.Next(parameters[i].min, parameters[i].max + 1);   //Верхний предел исключён.
         }
     }
 }

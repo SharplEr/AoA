@@ -17,14 +17,16 @@ namespace Metaheuristics
             Temp = t;
         }
 
-        //Бля вот тут то и проблемка. Нужен новый блядский интерфейс(((
         public bool Jump(T x, T y)
         {
             double delta = y.CompareTo(x);
+
+            if (delta >= 0) Console.WriteLine("дельта: {0}", delta);
+
             if (delta >= 0) return true;
 
             double test = random.NextDouble();
-            Console.WriteLine("Хей, йоу!");
+
             if (test < Math.Exp((delta) / Temp())) return true;
             else return false;
         }

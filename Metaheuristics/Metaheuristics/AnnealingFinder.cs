@@ -14,25 +14,36 @@ namespace Metaheuristics
         protected Random random = new Random();
 
         protected Func<double> temp;
+        protected Func<double>[] temps;
 
-        public AnnealingFinder(Parameter[] p, Action<int> w): base(p, w)
+        public AnnealingFinder(Parameter[] p, Action<int> w, double maxDelta, int maxStep): base(p, w)
         {
-            const double t0 = 2;
-            const double c = 1;
-            temp = () => t0 * Math.Exp(-c * Math.Pow(step, 1.0 / parameters.Length));
-            
+            double d = Math.Pow(maxStep, 1.0 / parameters.Length);
+            temps = new Func<double>[p.Length];
             double m = 0.0;
-
             for (int i = 0; i < p.Length; i++)
-                m += (p[i].length + 1)*(p[i].length + 1);
+            {
+                m += (p[i].length + 1) * (p[i].length + 1);
+
+                double cl = Math.Log((parameters[i].length * parameters[i].length) * (1.0 - 2.0 / parameters[i].length))/d;
+                temps[i] = () => Math.Exp(-cl * Math.Pow(step, 1.0 / parameters.Length));
+            }
 
             m = Math.Sqrt(m) / 2;
             if (m < 1) m = 1;
             starter = new RandomStart(random, p);
-            stoper = new SmartStoper(()=> step, ()=> stepWithoutBest, (int)Math.Round(m), temp, 0.01);
             
+            double epsilon = 0.001; //Вероятность перехода в плохое решение на последних шагах алгоритма
+            double minTemp = -maxDelta / Math.Log(epsilon);
+            double maxTemp = -maxDelta/Math.Log(1-epsilon);
+            double c = Math.Log(maxTemp / minTemp) / d;
+            temp = () => maxTemp * Math.Exp(-c * Math.Pow(step, 1.0 / parameters.Length));
+
+            stoper = new SmartStoper(() => step, () => stepWithoutBest, (int)Math.Round(m), temp, minTemp);
+
             jumper = new AnnealingJump<T>(random, temp);
-            neighbor = new AnnealingNeighborhood(random, p, temp);
+
+            neighbor = new AnnealingNeighborhood(random, p, temps);
         }
     }
 }

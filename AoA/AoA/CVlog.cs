@@ -44,11 +44,14 @@ namespace AoA
             //t = log2.pOfHard - log1.pOfHard;
             //if (t != 0.0) return t;
             t = Statist.ExactDifference(log2.avgErrorAtControl, log2.errorOfAvgErrorAtControl, log1.avgErrorAtControl, log1.errorOfAvgErrorAtControl);
-            if (t != 0.0) return t;
+            if (t != 0.0) return t/2.0;
             t = Statist.ExactDifference(log2.avgOverLearning, log2.errorOfAvgOverLearning, log1.avgOverLearning, log1.errorOfAvgOverLearning);
-            if (t != 0.0) return t;
+            if (t != 0.0) return t/4.0;
 
-            return 0.0;
+
+            t = log2.errorOfAUC - log1.errorOfAUC;
+            return t/8.0;
+            //return 0.0;
         }
 
         public double CompareTo(CVlog log2)
@@ -57,11 +60,13 @@ namespace AoA
             if (t != 0.0) return t;
 
             t = Statist.ExactDifference(log2.avgErrorAtControl, log2.errorOfAvgErrorAtControl, avgErrorAtControl, errorOfAvgErrorAtControl);
-            if (t != 0.0) return t;
+            if (t != 0.0) return t/2.0;
             t = Statist.ExactDifference(log2.avgOverLearning, log2.errorOfAvgOverLearning, avgOverLearning, errorOfAvgOverLearning);
-            if (t != 0.0) return t;
+            if (t != 0.0) return t/4.0;
 
-            return 0.0;
+            t = log2.errorOfAUC - errorOfAUC;
+            return t/8.0;
+            //return 0.0;
         }
 
         public bool Save(Stream s)

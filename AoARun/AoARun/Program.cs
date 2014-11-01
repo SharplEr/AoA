@@ -32,12 +32,12 @@ namespace AoARun
             //35-24-9-0,664-лучшее, при 0.1, 5500
             //
             
-            const int mmm = 1000;
+            const int mmm = 300;
 
             var tupleSigment = DataManager.getShuffleFrom(data, mmm, 0.25, new Random(271828314));
-            
-            //500-5-24-9
-            Experiments experiment = new Experiments(() => new AGN(0.21, 200*100, 200, 100, 50), mmm);
+            /*
+            //0,21-500-5-24-9
+            Experiments experiment = new Experiments(() => new AGN(0.01, 100, 5, 100, 22), mmm);
             //Experiments experiment = new Experiments(() => new AGRNN(69,36, 6, 25));
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -46,20 +46,22 @@ namespace AoARun
             if (experiment.WriteLog(@"log.txt")) Console.WriteLine("Отчет сформирован");
             else Console.WriteLine("Не удалось");
             Console.WriteLine("Время: {0} (мс/обучение)", (double)sw.ElapsedMilliseconds/mmm);
+            */
             
-            /*
             Parameter[] p = new Parameter[5];
-            p[0] = new Parameter(100, 1, "Число в 1 слое", (x) => x);
-            p[1] = new Parameter(50, 2, "Число в 2 слое", (x) => x);
+            p[0] = new Parameter(99, 1, "начальный коэффициент", (x) => x / 100.0);
+            p[1] = new Parameter(100, 1, "время обучения", (x) => x * 100.0);
             p[2] = new Parameter(20, 1, "Итерации обучения", (x) => x);
-            p[3] = new Parameter(100, 1, "время обучения", (x) => x*100.0);
-            p[4] = new Parameter(99, 1, "начальный коэффициент", (x) => x/100.0);
-            FindAlgorithm finder = new FindAlgorithm(p, (x) => Console.WriteLine("Step: {0}", x), (x) => new AGN((double)x[4], (double)x[3], (int)x[2], (int)x[0], (int)x[1]), data, tupleSigment.Item1, tupleSigment.Item2);
+            p[3] = new Parameter(100, 1, "Число в 1 слое", (x) => x);
+            p[4] = new Parameter(50, 2, "Число в 2 слое", (x) => x);
+            
+            //FindAlgorithm finder = new FindAlgorithm(p, (x) => Console.WriteLine("Step: {0}", x), (x) => new AGN((double)x[4], (double)x[3], (int)x[2], (int)x[0], (int)x[1]), data, tupleSigment.Item1, tupleSigment.Item2);
+            FindAlgorithm finder = new FindAlgorithm(p, (x) => Console.WriteLine("Step: {0}", x), typeof(AGN)/*(x) => new AGN(x)*/, data, tupleSigment.Item1, tupleSigment.Item2);
             object[] os = finder.Find().Item1;
 
             for (int i = 0; i < os.Length; i++ )
                 Console.WriteLine(p[i].name+":"+os[i].ToString());
-             */
+             
             /*
             CVlog max = default(CVlog);
             

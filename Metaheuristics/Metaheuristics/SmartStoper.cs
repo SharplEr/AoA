@@ -25,7 +25,8 @@ namespace Metaheuristics
         public bool DontStop()
         {
             //Надо дать алгоритму шанс по дольше поискать
-            return (Step() < 2 * maxStep) || (StepWithoutBest() < maxStep) && (f()>min);
+            //return f() > min;
+            return (Step() < 2 * maxStep) || (StepWithoutBest() < maxStep) || (f()>min);
             //Так как поле дискретное, то и нет особой мазы ограничивать общее число итераций - пока находит, пусть ищет.
         }
     }
