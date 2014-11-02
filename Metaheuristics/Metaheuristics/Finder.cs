@@ -19,6 +19,7 @@ namespace Metaheuristics
 
         protected int step;
         protected int stepWithoutBest;
+        protected int stepWithoutJump;
 
         protected Action<int> Whatup;
 
@@ -45,40 +46,68 @@ namespace Metaheuristics
             positionResult = bestResult;
             step = 0;
             stepWithoutBest = 0;
+            stepWithoutJump = 0;
         }
 
 
         int count = 0;
+
+        protected virtual void ChangeStep(bool jump, bool best)
+        {
+            if (best) stepWithoutBest = 0;
+            else stepWithoutBest++;
+
+            if (jump)
+            {
+                step++;
+                stepWithoutJump = 0;
+            }
+            else
+            {
+                stepWithoutJump++;
+
+                if (stepWithoutJump > 10)
+                    step++;
+            }
+        }
+
         protected virtual void GoNext()
         {
             int[] newPosition = Neighborhood(position);
 
             T y = Quality(newPosition);
-
-            if (Jump(positionResult, y))
+            bool jump = Jump(positionResult, y);
+            if (jump)
             {
                 position = newPosition;
                 positionResult = y;
-                step++;
+                //step++;
+                //stepWithoutJump = 0;
             }
+            //else stepWithoutJump++;
+
+            //if (stepWithoutJump > 10) step++;
 
             //Мало ли не во всех алгоритмах будет переход к лучшему решению. Может иногда будет создатьваться другой Finder для того что бы там посмотреть
             double delta = y.CompareTo(bestResult);
-            if (delta > 0)
+            bool best = delta > 0;
+            if (best)
             {
                 Console.WriteLine("Нашли по лучше! {0}", ++count);
                 bestPosition = (int[])newPosition.Clone();
                 bestResult = y;
 
-                stepWithoutBest = 0;
+                //stepWithoutBest = 0;
             }
             else
             {
-                stepWithoutBest++;
+                //stepWithoutBest++;
                 Console.WriteLine("Не хватило: {0}", delta);
             }
 
             Console.WriteLine("Лучших найдено: {0}", count);
+
+            ChangeStep(jump, best);
 
             Whatup(stepWithoutBest);
         }

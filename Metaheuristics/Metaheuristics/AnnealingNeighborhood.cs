@@ -38,8 +38,6 @@ namespace Metaheuristics
                     if (ans[i] > parameters[i].max) ans[i] = parameters[i].max;
                     else if (ans[i] < parameters[i].min) ans[i] = parameters[i].min;
                 }
-
-                Console.WriteLine("прыг: {0}", Math.Abs(ans[i] - x[i]));
             }
 
             return ans;
