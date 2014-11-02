@@ -20,9 +20,9 @@ namespace AoA
         SigmentData[] TestDataSigmentControl;
 
         const double maxDelta = 0.1;
-        const int maxStep = 300;
+        const int maxStep = 250;
 
-        public FindAlgorithm(Parameter[] p, Action<int> w,Func<object[], Algorithm> ga, FullData td, SigmentData[] dsl, SigmentData[] dsc)
+        public FindAlgorithm(Parameter[] p, Action<int, int> w,Func<object[], Algorithm> ga, FullData td, SigmentData[] dsl, SigmentData[] dsc)
             : base(p, w, maxDelta, maxStep)
         {
             getAlg = ga;
@@ -33,7 +33,7 @@ namespace AoA
             TestDataSigmentControl = dsc;
         }
 
-        public FindAlgorithm(Parameter[] p, Action<int> w, Type algType, FullData td, SigmentData[] dsl, SigmentData[] dsc)
+        public FindAlgorithm(Parameter[] p, Action<int, int> w, Type algType, FullData td, SigmentData[] dsl, SigmentData[] dsc)
             : base(p, w, maxDelta, maxStep)
         {
             getAlg = AlgorithmFactory.GetFactory(algType);

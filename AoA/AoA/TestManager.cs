@@ -70,7 +70,7 @@ namespace AoA
             testing = 0;
         }
 
-        protected void Start(Parameter[] p, Func<object[], Algorithm> getAlg, Action<int> w)
+        protected void Start(Parameter[] p, Func<object[], Algorithm> getAlg, Action<int, int> w)
         {
             //Перед вызовом надо обязателньо найти последний выполненный тест!
             for (; testing < tests.Length; testing++)

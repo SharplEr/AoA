@@ -21,13 +21,13 @@ namespace Metaheuristics
         protected int stepWithoutBest;
         protected int stepWithoutJump;
 
-        protected Action<int> Whatup;
+        protected Action<int, int> Whatup;
 
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="p">Список параметров</param>
-        public Finder(Parameter[] p, Action<int> w)
+        public Finder(Parameter[] p, Action<int, int> w)
         {
             parameters = p;
             
@@ -50,7 +50,7 @@ namespace Metaheuristics
         }
 
 
-        int count = 0;
+        int countBest = 0;
 
         protected virtual void ChangeStep(bool jump, bool best)
         {
@@ -90,11 +90,12 @@ namespace Metaheuristics
             {
                 bestPosition = (int[])newPosition.Clone();
                 bestResult = y;
+                countBest++;
             }
 
             ChangeStep(jump, best);
 
-            Whatup(stepWithoutBest);
+            Whatup(stepWithoutBest, countBest);
         }
 
         /// <summary>
