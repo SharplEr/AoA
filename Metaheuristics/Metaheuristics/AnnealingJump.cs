@@ -21,8 +21,6 @@ namespace Metaheuristics
         {
             double delta = y.CompareTo(x);
 
-            if (delta >= 0) Console.WriteLine("дельта: {0}", delta);
-
             if (delta >= 0) return true;
 
             double test = random.NextDouble();

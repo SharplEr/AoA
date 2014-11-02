@@ -81,31 +81,16 @@ namespace Metaheuristics
             {
                 position = newPosition;
                 positionResult = y;
-                //step++;
-                //stepWithoutJump = 0;
             }
-            //else stepWithoutJump++;
-
-            //if (stepWithoutJump > 10) step++;
 
             //Мало ли не во всех алгоритмах будет переход к лучшему решению. Может иногда будет создатьваться другой Finder для того что бы там посмотреть
             double delta = y.CompareTo(bestResult);
             bool best = delta > 0;
             if (best)
             {
-                Console.WriteLine("Нашли по лучше! {0}", ++count);
                 bestPosition = (int[])newPosition.Clone();
                 bestResult = y;
-
-                //stepWithoutBest = 0;
             }
-            else
-            {
-                //stepWithoutBest++;
-                Console.WriteLine("Не хватило: {0}", delta);
-            }
-
-            Console.WriteLine("Лучших найдено: {0}", count);
 
             ChangeStep(jump, best);
 
