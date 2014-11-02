@@ -23,6 +23,7 @@ namespace AoARun
         int two = 9;
         int m = 29;
         int s = 11;
+        double x = 4.05;
 
         public AGRNN()
         {
@@ -33,7 +34,7 @@ namespace AoARun
             }
         }
 
-        public AGRNN(int o, int t, int mm, int s)
+        public AGRNN(int o, int t, int mm, int s, double xx)
         {
             lock (naming)
             {
@@ -44,19 +45,21 @@ namespace AoARun
             two = t;
             m = mm;
             this.s = s;
+            x = xx;
         }
 
-        public AGRNN(object[] x)
+        public AGRNN(object[] o)
         {
             lock (naming)
             {
                 globalcount++;
                 name = "RN-сеть №" + globalcount.ToString();
             }
-            one = (int) x[0];
-            two = (int) x[1];
-            m = (int) x[2];
-            this.s = (int) x[3];
+            one = (int) o[0];
+            two = (int) o[1];
+            m = (int) o[2];
+            s = (int) o[3];
+            x = (double)o[4];
         }
 
         public override Results Calc(SigmentInputData data)
@@ -91,7 +94,7 @@ namespace AoARun
             threshold = 0.0;
 
             network = new RNNetwork();
-            network.Learning(data.GetMixArray(), data.GetResults(), data.GetMaxDiscretePath(), s, 0.9, one, two, m);
+            network.Learning(data.GetMixArray(), data.GetResults(), data.GetMaxDiscretePath(), s, 0.9, one, two, m, x);
 
             //if (network.haveNaN()) throw new ArithmeticException("Была ошибка в вычислениях");
         }
