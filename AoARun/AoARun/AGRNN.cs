@@ -46,6 +46,19 @@ namespace AoARun
             this.s = s;
         }
 
+        public AGRNN(object[] x)
+        {
+            lock (naming)
+            {
+                globalcount++;
+                name = "RN-сеть №" + globalcount.ToString();
+            }
+            one = (int) x[0];
+            two = (int) x[1];
+            m = (int) x[2];
+            this.s = (int) x[3];
+        }
+
         public override Results Calc(SigmentInputData data)
         {
             if (network == null) throw new NullReferenceException("Сперва должно пройти обучение");
