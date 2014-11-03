@@ -41,34 +41,38 @@ namespace AoA
 
         #region Информация для отчета
         public double avgErrorAtControl;
-        double avgErrorAtTest;
+        double avgErrorAtLearn;
         double errorOfAvgErrorAtControl;
+        double errorOfAvgErrorAtLearn;
         double errorDispAtControl;
-        double errorDispAtTest;
+        double errorDispAtLearn;
         double avgOverLearning;
         double overLearningDisp;
         double errorOfAvgOverLearning;
+        
         double[] foundThreshold;
         double avgThreshold;
         double dispThreshold;
 
         double[] avgErrorAtControls;
-        double[] avgErrorAtTests;
+        double[] avgErrorAtLearns;
         double[] errorDispAtControls;
-        double[] errorDispAtTests;
+        double[] errorDispAtLearns;
         double[] avgOverLearnings;
         double[] overLearningDisps;
 
         double[] errorOfErrorAtControls;
-        double[] errorOfErrorAtTests;
+        double[] errorOfErrorAtLearns;
         double[] errorOfOverLearnings;
 
         ROC[] rocs;
         double AUC;
         double errorOfAUC;
 
-        int countOfHard;
-        public double pOfHard;
+        int countOfHardOver;
+        int countOfHardUnder;
+        public double pOfHardOver;
+        public double pOfHardUnder;
         //SpaceInfo pinfo, ninfo; // Не уверен в необходимости
 
         string name = null;
@@ -210,7 +214,7 @@ namespace AoA
         {
             double a = 0.95;
             avgErrorAtControl = 0.0;
-            avgErrorAtTest = 0.0;
+            avgErrorAtLearn = 0.0;
             avgOverLearning = 0.0;
             
             for (int i = 0; i < info.Length; i++)
@@ -251,17 +255,17 @@ namespace AoA
                     info[i].errorOfErrorLearn /= info[i].errorLearn.Count - 1;
                     info[i].errorOfErrorLearn = Statist.CalcError(info[i].errorLearn.Count, info[i].errorOfErrorLearn, a);
                 }
-                avgErrorAtTest += info[i].avgErrorLearn;
+                avgErrorAtLearn += info[i].avgErrorLearn;
                 avgOverLearning += info[i].avgErrorControl - info[i].avgErrorLearn;
             }
 
             avgErrorAtControl /= info.Length;
-            avgErrorAtTest /= info.Length;
+            avgErrorAtLearn /= info.Length;
             avgOverLearning /= info.Length;
 
             //дисперсии
             errorDispAtControl = 0.0;
-            errorDispAtTest = 0.0;
+            errorDispAtLearn = 0.0;
             overLearningDisp = 0.0;
             double t;
 
@@ -269,14 +273,14 @@ namespace AoA
             {
                 t = info[i].avgErrorControl - avgErrorAtControl;
                 errorDispAtControl += t * t;
-                t = info[i].avgErrorLearn - avgErrorAtTest;
-                errorDispAtTest += t * t;
+                t = info[i].avgErrorLearn - avgErrorAtLearn;
+                errorDispAtLearn += t * t;
                 t = info[i].avgErrorControl - info[i].avgErrorLearn - avgOverLearning;
                 overLearningDisp += t * t;
             }
 
             errorDispAtControl /= info.Length - 1;
-            errorDispAtTest /= info.Length - 1;
+            errorDispAtLearn /= info.Length - 1;
             overLearningDisp /= info.Length - 1;
 
             avgThreshold = 0.0;
@@ -298,24 +302,24 @@ namespace AoA
 
             //Для отдельных классов
             avgErrorAtControls = new double[nnn];
-            avgErrorAtTests = new double[nnn];
+            avgErrorAtLearns = new double[nnn];
             errorDispAtControls = new double[nnn];
-            errorDispAtTests = new double[nnn];
+            errorDispAtLearns = new double[nnn];
             avgOverLearnings = new double[nnn];
             overLearningDisps = new double[nnn];
 
             errorOfErrorAtControls = new double[nnn];
-            errorOfErrorAtTests = new double[nnn];
+            errorOfErrorAtLearns = new double[nnn];
             errorOfOverLearnings = new double[nnn];
 
             for (int i = 0; i < nnn; i++)
             {
                 avgErrorAtControls[i] = 0.0;
-                avgErrorAtTests[i] = 0.0;
+                avgErrorAtLearns[i] = 0.0;
                 avgOverLearnings[i] = 0.0;
 
                 errorOfErrorAtControls[i] = 0.0;
-                errorOfErrorAtTests[i] = 0.0;
+                errorOfErrorAtLearns[i] = 0.0;
                 
                 int l = 0;
 
@@ -325,24 +329,24 @@ namespace AoA
                     {
                         l++;
                         avgErrorAtControls[i] += info[j].avgErrorControl;
-                        avgErrorAtTests[i] += info[j].avgErrorLearn;
+                        avgErrorAtLearns[i] += info[j].avgErrorLearn;
                         avgOverLearnings[i] += info[j].avgErrorControl - info[j].avgErrorLearn;
 
                         errorOfErrorAtControls[i] += info[j].errorOfErrorControl * info[j].errorOfErrorControl;
-                        errorOfErrorAtTests[i] += info[j].errorOfErrorLearn * info[j].errorOfErrorLearn;
+                        errorOfErrorAtLearns[i] += info[j].errorOfErrorLearn * info[j].errorOfErrorLearn;
                     }
                 }
 
                 avgErrorAtControls[i] /= l;
-                avgErrorAtTests[i] /= l;
+                avgErrorAtLearns[i] /= l;
                 avgOverLearnings[i] /= l;
 
                 errorOfErrorAtControls[i] = Math.Sqrt(errorOfErrorAtControls[i])/l;
-                errorOfErrorAtTests[i] = Math.Sqrt(errorOfErrorAtTests[i]) / l;
+                errorOfErrorAtLearns[i] = Math.Sqrt(errorOfErrorAtLearns[i]) / l;
 
                 //дисперсии
                 errorDispAtControls[i] = 0.0;
-                errorDispAtTests[i] = 0.0;
+                errorDispAtLearns[i] = 0.0;
                 overLearningDisps[i] = 0.0;
 
                 for (int j = 0; j < info.Length; j++)
@@ -351,15 +355,15 @@ namespace AoA
                     {
                         t = info[j].avgErrorControl - avgErrorAtControls[i];
                         errorDispAtControls[i] += t * t;
-                        t = info[j].avgErrorLearn - avgErrorAtTests[i];
-                        errorDispAtTests[i] += t * t;
+                        t = info[j].avgErrorLearn - avgErrorAtLearns[i];
+                        errorDispAtLearns[i] += t * t;
                         t = info[j].avgErrorControl - info[j].avgErrorLearn - avgOverLearnings[i];
                         overLearningDisps[i] += t * t;
                     }
                 }
 
                 errorDispAtControls[i] /= l-1;
-                errorDispAtTests[i] /= l-1;
+                errorDispAtLearns[i] /= l-1;
                 overLearningDisps[i] /= l-1;
 
                 errorOfOverLearnings[i] = Statist.CalcError(l, overLearningDisps[i], a);
@@ -370,13 +374,23 @@ namespace AoA
                 errorOfAvgErrorAtControl += info[i].errorOfErrorControl * info[i].errorOfErrorControl;
             errorOfAvgErrorAtControl = Math.Sqrt(errorOfAvgErrorAtControl) / info.Length;
 
-            countOfHard = 0;
+            errorOfAvgErrorAtLearn = 0.0;
+            for (int i = 0; i < info.Length; i++)
+                errorOfAvgErrorAtLearn += info[i].errorOfErrorLearn * info[i].errorOfErrorLearn;
+            errorOfAvgErrorAtLearn = Math.Sqrt(errorOfAvgErrorAtLearn) / info.Length;
+
+            countOfHardOver = 0;
 
             //Раньше тут было >=1 но теперь вроде как надо писать так
             for (int i = 0; i < info.Length; i++)
                 if (info[i].avgErrorControl - info[i].errorOfErrorControl >= 0.5)
-                    countOfHard++;
-            pOfHard = (double) countOfHard / info.Length;
+                    countOfHardUnder++;
+            pOfHardUnder = (double)countOfHardUnder / info.Length;
+
+            for (int i = 0; i < info.Length; i++)
+                if (info[i].avgErrorControl + info[i].errorOfErrorControl >= 0.5)
+                    countOfHardOver++;
+            pOfHardOver = (double)countOfHardOver / info.Length;
 
             errorOfAvgOverLearning = Statist.CalcError(info.Length, overLearningDisp, a);
             //Для ROC кривых
@@ -440,31 +454,34 @@ namespace AoA
             CVlog log;
             log.avgErrorAtControl = avgErrorAtControl;
             log.errorOfAvgErrorAtControl = errorOfAvgErrorAtControl;
-            log.avgErrorAtTest = avgErrorAtTest;
+            log.errorOfAvgErrorAtLearn = errorOfAvgErrorAtLearn;
+            log.avgErrorAtLearn = avgErrorAtLearn;
             log.errorDispAtControl = errorDispAtControl;
-            log.errorDispAtTest = errorDispAtTest;
+            log.errorDispAtLearn = errorDispAtLearn;
             log.avgOverLearning = avgOverLearning;
             log.overLearningDisp = overLearningDisp;
             log.errorOfAvgOverLearning = errorOfAvgOverLearning;
 
             log.avgErrorAtControls = avgErrorAtControls.CloneOk<double[]>();
-            log.avgErrorAtTests = avgErrorAtTests.CloneOk<double[]>();
+            log.avgErrorAtLearns = avgErrorAtLearns.CloneOk<double[]>();
             log.errorDispAtControls = errorDispAtControls.CloneOk<double[]>();
-            log.errorDispAtTests = errorDispAtTests.CloneOk<double[]>();
+            log.errorDispAtLearns = errorDispAtLearns.CloneOk<double[]>();
             log.avgOverLearnings = avgOverLearnings.CloneOk<double[]>();
             log.overLearningDisps = overLearningDisps.CloneOk<double[]>();
 
             log.errorOfErrorAtControls = errorOfErrorAtControls.CloneOk<double[]>();
-            log.errorOfErrorAtTests = errorOfErrorAtTests.CloneOk<double[]>();
+            log.errorOfErrorAtLearns = errorOfErrorAtLearns.CloneOk<double[]>();
             log.errorOfOverLearnings = errorOfOverLearnings.CloneOk<double[]>();
 
-            log.pOfHard = pOfHard;
+            log.pOfHardOver = pOfHardOver;
+            log.pOfHardUnder = pOfHardUnder;
 
             log.rocs = rocs.CloneOk<ROC[]>();
 
             log.AUC = AUC;
             log.errorOfAUC = errorOfAUC;
             log.name = name;
+            
             return log;
         }
 
@@ -501,14 +518,14 @@ namespace AoA
                 for (int i = 0; i < info.Length; i++)
                     t += info[i].errorOfErrorLearn * info[i].errorOfErrorLearn;
                 t = Math.Sqrt(t) / info.Length;
-                writer.WriteLine("Средняя ошибка (на множестве обучения) для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgErrorAtTest, errorDispAtTest, t);
+                writer.WriteLine("Средняя ошибка (на множестве обучения) для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgErrorAtLearn, errorDispAtLearn, t);
 
                 writer.WriteLine("Средняя переобученность для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgOverLearning, overLearningDisp, errorOfAvgOverLearning);
                 writer.WriteLine();
                 for (int i = 0; i < errorDispAtControls.Length; i++)
                 {
                     writer.WriteLine("Средняя ошибка (на контрольном множестве) для класса {2}: {0}. Дисперсия: {1}. Отклонение: {3}", avgErrorAtControls[i], errorDispAtControls[i], i, errorOfErrorAtControls[i]);
-                    writer.WriteLine("Средняя ошибка (на множестве обучения) для класса {2}: {0}. Дисперсия: {1}. Отклонение: {3}", avgErrorAtTests[i], errorDispAtTests[i], i, errorOfErrorAtTests[i]);
+                    writer.WriteLine("Средняя ошибка (на множестве обучения) для класса {2}: {0}. Дисперсия: {1}. Отклонение: {3}", avgErrorAtLearns[i], errorDispAtLearns[i], i, errorOfErrorAtLearns[i]);
                     writer.WriteLine("Средняя переобученность для класса {2}: {0}. Дисперсия: {1}. Отклонение: {3}", avgOverLearnings[i], overLearningDisps[i], i, errorOfOverLearnings[i]);
                     writer.WriteLine();
                 }
@@ -518,7 +535,7 @@ namespace AoA
                     if (info[i].avgErrorControl-info[i].errorOfErrorControl >= 0.5)
                         writer.WriteLine(i);
 
-                writer.WriteLine("колличество трудных объектов: {0} - что составляет {1}% от общего числа.", countOfHard, pOfHard * 100.0);
+                writer.WriteLine("колличество трудных объектов: {0} - что составляет {1}% от общего числа.", countOfHardOver, pOfHardOver * 100.0);
 
                 writer.WriteLine("Cписок трудных объектов (вбросов с точки зрения алгоритма) оценка с верху:");
 
@@ -527,7 +544,7 @@ namespace AoA
                     if (info[i].avgErrorControl + info[i].errorOfErrorControl >= 0.5)
                         writer.WriteLine(i);
 
-                //writer.WriteLine("колличество трудных объектов: {0} - что составляет {1}% от общего числа.", countOfHard, pOfHard * 100.0);
+                //writer.WriteLine("колличество трудных объектов: {0} - что составляет {1}% от общего числа.", countOfHardOver, pOfHardOver * 100.0);
 
                 writer.WriteLine("Конец списка трудных объектв.");
                 writer.WriteLine("Средний порог найденный алгоритмом: {0} и его дисперсия {1}", avgThreshold, dispThreshold);
