@@ -37,11 +37,10 @@ namespace AoARun
             var tupleSigment = DataManager.getShuffleFrom(data, mmm, 0.25, new Random(271828314));
             
             //0,21-500-5-24-9
-            
+            /*
             //Experiments experiment = new Experiments(() => new AGN(0.01, 2800, 13, 65, 20), mmm);
             //1-2-10-6
             //1-6-1-13-2,05
-            
             Experiments experiment = new Experiments(() => new AGRNN(4,8, 7, 3, 2.05), mmm);
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -50,21 +49,20 @@ namespace AoARun
 
             if (v.Save(new StreamWriter(@"log.txt", false))) Console.WriteLine("Отчет сформирован");
             else Console.WriteLine("Не удалось");
-            /*
-            if (experiment.WriteLog(@"log.txt")) Console.WriteLine("Отчет сформирован");
-            else Console.WriteLine("Не удалось");
-            */
-            Console.WriteLine("Время: {0} (мс/обучение)", (double)sw.ElapsedMilliseconds/mmm);
             
-            /*
+            Console.WriteLine("Время: {0} (мс/обучение)", (double)sw.ElapsedMilliseconds/mmm);
+            */
+            
             Parameter[] p = new Parameter[5];
             p[0] = new Parameter(99, 1, "начальный коэффициент", (x) => x / 100.0);
             p[1] = new Parameter(100, 1, "время обучения", (x) => x * 100.0);
             p[2] = new Parameter(20, 1, "Итерации обучения", (x) => x);
-            p[3] = new Parameter(100, 1, "Число в 1 слое", (x) => x);
-            p[4] = new Parameter(50, 2, "Число в 2 слое", (x) => x);
-            FindAlgorithm finder = new FindAlgorithm(p, (x) => Console.WriteLine("Step: {0}", x), typeof(AGN), data, tupleSigment.Item1, tupleSigment.Item2);
-            */
+            p[3] = new Parameter(100, 50, "Число в 1 слое", (x) => x);
+            p[4] = new Parameter(50, 15, "Число в 2 слое", (x) => x);
+
+            Type type = typeof(AGN); //typeof(AGRNN)
+            FindAlgorithm finder = new FindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}", x, y), type, data, tupleSigment.Item1, tupleSigment.Item2);
+            
             /*
             Parameter[] p = new Parameter[5];
             p[0] = new Parameter(5, 1, "Число в 1 слое", (x) => x);
@@ -72,14 +70,24 @@ namespace AoARun
             p[2] = new Parameter(15, 1, "Итерации обучения", (x) => x);
             p[3] = new Parameter(13, 3, "S критерий", (x) => x);
             p[4] = new Parameter(81, 1, "x критерий", (x) => x/20.0);
-           
-            FindAlgorithm finder = new FindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}", x, y), typeof(AGRNN), data, tupleSigment.Item1, tupleSigment.Item2);
-            
-            object[] os = finder.Find().Item1;
+           */
+
+            var ans = finder.Find();
+            object[] os = ans.Item1;
 
             for (int i = 0; i < os.Length; i++ )
                 Console.WriteLine(p[i].name+":"+os[i].ToString());
-            */
+
+            var writer = new StreamWriter(@"log.txt", false);
+            writer.WriteLine("      Начало отчета алгоритма {0}", type);
+            writer.WriteLine("Найденные параметры:");
+
+            for (int i = 0; i < os.Length; i++)
+                writer.WriteLine(p[i].name + ":" + os[i].ToString());
+
+            writer.WriteLine();
+
+            ans.Item2.Save(writer);
             /*
             CVlog max = default(CVlog);
             
