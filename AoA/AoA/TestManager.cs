@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Threading;
 using IOData;
 using Metaheuristics;
 using VectorSpace;
@@ -14,95 +15,95 @@ namespace AoA
     /// <summary>
     /// Класс реализующий тестирование алгоритмов
     /// </summary>
-    /*
-     * Надо переписать, принимать набор алгоритмов и тестировать их на перемешиваниях, потом на других и т.д. А то памяти на запасешься. 
-    */ 
     public class TestManager
     {
-        //Тесты уже взятые из файлов
-        FullData[] TestData;
-
-        //Взяли из файлов да ещё и перемешали
-        Tuple<SigmentData[], SigmentData[]>[] TestDataSigment;    //Такое может и в память не вместиться - да,да.
-
-        Test[] tests;
+        Test[,] tests;
         int testing;
+        int testingAlgorithm;
+        int m;
+        double part;
+        FullData[] TestData;
+        Type[] types;
 
-        /// <summary>
-        /// Можно ли сохранить данные?
-        /// </summary>
-        bool canSaveData = false;
-        /// <summary>
-        /// Можно ли сохранить прогресс выполненных тестов?
-        /// </summary>
-        bool canSaveTest = false;
+        string fileName;
 
         [NonSerialized]
         BinaryFormatter deser = new BinaryFormatter();
+
         [NonSerialized]
-        FileStream testStream;
+        FileStream saveWriter;
 
-        public TestManager(FullData[] td, int m, double part, string nameForData, string nameForDataSigment, string nameForTest)
+        [NonSerialized]
+        Parameter[][] parameters;
+
+        [NonSerialized]
+        Thread runer;
+
+        public TestManager(FullData[] td, int m, double part, string name, Type[] ts, Parameter[][] ps)
         {
-            //Тестовые данные
+            this.m = m;
+            this.part = part;
             TestData = td;
-            //Мешаем
-            TestDataSigment = DataManager.getShuffleFrom(TestData, m, part);
-           
-            //Можно сохранить данные
-            canSaveData = true;
+            types = ts;
 
-            FileStream sw1 = new FileStream(nameForData, FileMode.Create);
-            FileStream sw2 = new FileStream(nameForDataSigment, FileMode.Create);
-            if (!SaveData(sw1, sw2)) throw new SystemException();
-            sw1.Close();
-            sw1.Dispose();
-            sw2.Close();
-            sw2.Dispose();
+            for (int i = 0; i < types.Length; i++ )
+                if (!typeof(Algorithm).IsAssignableFrom(types[i])) throw new ArgumentException("Не верный тип, должен наследовать Algorithm");
 
-            //Подготавливаем план тестов
-            tests = new Test[TestData.Length];
-            //Можно сохранить
-            canSaveTest = true;
-            testStream = new FileStream(nameForTest, FileMode.Create);
-            if (!SaveTest()) throw new SystemException();
-            //Начинаем первый тест
+            tests = new Test[TestData.Length, types.Length];
+
             testing = 0;
+            testingAlgorithm = 0;
+            fileName = name;
+
+            Refresh(ps);
+
+            if (!Save(saveWriter)) throw new SystemException();
         }
 
-        protected void Start(Parameter[] p, Func<object[], Algorithm> getAlg, Action<int, int> w)
+        public void Starting(Action<int, int, Type, int, int> w)
         {
-            //Перед вызовом надо обязателньо найти последний выполненный тест!
-            for (; testing < tests.Length; testing++)
-            {
-                FindAlgorithm finder = new FindAlgorithm(p, w, getAlg, TestData[testing], TestDataSigment[testing].Item1, TestDataSigment[testing].Item2);
+            if (runer != null) throw new ArgumentException("Что-то уже работает!");
+            runer = new Thread(() => Start(w));
 
-                var o = finder.Find();
-                tests[testing].parameter = o.Item1;
-                tests[testing].log = o.Item2;
-                tests[testing].ready = true;
+            runer.Start();
+        }
+
+
+        protected void Start(Action<int, int, Type, int, int> w)
+        {
+            int startI = testing;
+            int startJ = testingAlgorithm;
+
+            for (int i = startI; i < TestData.Length; i++)
+            {
+                var td = DataManager.getShuffleFrom(TestData[i], m, part, new Random(271828314));
+
+                for(int j = startJ; j< types.Length; j++)
+                {
+                    var finder = new FindAlgorithm(parameters[j], (x, y) => w(x, y, types[j], i, j), types[j], TestData[i], td.Item1, td.Item2);
+                    var ans = finder.Find();
+                    tests[i, j] = new Test(types[j], parameters[j], ans.Item2, ans.Item1);
+                    testingAlgorithm = j++;
+                }
+                testingAlgorithm = 0;
+                testing = i++;
             }
         }
 
-        public bool CanSaveData
+        protected void MakeOutputFiles()
         {
-            get
-            { return canSaveData; }
+            for (int i = 0; i<TestData.Length; i++)
+                for (int j = 0; j < types.Length; j++)
+                {
+                    tests[i, j].Save(new StreamWriter(@types[j].ToString() + "("+ j.ToString() + ")at data №" + i.ToString() + ".txt", false));
+                }
         }
 
-        public bool CanSaveTest
-        {
-            get
-            { return canSaveTest; }
-        }
-
-        protected bool SaveData(Stream data, Stream sigmentData)
+        protected bool Save(Stream file)
         {
             try
             {
-                if (!canSaveData) return false;
-                deser.Serialize(data, TestData);
-                deser.Serialize(sigmentData, TestDataSigment);
+                deser.Serialize(file, this);
                 return true;
             }
             catch
@@ -111,51 +112,64 @@ namespace AoA
             }
         }
 
-        protected bool LoadData(Stream data, Stream sigmentData)
+        public static TestManager GetFrom(Stream file, Parameter[][] ps)
         {
-            try
+            TestManager ans = (TestManager)(new BinaryFormatter()).Deserialize(file);
+            ans.Refresh(ps);
+            return ans;
+        }
+
+        protected void Refresh(Parameter[][] ps)
+        {
+            deser = new BinaryFormatter();
+            saveWriter = new FileStream(fileName, FileMode.Create);
+            parameters = ps;
+
+            if (testingAlgorithm == types.Length)
             {
-                FullData[] TestData = (FullData[])deser.Deserialize(data);
-                Tuple<SigmentData[], SigmentData[]>[] TestDataSigment = (Tuple<SigmentData[], SigmentData[]>[])deser.Deserialize(sigmentData);
-                
-                return true;
-            }
-            catch
-            {
-                return false;
+                testing++;
+                testingAlgorithm = 0;
             }
         }
 
-        protected bool SaveTest()
+        public void DisposeAndSave()
         {
-            try
+            if (runer != null)
             {
-                if (!canSaveTest) return false;
-                deser.Serialize(testStream, tests);
-                return true;
+                try
+                {
+                    runer.Abort();
+                }
+                catch
+                { }
+                runer = null;
             }
-            catch
-            {
-                return false;
-            }
+
+            Save(saveWriter);
+
+            saveWriter.Close();
+            saveWriter.Dispose();
+            saveWriter = null;
         }
 
-        protected bool LoadTest(Stream s)
+        public void Dispose()
         {
-            try
+            if (saveWriter != null)
             {
-                tests = (Test[]) deser.Deserialize(s);
-                return true;
+                saveWriter.Close();
+                saveWriter.Dispose();
             }
-            catch
-            {
-                return false;
-            }
-        }
 
-        public void Refresh()
-        {
-            
+            if (runer != null)
+            {
+                try
+                {
+                    runer.Abort();
+                }
+                catch
+                { }
+                runer = null;
+            }
         }
     }
 }
