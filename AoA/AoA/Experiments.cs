@@ -50,7 +50,6 @@ namespace AoA
         double overLearningDisp;
         double errorOfAvgOverLearning;
         
-        double[] foundThreshold;
         double avgThreshold;
         double dispThreshold;
 
@@ -81,7 +80,6 @@ namespace AoA
         public Experiments(Func<Algorithm> getAlg, int mmm, string AlgName)
         {
             m = mmm;
-            foundThreshold = new double[m];
             getAlgorithm = getAlg;
             name = AlgName;
         }
@@ -89,7 +87,6 @@ namespace AoA
         public Experiments(Func<Algorithm> getAlg, int mmm)
         {
             m = mmm;
-            foundThreshold = new double[m];
             getAlgorithm = getAlg;
         }
 
@@ -122,7 +119,6 @@ namespace AoA
         /// <param name="FullData">Данные</param>
         public CVlog Run(FullData d, Action<double> f)
         {
-            if(foundThreshold==null) foundThreshold = new double[m];
             int i;
             data = d;
 
@@ -176,7 +172,7 @@ namespace AoA
             worker.Run(data, getAlgorithm, allLearnDate, allControlDate, ROCn);
 
             rocs = worker.rocs;
-            foundThreshold = worker.foundThreshold;
+
             worker.Dispose();
             return CalcTotalInfo();
         }
@@ -184,7 +180,7 @@ namespace AoA
         public CVlog Run(FullData d, Action<double> f, SigmentData[] learnDate, SigmentData[] controlDate)
         {
             m = learnDate.Length;
-            if (foundThreshold==null )foundThreshold = new double[m];
+
             int i;
             data = d;
             info = new Info[data.Length];
@@ -205,7 +201,7 @@ namespace AoA
             worker.Run(data, getAlgorithm, learnDate, controlDate, ROCn);
 
             rocs = worker.rocs;
-            foundThreshold = worker.foundThreshold;
+
             worker.Dispose();
             return CalcTotalInfo();
         }
@@ -282,21 +278,6 @@ namespace AoA
             errorDispAtControl /= info.Length - 1;
             errorDispAtLearn /= info.Length - 1;
             overLearningDisp /= info.Length - 1;
-
-            avgThreshold = 0.0;
-
-            for (int i = 0; i < m; i++)
-                avgThreshold += foundThreshold[i];
-            avgThreshold /= m;
-
-            dispThreshold = 0.0;
-            for (int i = 0; i < m; i++)
-            {
-                t = foundThreshold[i] - avgThreshold;
-                dispThreshold += t * t;
-            }
-
-            dispThreshold /= m - 1;
 
             int nnn = data.Output.MaxNumber;
 

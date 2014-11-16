@@ -23,27 +23,9 @@ namespace GenomeNeuralNetwork
 
         double a = 1.7159, b = 2.0 / 3.0;
 
-        Action<Vector> convert;
-
-        public Action<Vector> Convert
-        {
-            get
-            {
-                return convert;
-            }
-        }
-
         //9-2
         public GenomeNetwork(double r, double t, int one, int two) : base(r, t, 3)
-        {
-            /*
-            layers[0] = new NeuronLayer(one, TestTags.Length + 1, true, 1, "tanh", a, b);
-            layers[0].NormalInitialize();
-            layers[1] = new NeuronLayer(2, one + 1, false, 1, "tanh", a, b);
-            layers[1].NormalInitialize();
-
-            layers[1].CalcInvers(layers[0].WithThreshold);*/
-            
+        {   
             layers[0] = new NeuronLayer(one, TestTags.Length + 1, true, 1, "tanh", a/2, b);
             layers[0].NormalInitialize(random);
             layers[1] = new NeuronLayer(two, one + 1, true, 1, "tanh", a, b);
@@ -75,13 +57,14 @@ namespace GenomeNeuralNetwork
             return base.FullLearn(minError);
         }
         
+        /*
         public static Vector[] LoadResultDate(CSVReader reader)
         {
             Vector[] ans = new Vector[reader.countLine];
             for (int i = 0; i < ans.Length; i++)
                 ans[i] = new Vector(ResultTags.Length, (j) => { return ToDouble(reader[i, ResultTags[j]]); });
             return ans;
-        }
+        }*/
 
         public static double ToDouble(string s)
         {

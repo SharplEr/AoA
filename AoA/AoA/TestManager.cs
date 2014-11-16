@@ -17,24 +17,24 @@ namespace AoA
     /// </summary>
     public class TestManager
     {
-        Test[,] tests;
-        int testing;
-        int testingAlgorithm;
-        int m;
-        double part;
-        FullData[] TestData;
-        Type[] types;
+        protected List<Tuple<Type, Test[]>> info;
 
-        string fileName;
+        [NonSerialized]
+        protected List<Parameter[]> parameters;
+
+        protected bool haveChange;
+
+        protected int m;
+        protected double part;
+        protected FullData[] TestData;
+
+        protected string fileName;
 
         [NonSerialized]
         BinaryFormatter deser = new BinaryFormatter();
 
         [NonSerialized]
         FileStream saveWriter;
-
-        [NonSerialized]
-        Parameter[][] parameters;
 
         [NonSerialized]
         Thread runer;
@@ -44,20 +44,21 @@ namespace AoA
             this.m = m;
             this.part = part;
             TestData = td;
-            types = ts;
+            info = new List<Tuple<Type, Test[]>>();
 
-            for (int i = 0; i < types.Length; i++ )
-                if (!typeof(Algorithm).IsAssignableFrom(types[i])) throw new ArgumentException("Не верный тип, должен наследовать Algorithm");
+            for (int i = 0; i < ts.Length; i++)
+                if (!typeof(Algorithm).IsAssignableFrom(ts[i])) throw new ArgumentException("Не верный тип! Должен наследовать Algorithm.");
 
-            tests = new Test[TestData.Length, types.Length];
-
-            testing = 0;
-            testingAlgorithm = 0;
+            for (int i = 0; i < ts.Length; i++)
+                info.Add(new Tuple<Type, Test[]>(ts[i], new Test[td.Length]));
+            
             fileName = name;
 
             Refresh(ps);
 
-            if (!Save(saveWriter)) throw new SystemException();
+            haveChange = false;
+
+            if (!Save(saveWriter)) throw new SystemException("Не удается сохранить");
         }
 
         public void Starting(Action<int, int, Type, int, int> w)
@@ -68,35 +69,53 @@ namespace AoA
             runer.Start();
         }
 
+        public void Add(Type t, Parameter[] ps)
+        {
+            info.Add(new Tuple<Type, Test[]>(t, new Test[TestData.Length]));
+            parameters.Add(ps);
+        }
+
+        public void Add(Type[] t, Parameter[][] ps)
+        {
+            for (int i = 0; i < t.Length; i++)
+                Add(t[i], ps[i]);
+        }
+
+        public void Pause()
+        {
+            runer.Suspend();
+        }
+
+        public void Resume()
+        {
+            runer.Resume();
+        }
 
         protected void Start(Action<int, int, Type, int, int> w)
         {
-            int startI = testing;
-            int startJ = testingAlgorithm;
-
-            for (int i = startI; i < TestData.Length; i++)
+            int i = 0;
+            while(i < TestData.Length)
             {
                 var td = DataManager.getShuffleFrom(TestData[i], m, part, new Random(271828314));
 
-                for(int j = startJ; j< types.Length; j++)
+                for(int j = 0; j< info.Count; j++)
                 {
-                    var finder = new FindAlgorithm(parameters[j], (x, y) => w(x, y, types[j], i, j), types[j], TestData[i], td.Item1, td.Item2);
+                    if (info[j].Item2[i] == null) continue;
+
+                    var finder = new FindAlgorithm(parameters[j], (x, y) => w(x, y, info[j].Item1, i, j), info[j].Item1, TestData[i], td.Item1, td.Item2);
                     var ans = finder.Find();
-                    tests[i, j] = new Test(types[j], parameters[j], ans.Item2, ans.Item1);
-                    testingAlgorithm = j++;
+                    info[j].Item2[i] = new Test(info[j].Item1, parameters[j], ans.Item2, ans.Item1);
                 }
-                testingAlgorithm = 0;
-                testing = i++;
+                i++;
+                if ((i == TestData.Length) && haveChange) i = 0;
             }
         }
 
         protected void MakeOutputFiles()
         {
-            for (int i = 0; i<TestData.Length; i++)
-                for (int j = 0; j < types.Length; j++)
-                {
-                    tests[i, j].Save(new StreamWriter(@types[j].ToString() + "("+ j.ToString() + ")at data №" + i.ToString() + ".txt", false));
-                }
+            for (int i = 0; i<info.Count; i++)
+                for (int j = 0; j < info[i].Item2.Length; j++)
+                    info[i].Item2[j].Save(new StreamWriter(@info[i].Item1.ToString() + "(" + j.ToString() + ")at data №" + i.ToString() + ".txt", false));
         }
 
         protected bool Save(Stream file)
@@ -123,13 +142,7 @@ namespace AoA
         {
             deser = new BinaryFormatter();
             saveWriter = new FileStream(fileName, FileMode.Create);
-            parameters = ps;
-
-            if (testingAlgorithm == types.Length)
-            {
-                testing++;
-                testingAlgorithm = 0;
-            }
+            parameters = ps.ToList();
         }
 
         public void DisposeAndSave()

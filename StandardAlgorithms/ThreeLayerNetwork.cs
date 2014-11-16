@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using VectorSpace;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AoA;
 using Araneam;
-using GenomeNeuralNetwork;
+using VectorSpace;
 using IOData;
 
-namespace AoARun
+namespace StandardAlgorithms
 {
-    class AGN: Algorithm
+    public class ThreeLayerNetwork : Algorithm
     {
-        static int globalcount = 0;
-        object naming = new object();
-        GenomeNetwork network;
+        ClassicNetwork network;
         double r, tm;
         int max;
 
@@ -20,13 +20,13 @@ namespace AoARun
 
         double threshold = 0;
 
-        public AGN(params object[] p):base(p)
+        public ThreeLayerNetwork(params object[] p):base(p)
         {
             if (p.Length != 5) throw new ArgumentException("Длина не та");
             Set((double)p[0], (double)p[1], (int)p[2], (int)p[3], (int)p[4]);
         }
 
-        public AGN(double rr, double tt, int mmax, int one, int two)
+        public ThreeLayerNetwork(double rr, double tt, int mmax, int one, int two)
         {
             Set(rr, tt, mmax, one, two);
         }
@@ -38,11 +38,6 @@ namespace AoARun
             max = mmax;
             this.one = one;
             this.two = two;
-            lock (naming)
-            {
-                globalcount++;
-                name = "Многослойный персептрон №" + globalcount.ToString();
-            }
         }
 
         public override Results Calc(SigmentInputData data)
@@ -98,7 +93,7 @@ namespace AoARun
             pvsi.AddRange(nvsi);
  
             int[] counts = new int[] { count, resultDate.Length - count };
-            network = new GenomeNetwork(r, tm, one, two);
+            network = new ClassicNetwork(r, tm, one, two, inputDate[0].Length, resultDate[0].Length);
             network.AddTestDate(pvsi.ToArray(), pvso.ToArray(), counts);
             network.NewLearn(false, max);
             /*
@@ -115,7 +110,6 @@ namespace AoARun
 
         public override void ChangeThreshold(double th)
         {
-            //threshold = 1.7159*2.0*th;
             threshold = th;
         }
 

@@ -16,15 +16,12 @@ namespace AoA
 
         public Info[] info;
         
-        public double[] foundThreshold;
-        
         public ROC[] rocs;
 
         public ExperimentWorkerOld(int threadCount, int nn, Info[] inf, Action<double> ff)
             : base(threadCount, nn, @"ExperimentWorker№", ff)
         {
             info = inf;
-            foundThreshold = new double[nn];
         }
 
         public void Run(FullData fd, Func<Algorithm> algs, int[][] dl, int[][] dc, int ROCn)
@@ -52,8 +49,6 @@ namespace AoA
                 SigmentData controlSigmentData = new SigmentData(data, controlDate[i]);
 
                 alg.Learn(learnSigmentData);
-
-                foundThreshold[i] = alg.GetThreshold();
 
                 Results CalcedLearn = alg.Calc(learnSigmentData);
 

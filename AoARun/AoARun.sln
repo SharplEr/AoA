@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArrayHelper", "..\Araneam\A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metaheuristics", "..\Metaheuristics\Metaheuristics\Metaheuristics.csproj", "{6A5B5AED-B183-429E-9657-C10C25CF7E96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardAlgorithms", "..\StandardAlgorithms\StandardAlgorithms.csproj", "{8D71B998-5B9E-4770-BCD8-33D9622B86D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,6 +140,12 @@ Global
 		{6A5B5AED-B183-429E-9657-C10C25CF7E96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A5B5AED-B183-429E-9657-C10C25CF7E96}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6A5B5AED-B183-429E-9657-C10C25CF7E96}.Release|x64.ActiveCfg = Release|Any CPU
+		{8D71B998-5B9E-4770-BCD8-33D9622B86D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D71B998-5B9E-4770-BCD8-33D9622B86D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D71B998-5B9E-4770-BCD8-33D9622B86D4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8D71B998-5B9E-4770-BCD8-33D9622B86D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D71B998-5B9E-4770-BCD8-33D9622B86D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D71B998-5B9E-4770-BCD8-33D9622B86D4}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

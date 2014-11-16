@@ -14,11 +14,6 @@ namespace AoA
     /// </summary>
     public abstract class Algorithm
     {
-        /// <summary>
-        /// Имя алгоритма
-        /// </summary>
-        public string name;
-
         public Algorithm(params object[] p)
         {
 
@@ -42,15 +37,6 @@ namespace AoA
         /// </summary>
         /// <param name="th">Новый порог</param>
         public abstract void ChangeThreshold(double th);
-       
-        /// <summary>
-        /// Метод возвращающий текущий порог выбранный алгоритмом
-        /// </summary>
-        /// <returns></returns>
-        public virtual double GetThreshold()
-        {
-            return 0.0;
-        }
 
         /// <summary>
         /// Высвобождение ресурсов

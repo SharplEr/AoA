@@ -16,9 +16,6 @@ namespace AoARun
 
         double threshold = 0;
 
-        static int globalcount = 0;
-        object naming = new object();
-
         int one = 24;
         int two = 9;
         int m = 29;
@@ -26,21 +23,10 @@ namespace AoARun
         double x = 4.05;
 
         public AGRNN()
-        {
-            lock (naming)
-            {
-                globalcount++;
-                name = "RN-сеть №" + globalcount.ToString();
-            }
-        }
+        {}
 
         public AGRNN(int o, int t, int mm, int s, double xx)
         {
-            lock (naming)
-            {
-                globalcount++;
-                name = "RN-сеть №" + globalcount.ToString();
-            }
             one = o;
             two = t;
             m = mm;
@@ -50,11 +36,6 @@ namespace AoARun
 
         public AGRNN(object[] o)
         {
-            lock (naming)
-            {
-                globalcount++;
-                name = "RN-сеть №" + globalcount.ToString();
-            }
             one = (int) o[0];
             two = (int) o[1];
             m = (int) o[2];
@@ -95,13 +76,10 @@ namespace AoARun
 
             network = new RNNetwork();
             network.Learning(data.GetMixArray(), data.GetResults(), data.GetMaxDiscretePath(), s, 0.9, one, two, m, x);
-
-            //if (network.haveNaN()) throw new ArithmeticException("Была ошибка в вычислениях");
         }
 
         public override void ChangeThreshold(double th)
         {
-            //threshold = 1.7159 * 2.0 * th;
             threshold = th;
         }
 

@@ -7,6 +7,7 @@ using GenomeNeuralNetwork;
 using Metaheuristics;
 using System.Collections.Generic;
 using System.Diagnostics;
+using StandardAlgorithms;
 
 namespace AoARun
 {
@@ -60,7 +61,7 @@ namespace AoARun
             p[3] = new Parameter(100, 50, "Число в 1 слое", (x) => x);
             p[4] = new Parameter(50, 15, "Число в 2 слое", (x) => x);
 
-            Type type = typeof(AGN); //typeof(AGRNN)
+            Type type = typeof(ThreeLayerNetwork); //typeof(AGRNN)
             FindAlgorithm finder = new FindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}", x, y), type, data, tupleSigment.Item1, tupleSigment.Item2);
             
             /*
@@ -184,7 +185,7 @@ namespace AoARun
             writer.Close();
             writer.Dispose();
             */
-            //GC.Collect();
+            GC.Collect();
             Console.ReadKey();
         }
     }
