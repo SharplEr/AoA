@@ -55,16 +55,8 @@ namespace AoA
 
         public double CompareTo(CVlog log2)
         {
-            double t = Statist.ExactDifference(AUC, errorOfAUC, log2.AUC, log2.errorOfAUC);
-            if (t != 0.0) return t;
-            t = Statist.ExactDifference(log2.avgErrorAtControl, log2.errorOfAvgErrorAtControl, avgErrorAtControl, errorOfAvgErrorAtControl);
-            if (t != 0.0) return t/2.0;
-            t = Statist.ExactDifference(log2.avgOverLearning, log2.errorOfAvgOverLearning, avgOverLearning, errorOfAvgOverLearning);
-            if (t != 0.0) return t/4.0;
 
-            t = log2.errorOfAUC - errorOfAUC;
-            return t/8.0;
-            //return log2.avgErrorAtLearn - avgErrorAtLearn;
+            return log2.AUC - AUC;
         }
 
         public bool Save(StreamWriter writer)

@@ -111,6 +111,7 @@ namespace Metaheuristics
             //Ключевой код поиска
             GoStart();
 
+            if (parameters.Length!=0)
             while (DontStop())
             {
                 GoNext();

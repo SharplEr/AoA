@@ -23,8 +23,6 @@ namespace AoA
     */
     public class Experiments
     {
-        int[] testDate;
-        int[] controlDate;
         //Число экспериментов (оптимальные значения 180-32000)
         int m = 1000;
         //Какая часть пойдет на контрольное множество от всех данных
@@ -49,9 +47,6 @@ namespace AoA
         double avgOverLearning;
         double overLearningDisp;
         double errorOfAvgOverLearning;
-        
-        double avgThreshold;
-        double dispThreshold;
 
         double[] avgErrorAtControls;
         double[] avgErrorAtLearns;
@@ -96,86 +91,7 @@ namespace AoA
             getAlgorithm = getAlg;
         }
 
-        /// <summary>
-        /// Перемешивание
-        /// </summary>
-        void Next()
-        {
-            int j, t;
-            for (int i = 0; i < controlDate.Length; i++)
-            {
-                j = r.Next(testDate.Length - 1);
-                t = controlDate[i];
-                controlDate[i] = testDate[j];
-                testDate[j] = t;
-            }
-        }
-
         FullData data;
-
-        /// <summary>
-        /// Запуск тестирования
-        /// </summary>
-        /// <param name="FullData">Данные</param>
-        public CVlog Run(FullData d, Action<double> f)
-        {
-            int i;
-            data = d;
-
-            info = new Info[data.Length];
-            info.done();
-
-            int k = (int)Math.Round(data.Length * part);
-            testDate = new int[data.Length - k];
-            controlDate = new int[k];
-
-            for (i = 0; i < data.Length - k; i++)
-            {
-                testDate[i] = i;
-            }
-
-            for (i = data.Length - k; i < data.Length; i++)
-            {
-                controlDate[i - data.Length + k] = i;
-            }
-
-            if (data == null) throw new ArgumentNullException();
-
-            for (i = 0; i < info.Length; i++)
-                info[i].nClass = data.Output[i].Number;
-
-            i = 0;
-
-            int[][] allLearnDate = new int[m][];
-            int[][] allControlDate = new int[m][];
-
-            while (i < m)
-            {
-                Next();
-
-                SigmentData tempdata = new SigmentData(data, controlDate);
-
-                if (tempdata.GetResults().Equable>1.5) continue;
-                allLearnDate[i] = testDate.CloneOk<int[]>();
-                allControlDate[i] = controlDate.CloneOk<int[]>();
-                i++;
-            }
-
-            ExperimentWorkerOld worker;
-
-            #if DEBUG
-            worker = new ExperimentWorkerOld(1/*Environment.ProcessorCount*/, m, info, f);
-            #else
-            worker = new ExperimentWorkerOld(Environment.ProcessorCount, m, info, f);
-            #endif
-
-            worker.Run(data, getAlgorithm, allLearnDate, allControlDate, ROCn);
-
-            rocs = worker.rocs;
-
-            worker.Dispose();
-            return CalcTotalInfo();
-        }
 
         public CVlog Run(FullData d, Action<double> f, SigmentData[] learnDate, SigmentData[] controlDate)
         {

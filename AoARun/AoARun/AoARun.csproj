@@ -46,7 +46,6 @@
     <Compile Include="AGRNN.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DeepBayesianNetwork.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Regression.cs" />
