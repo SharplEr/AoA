@@ -8,9 +8,7 @@ using AoA;
 using VectorSpace;
 
 namespace StandardAlgorithms
-{
-    //Прежде чем, что-то делать надо добавить поддержку много классового хуйца для roc кривых!!!! иначе ай-яй-яй!
-    
+{   
     public class FullRandom : Algorithm
     {
         Random r;

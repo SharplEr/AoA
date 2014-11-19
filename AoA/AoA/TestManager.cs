@@ -111,6 +111,9 @@ namespace AoA
             }
         }
 
+        /*
+         * Можно добавить генерирование отчетов в виде tex файла, лал-с:)
+         */
         protected void MakeOutputFiles()
         {
             for (int i = 0; i<info.Count; i++)
