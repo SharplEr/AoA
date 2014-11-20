@@ -8,7 +8,7 @@ using AoA;
 using VectorSpace;
 
 namespace StandardAlgorithms
-{   
+{
     public class FullRandom : Algorithm
     {
         Random r;

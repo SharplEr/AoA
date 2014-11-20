@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using Metaheuristics;
 
 namespace AoA
@@ -30,5 +31,18 @@ namespace AoA
             return ans;
         }
 
+        public static Type[] LoadAlgorithm(string file)
+        {
+            Assembly a = Assembly.LoadFrom(file);
+            List<Type> ans = new List<Type>();
+
+            foreach (Type t in a.GetExportedTypes())
+            {
+                if (!t.IsAbstract && typeof(Algorithm).IsAssignableFrom(t))
+                    ans.Add(t);
+            }
+
+            return ans.ToArray();
+        }
     }
 }
