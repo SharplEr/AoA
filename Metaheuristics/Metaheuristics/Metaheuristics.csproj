@@ -50,6 +50,7 @@
     <Compile Include="IJump.cs" />
     <Compile Include="INeighborhood.cs" />
     <Compile Include="Parameter.cs" />
+    <Compile Include="ParametersSeter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomNeighborhood.cs" />
     <Compile Include="RandomStart.cs" />

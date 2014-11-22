@@ -15,13 +15,14 @@ namespace AoARun
     {
         static void Main(string[] args)
         {
-            
+            FullData data = new FullData(@"..\..\..\Data\DataInfo.txt");
+            /*
             FullData data = new FullData(new string[] { @"..\..\..\Data\data_1.csv", @"..\..\..\Data\data_2.csv" },
                 GenomeNetwork.TestTags,
                 GenomeNetwork.ResultTags[0],
                 GenomeNetwork.FenTags,
                 GenomeNetwork.ToDouble);            
-            
+            */
             /*
             FullData data = new FullData(new string[] { @"..\..\..\Data\Iris.csv" },
                 new string[] { "Длинач", "Ширинач", "Длинал", "Ширинал"},
@@ -33,16 +34,16 @@ namespace AoARun
             //35-24-9-0,664-лучшее, при 0.1, 5500
             //
             
-            const int mmm = 100;
+            const int mmm = 1000;
 
             var tupleSigment = DataManager.getShuffleFrom(data, mmm, 0.25, new Random(271828314));
             
             //0,21-500-5-24-9
-            /*
-            //Experiments experiment = new Experiments(() => new AGN(0.01, 2800, 13, 65, 20), mmm);
+
+            Experiments experiment = new Experiments(() => new ThreeLayerNetwork(0.01, 2800, 13, 65, 20), mmm);
             //1-2-10-6
             //1-6-1-13-2,05
-            Experiments experiment = new Experiments(() => new AGRNN(4,8, 7, 3, 2.05), mmm);
+            //Experiments experiment = new Experiments(() => new AGRNN(4,8, 7, 3, 2.05), mmm);
             Stopwatch sw = new Stopwatch();
             sw.Start();
             CVlog v = experiment.Run(data, (x) => { Console.WriteLine("Завершено {0}%", x * 100); }, tupleSigment.Item1, tupleSigment.Item2);
@@ -52,8 +53,8 @@ namespace AoARun
             else Console.WriteLine("Не удалось");
             
             Console.WriteLine("Время: {0} (мс/обучение)", (double)sw.ElapsedMilliseconds/mmm);
-            */
             
+            /*
             Parameter[] p = new Parameter[5];
             p[0] = new Parameter(99, 1, "начальный коэффициент", (x) => x / 100.0);
             p[1] = new Parameter(100, 1, "время обучения", (x) => x * 100.0);
@@ -63,7 +64,7 @@ namespace AoARun
 
             Type type = typeof(ThreeLayerNetwork); //typeof(AGRNN)
             FindAlgorithm finder = new FindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}", x, y), type, data, tupleSigment.Item1, tupleSigment.Item2);
-            
+            */
             /*
             Parameter[] p = new Parameter[5];
             p[0] = new Parameter(5, 1, "Число в 1 слое", (x) => x);
@@ -72,7 +73,7 @@ namespace AoARun
             p[3] = new Parameter(13, 3, "S критерий", (x) => x);
             p[4] = new Parameter(81, 1, "x критерий", (x) => x/20.0);
            */
-
+            /*
             var ans = finder.Find();
             object[] os = ans.Item1;
 
@@ -88,7 +89,7 @@ namespace AoARun
 
             writer.WriteLine();
 
-            ans.Item2.Save(writer);
+            ans.Item2.Save(writer);*/
             /*
             CVlog max = default(CVlog);
             

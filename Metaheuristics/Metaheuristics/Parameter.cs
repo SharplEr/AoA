@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Metaheuristics
 {
@@ -46,6 +47,40 @@ namespace Metaheuristics
             name = n;
             convert = f;
             length = max - min;
+        }
+        
+        public static Parameter[] LoadFromDLL(string file)
+        {
+            Assembly a = Assembly.LoadFrom(file);
+            Parameter[] ans = null;
+
+            foreach (Type t in a.GetExportedTypes())
+            {
+                if (typeof(ParametersSeter).IsAssignableFrom(t))
+                {
+                    ans = (Parameter[])t.GetMethod("GetParameters").Invoke(null, null);
+                    break;
+                }
+            }
+
+            return ans;
+        }
+
+        public static Parameter[] LoadFromDLL(string file, string name)
+        {
+            Assembly a = Assembly.LoadFrom(file);
+            Parameter[] ans = null;
+
+            foreach (Type t in a.GetExportedTypes())
+            {
+                if (typeof(ParametersSeter).IsAssignableFrom(t) && (t.Name == name))
+                {
+                    ans = (Parameter[])t.GetMethod("GetParameters").Invoke(null, null);
+                    break;
+                }
+            }
+
+            return ans;
         }
     }
 }

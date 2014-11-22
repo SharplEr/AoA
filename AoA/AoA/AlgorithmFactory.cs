@@ -31,7 +31,7 @@ namespace AoA
             return ans;
         }
 
-        public static Type[] LoadAlgorithm(string file)
+        public static Type[] LoadFromDLL(string file)
         {
             Assembly a = Assembly.LoadFrom(file);
             List<Type> ans = new List<Type>();
@@ -41,6 +41,16 @@ namespace AoA
                 if (!t.IsAbstract && typeof(Algorithm).IsAssignableFrom(t))
                     ans.Add(t);
             }
+
+            return ans.ToArray();
+        }
+
+        public static Type[] LoadFromDLL(string[] files)
+        {
+            List<Type> ans = new List<Type>();
+
+            for (int i = 0; i < files.Length; i++)
+                ans.AddRange(LoadFromDLL(files[i]));
 
             return ans.ToArray();
         }

@@ -61,6 +61,42 @@ namespace AoA
             if (!Save(saveWriter)) throw new SystemException("Не удается сохранить");
         }
 
+        /*
+        protected Tuple<int, double, > LoadConfig(StreamReader reader)
+        {
+            string s = reader.ReadLine();
+
+            
+        }*/
+
+        /*
+        public TestManager(FullData[] td, int m, double part, string name, Type[] ts, Parameter[][] ps)
+        {
+            this.m = m;
+            this.part = part;
+            TestData = td;
+            info = new List<Tuple<Type, Test[]>>();
+
+            for (int i = 0; i < ts.Length; i++)
+                if (!typeof(Algorithm).IsAssignableFrom(ts[i])) throw new ArgumentException("Не верный тип! Должен наследовать Algorithm.");
+
+            for (int i = 0; i < ts.Length; i++)
+                info.Add(new Tuple<Type, Test[]>(ts[i], new Test[td.Length]));
+
+            fileName = name;
+
+            Refresh(ps);
+
+            haveChange = false;
+
+            if (!Save(saveWriter)) throw new SystemException("Не удается сохранить");
+        }*/
+
+        public TestManager()
+        {
+            
+        }
+
         public void Starting(Action<int, int, Type, int, int> w)
         {
             if (runer != null) throw new ArgumentException("Что-то уже работает!");
