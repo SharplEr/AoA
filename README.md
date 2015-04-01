@@ -1,4 +1,4 @@
-GenomeParser
+AoA
 ============
 
-This application analyzes genetic and phenotypic information and make predictions about the presence of hypertension.
+This application analyzes machine learning algorithms. AoA -- Analysis of analyzers.
