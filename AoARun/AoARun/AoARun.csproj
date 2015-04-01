@@ -48,7 +48,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Regression.cs" />
     <Compile Include="RndA.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -78,10 +77,6 @@
     <ProjectReference Include="..\..\Araneam\VectorSpace\VectorSpace\VectorSpace.csproj">
       <Project>{82c4c097-83df-4c8a-acf7-bd4cd7fbdbc9}</Project>
       <Name>VectorSpace</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\GenomeNeuralNetwork\GenomeNeuralNetwork.csproj">
-      <Project>{8ed3c145-b2f8-45bb-80f9-0411e2347322}</Project>
-      <Name>GenomeNeuralNetwork</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Metaheuristics\Metaheuristics\Metaheuristics.csproj">
       <Project>{6a5b5aed-b183-429e-9657-c10c25cf7e96}</Project>

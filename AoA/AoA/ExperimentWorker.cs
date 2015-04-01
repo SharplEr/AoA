@@ -33,8 +33,13 @@ namespace AoA
             getAlgorithms = algs;
             learnDate = dl;
             controlDate = dc;
-            rocs = new ROC[ROCn];
-            rocs.done();
+
+            if (ROCn == 0 || controlDate[0].Length < 2 || controlDate[0].GetResults().MaxNumber > 2) rocs = null;
+            else
+            {
+                rocs = new ROC[ROCn];
+                rocs.Done();
+            }
 
             Run(100, 1000);
         }
@@ -58,7 +63,7 @@ namespace AoA
                 controlDate[i].AddControlError(CalcedControl, info);
 
                 double th = -1;
-
+                if (rocs!=null)
                 for (int k = 0; k < rocs.Length; k++)
                 {
                     alg.ChangeThreshold(th);

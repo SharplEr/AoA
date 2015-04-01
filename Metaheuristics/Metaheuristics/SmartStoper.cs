@@ -25,8 +25,12 @@ namespace Metaheuristics
         public bool DontStop()
         {
             //Надо дать алгоритму шанс по дольше поискать
-            //return f() > min;
-            return (Step() < 2 * maxStep) || (StepWithoutBest() < maxStep) || (f()>min);
+            //return f() >= min;
+            //Хорошо бы как-то сделать так, что бы нельзя было топтаться на одном месте
+            //Ну список запрета наверное затащит, но его же хер сделаешь нормально... хотя я и так наверное не особо топтаюсь
+            int m = (int)Math.Round(Math.Sqrt(maxStep));
+            if (m < 2) m = 2;
+            return (Step() < maxStep) || (StepWithoutBest() < m) || (f()>min);
             //Так как поле дискретное, то и нет особой мазы ограничивать общее число итераций - пока находит, пусть ищет.
         }
     }

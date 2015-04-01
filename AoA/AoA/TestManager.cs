@@ -132,7 +132,7 @@ namespace AoA
             int i = 0;
             while(i < TestData.Length)
             {
-                var td = DataManager.getShuffleFrom(TestData[i], m, part, new Random(271828314));
+                var td = DataManager.GetShuffleFrom(TestData[i], m, part, new Random(271828314));
 
                 for(int j = 0; j< info.Count; j++)
                 {

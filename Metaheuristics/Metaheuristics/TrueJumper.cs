@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace Metaheuristics
 {
-    public class ParametersSeter
+    public class TrueJumper<T>: IJump<T> where T : IQuality<T>
     {
-        public static Parameter[] GetParameters()
+        public TrueJumper()
+        { }
+
+        public bool Jump(T x, T y)
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }

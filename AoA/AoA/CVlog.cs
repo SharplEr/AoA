@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using Metaheuristics;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace AoA
 {
@@ -51,23 +52,27 @@ namespace AoA
 
             t = log2.errorOfAUC - log1.errorOfAUC;
             return t/8.0;
+            
+            //return log1.AUC - log2.AUC;
         }
 
         public double CompareTo(CVlog log2)
         {
-
-            return log2.AUC - AUC;
+            return Compare(this, log2);
+            //return log2.avgErrorAtLearn - avgErrorAtLearn;
+            //return log2.avgErrorAtControl - avgErrorAtControl;
+            //return -AUC + log2.AUC;
         }
 
         public bool Save(StreamWriter writer)
         {
             try
             {
-                writer.WriteLine("Средняя ошибка (на контрольном множестве) для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgErrorAtControl, errorDispAtControl, errorOfAvgErrorAtControl);
+                writer.WriteLine("Средняя ошибка (на контрольном множестве) для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgErrorAtControl, errorDispAtControl.ToString(NumberFormatInfo.InvariantInfo), errorOfAvgErrorAtControl.ToString(NumberFormatInfo.InvariantInfo));
 
-                writer.WriteLine("Средняя ошибка (на множестве обучения) для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgErrorAtLearn, errorDispAtLearn, errorOfAvgErrorAtLearn);
+                writer.WriteLine("Средняя ошибка (на множестве обучения) для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgErrorAtLearn.ToString(NumberFormatInfo.InvariantInfo), errorDispAtLearn.ToString(NumberFormatInfo.InvariantInfo), errorOfAvgErrorAtLearn.ToString(NumberFormatInfo.InvariantInfo));
 
-                writer.WriteLine("Средняя переобученность для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgOverLearning, overLearningDisp, errorOfAvgOverLearning);
+                writer.WriteLine("Средняя переобученность для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgOverLearning.ToString(NumberFormatInfo.InvariantInfo), overLearningDisp.ToString(NumberFormatInfo.InvariantInfo), errorOfAvgOverLearning.ToString(NumberFormatInfo.InvariantInfo));
                 writer.WriteLine();
                 for (int i = 0; i < errorDispAtControls.Length; i++)
                 {
@@ -81,21 +86,34 @@ namespace AoA
 
                 writer.WriteLine();
 
-                writer.WriteLine("ROC");
+                if (rocs != null)
+                {
+                    writer.WriteLine("ROC");
 
-                writer.WriteLine("ROC кривая для класса больных");
+                    writer.WriteLine("ROC кривая для класса больных");
 
-                writer.WriteLine("FPR:");
-                for (int i = 0; i < rocs.Length; i++)
-                    writer.WriteLine(rocs[i].avgFPR);
+                    writer.WriteLine("(FPR, TPR)");
+                    writer.WriteLine("(0, 0)");
+                    for (int i = 0; i < rocs.Length; i++)
+                    {
+                        double x = rocs[i].avgFPR, y = rocs[i].avgTPR;
+                        if (!((x==0.0 && y==0.0)||(x==1.0 && y == 1.00)))
+                            writer.WriteLine("({0}, {1})", x.ToString(NumberFormatInfo.InvariantInfo), y.ToString(NumberFormatInfo.InvariantInfo));
+                    }
+                    writer.WriteLine("(1, 1)");
+                    /*
+                    writer.WriteLine("FPR:");
+                    for (int i = 0; i < rocs.Length; i++)
+                        writer.WriteLine(rocs[i].avgFPR);
 
-                writer.WriteLine("TPR:");
-                for (int i = 0; i < rocs.Length; i++)
-                    writer.WriteLine(rocs[i].avgTPR);
-
-                writer.WriteLine("AUC: {0}", AUC);
-
-                writer.WriteLine("Ошибка AUC: {0}", errorOfAUC);
+                    writer.WriteLine("TPR:");
+                    for (int i = 0; i < rocs.Length; i++)
+                        writer.WriteLine(rocs[i].avgTPR);
+                    */
+                    writer.WriteLine("AUC: {0}", AUC);
+                    
+                    writer.WriteLine("Ошибка AUC: {0}", errorOfAUC);
+                }
 
                 writer.WriteLine("Конец отчета.");
                 writer.Close();

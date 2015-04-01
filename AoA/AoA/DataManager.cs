@@ -18,14 +18,18 @@ namespace AoA
         /// </summary>
         /// <param name="data">Данные</param>
         /// <param name="m">Число перестановок</param>
-        /// <param name="part">Доля идущая на контроль</param>
-        public static Tuple<SigmentData[], SigmentData[]> getShuffleFrom(FullData data, int m, double part, Random r)
+        /// <param name="part">Доля идущая на контроль. Если число примеров идущих на контроль будет меньше или равна 1, будет реализован скользящий контроль с одним оделяемым объектом</param>
+        public static Tuple<SigmentData[], SigmentData[]> GetShuffleFrom(FullData data, int m, double part, Random r)
         {
+            //Число на контроле
+            int k = (int)Math.Round(data.Length * part);
+            if (k <= 1) return GetOneFrom(data);
+
+            if (m < 1) return GetNoCross(data, data.Length - k);
+
             //Первый пусть будет обучением, а второй контрольный
             Tuple<SigmentData[], SigmentData[]> ans = new Tuple<SigmentData[], SigmentData[]>(new SigmentData[m], new SigmentData[m]);
 
-            int k = (int)Math.Round(data.Length * part);
-            if (k < 1) k = 1;
             int[] learnDate = new int[data.Length - k];
             int[] controlDate = new int[k];
 
@@ -65,14 +69,35 @@ namespace AoA
         }
 
         //Возможно эта функция не понадобится. В конце концов слишком уж много будет.
-        public static Tuple<SigmentData[], SigmentData[]>[] getShuffleFrom(FullData[] data, int m, double part)
+        public static Tuple<SigmentData[], SigmentData[]>[] GetShuffleFrom(FullData[] data, int m, double part)
         {
             Tuple<SigmentData[], SigmentData[]>[] ans = new Tuple<SigmentData[],SigmentData[]>[data.Length];
 
             for (int i = 0; i < data.Length; i++)
-                ans[i] = getShuffleFrom(data[i], m, part, new Random(271828314));
+                ans[i] = GetShuffleFrom(data[i], m, part, new Random(271828314));
 
             return ans;
+        }
+
+        public static Tuple<SigmentData[], SigmentData[]> GetOneFrom(FullData data)
+        {
+            Tuple<SigmentData[], SigmentData[]> ans = new Tuple<SigmentData[], SigmentData[]>(new SigmentData[data.Length], new SigmentData[data.Length]);
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                ans.Item1[i] = new SigmentData(data, Statist.GetIndex(data.Length - 1, i));
+                ans.Item2[i] = new SigmentData(data, new int[]{i});
+            }
+
+            return ans;
+        }
+
+        public static Tuple<SigmentData[], SigmentData[]> GetNoCross(FullData data, int n)
+        {
+            return new Tuple<SigmentData[], SigmentData[]>(
+                    new SigmentData[] { new SigmentData(data, Statist.GetIndex(n)) },
+                    new SigmentData[] { new SigmentData(data, Statist.GetIndexFromTo(n, data.Length)) }
+                    );
         }
     }
 }

@@ -45,6 +45,7 @@ namespace AoA
 
         public int[] GetMaxDiscretePath()
         {
+            //Только дискретной части? А после преобразования?
             return data.maxdiscretePart;
         }
     }

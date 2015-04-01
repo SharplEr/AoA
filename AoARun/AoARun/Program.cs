@@ -3,11 +3,12 @@ using System.IO;
 using IOData;
 using VectorSpace;
 using AoA;
-using GenomeNeuralNetwork;
+
 using Metaheuristics;
 using System.Collections.Generic;
 using System.Diagnostics;
 using StandardAlgorithms;
+using System.Globalization;
 
 namespace AoARun
 {
@@ -15,35 +16,64 @@ namespace AoARun
     {
         static void Main(string[] args)
         {
-            FullData data = new FullData(@"..\..\..\Data\DataInfo.txt");
-            /*
-            FullData data = new FullData(new string[] { @"..\..\..\Data\data_1.csv", @"..\..\..\Data\data_2.csv" },
-                GenomeNetwork.TestTags,
-                GenomeNetwork.ResultTags[0],
-                GenomeNetwork.FenTags,
-                GenomeNetwork.ToDouble);            
-            */
-            /*
-            FullData data = new FullData(new string[] { @"..\..\..\Data\Iris.csv" },
-                new string[] { "Длинач", "Ширинач", "Длинал", "Ширинал"},
-                "Вид",
-                new string[] { "Длинач", "Ширинач", "Длинал", "Ширинал" },
-                GenomeNetwork.ToDouble);
-              */
-            //21,30,11-0,641+0,005
-            //35-24-9-0,664-лучшее, при 0.1, 5500
-            //
-            
-            const int mmm = 1000;
+            Console.WriteLine("Запущенно со следующими параметрами: "+ String.Join(", ", args));
 
-            var tupleSigment = DataManager.getShuffleFrom(data, mmm, 0.25, new Random(271828314));
+            Console.WriteLine("Файл описывающий данные: {0}. Существует: {1}.", args[0], File.Exists(args[0]));
+            if (!File.Exists(args[0])) return;
+
+            Console.WriteLine("Файл описывающий реализацию алгоритма: {0}. Существует: {1}.", args[1], File.Exists(args[1]));
+            //if (!File.Exists(args[1])) return;
+
+            Console.WriteLine("Выходной файл: {0}.", args[2]);
+
+            FullData data = new FullData(args[0]);
             
+            double k = 0.2;
+
+            if (args.Length > 3)
+            {
+                try
+                {
+                    k = Convert.ToDouble(args[3], NumberFormatInfo.InvariantInfo);
+                }
+                catch
+                {
+                    k = Convert.ToDouble(args[3]);
+                }
+            }
+            Console.WriteLine("Доля на контроле = {0}. Число на обучении = {1}", k, data.Length - (int)Math.Round(data.Length * k));
+
+            if ((int)Math.Round(data.Length * k) < 2) Console.WriteLine("Активирован режим скользящего контроля с одним отделяемым объектом");
+            
+            int mmm = 180;
+
+            if (args.Length > 4)
+                    mmm = Convert.ToInt32(args[4]);
+
+            Console.WriteLine("Итараций скользящего контроля при поиске: {0}", mmm);
+
+            var tupleSigment = DataManager.GetShuffleFrom(data, mmm, k, new Random(271828314));
+
+            int m5m = 5 * mmm;
+
+            if (mmm < 1)
+            {
+                m5m = 0;
+                Console.WriteLine("Скользящий контроль отключен");
+            }
+            else
+                if (args.Length > 5)
+                    mmm = Convert.ToInt32(args[5]);
+
+            Console.WriteLine("Итараций скользящего контроля в конце: {0}", m5m);
+
             //0,21-500-5-24-9
+            /*
+            Experiments experiment = new Experiments(() => new ThreeLayerNetwork(0.02, 50, 3, 24, 9), 150, mmm);
 
-            Experiments experiment = new Experiments(() => new ThreeLayerNetwork(0.01, 2800, 13, 65, 20), mmm);
             //1-2-10-6
             //1-6-1-13-2,05
-            //Experiments experiment = new Experiments(() => new AGRNN(4,8, 7, 3, 2.05), mmm);
+            //Experiments experiment = new Experiments(() => new AGRNN(4,8, 7, 3, 2.05), 150, mmm);
             Stopwatch sw = new Stopwatch();
             sw.Start();
             CVlog v = experiment.Run(data, (x) => { Console.WriteLine("Завершено {0}%", x * 100); }, tupleSigment.Item1, tupleSigment.Item2);
@@ -54,17 +84,29 @@ namespace AoARun
             
             Console.WriteLine("Время: {0} (мс/обучение)", (double)sw.ElapsedMilliseconds/mmm);
             
-            /*
-            Parameter[] p = new Parameter[5];
-            p[0] = new Parameter(99, 1, "начальный коэффициент", (x) => x / 100.0);
-            p[1] = new Parameter(100, 1, "время обучения", (x) => x * 100.0);
-            p[2] = new Parameter(20, 1, "Итерации обучения", (x) => x);
-            p[3] = new Parameter(100, 50, "Число в 1 слое", (x) => x);
-            p[4] = new Parameter(50, 15, "Число в 2 слое", (x) => x);
-
-            Type type = typeof(ThreeLayerNetwork); //typeof(AGRNN)
-            FindAlgorithm finder = new FindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}", x, y), type, data, tupleSigment.Item1, tupleSigment.Item2);
             */
+
+            const double ir = Math.PI / 7.0 * 22.0;
+            const double ir2 = Math.E * 71.0 / 193.0;
+            Parameter[] p = new Parameter[3];
+            p[0] = new Parameter(500, 1, "начальный коэффициент", (x) => ir * x / 500.0);
+            //p[0] = new Parameter(60, 1, "начальный коэффициент", (x) => 0.01);
+            p[1] = new Parameter(32, 1, "время обучения", (x) => ir2 * x * 2.0);
+            //p[1] = new Parameter(1, 1, "время обучения", (x) => 0.0);
+            p[2] = new Parameter(30, 1, "Эпох обучения", (x) => x);
+            //p[3] = new Parameter(40, 3, "Число в 1 слое", (x) => x);
+            //p[4] = new Parameter(40, 3, "Число в 2 слое", (x) => x);
+            //p[5] = new Parameter(40, 3, "Число в 3 слое", (x) => x);
+            //p[6] = new Parameter(40, 3, "Число в 4 слое", (x) => x);
+
+            Type type = typeof(Neighbour);
+            //typeof(AGRNN)//ThreeLayerNetwork//TwoLayerNetwork//MPL///Regression
+            int step = 0;
+
+            var finder = new FindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++), type, data, tupleSigment.Item1, tupleSigment.Item2);
+
+            //var finder = new RandomFindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++), type, data, tupleSigment.Item1, tupleSigment.Item2);
+
             /*
             Parameter[] p = new Parameter[5];
             p[0] = new Parameter(5, 1, "Число в 1 слое", (x) => x);
@@ -73,119 +115,32 @@ namespace AoARun
             p[3] = new Parameter(13, 3, "S критерий", (x) => x);
             p[4] = new Parameter(81, 1, "x критерий", (x) => x/20.0);
            */
-            /*
+            
             var ans = finder.Find();
             object[] os = ans.Item1;
 
             for (int i = 0; i < os.Length; i++ )
                 Console.WriteLine(p[i].name+":"+os[i].ToString());
 
-            var writer = new StreamWriter(@"log.txt", false);
+            var writer = new StreamWriter(args[2], false);
             writer.WriteLine("      Начало отчета алгоритма {0}", type);
             writer.WriteLine("Найденные параметры:");
 
             for (int i = 0; i < os.Length; i++)
                 writer.WriteLine(p[i].name + ":" + os[i].ToString());
 
+            writer.WriteLine("Шагов поиска выполнено: {0}", step);
+
             writer.WriteLine();
 
-            ans.Item2.Save(writer);*/
-            /*
-            CVlog max = default(CVlog);
-            
-            bool flag = true;
-            List<Tuple<double, double, int, int, int, int>> cools = new List<Tuple<double, double, int, int, int, int>>();
+            Experiments exp = new Experiments(() => AlgorithmFactory.GetFactory(type)(os), 150);
 
-            //int one = 24; 
-            int two = 9;
-            double r = 0.21;
-            double tm = 500;
-            int s = 60;
-            int m = 5;
-            //for (double r = 0.15; r <= 0.25; r+=0.01 )
-              //  for (double tm = 400; tm <= 600; tm += 200)
-            for (int one = 1; one <= 24; one+=1)
-              //  for (int two = 3; two <= 9; two+=1 )
-            //for (int s = 2; s <= 20; s+=2 )
-                //for (int m = 1; m <= 101; m += 5)
-                {
-                    Experiments experiment = new Experiments(() => new AGN(r, tm, m, one, two), 200);
-                    //Experiments experiment = new Experiments(() => new AGRNN(one, two, m, s), 100);
-                    //!Здесь вы можете присвоить другой классификатор - раскоментировать одну строчку и закомментировать другую! (если выбрали AGN - надо вызвать dispose в конце как внизу)
-                    //new AGN(0.1, 1500);
-                    //new RndA();
-                    //new Regression(0.1, 3000);
-                    CVlog t = experiment.Run(data, (x) => { Console.WriteLine("Завершено {0}% (чекаем эпох: {1}, время {2}, r ={3}, ({4}, {5}) s - {6})", x * 100, m, tm, r, one, two, s); });
-                    if (flag)
-                    {
-                        max = t;
-                        cools.Add(new Tuple<double, double, int, int, int, int>(r, tm, m, one, two, s));
-                        flag = false;
-                    }
-                    else
-                    {
-                        double tt = CVlog.Compare(t, max);
-                        if (tt > 0.0)
-                        {
-                            Console.WriteLine("!!!Новый победитель: r = {0} t = {1} m = {2} ({3},{4}) s - {5}", r, tm, m, one, two, s);
-                            max = t;
-                            cools.Clear();
-                            cools.Add(new Tuple<double, double, int, int, int, int>(r, tm, m, one, two, s));
-                        }
-                        else if (tt == 0.0)
-                        {
-                            cools.Add(new Tuple<double, double, int, int, int, int>(r, tm, m, one, two, s));
-                            Console.WriteLine("Найден такой же хороший как предыдущий {0}", cools.Count);
-                        }
-                    }
-                    //if (experiment.WriteLog(@"log" + m.ToString() + ".txt")) Console.WriteLine("Отчет сформирован");
-                    //else Console.WriteLine("Не удалось");
-                }
+            var ts = DataManager.GetShuffleFrom(data, 5*mmm, k, new Random(271828314));
 
-            List<Tuple<double, double, int, int, int, int>> cools2 = new List<Tuple<double, double, int, int, int, int>>();
+            var log = exp.Run(data, (x)=>Console.WriteLine("завершающие проценты {0}", x), ts.Item1, ts.Item2);
 
-            max = default(CVlog);
+            log.Save(writer);
 
-            foreach (Tuple<double, double, int, int, int, int> tuple in cools)
-            {
-                Experiments experiment = new Experiments(() => new AGN(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple.Item5), 1000);
-                //Experiments experiment = new Experiments(() => new AGRNN(tuple.Item4, tuple.Item5, tuple.Item3, tuple.Item6), 1000);
-                CVlog t = experiment.Run(data, (x) => { Console.WriteLine("Завершено {0}% (чекаем 2 эпох: {1}, время {2}, r ={3}, ({4}, {5}), s - {6})", x * 100, tuple.Item3, tuple.Item2, tuple.Item1, tuple.Item4, tuple.Item5, tuple.Item6); });
-                if (cools2.Count == 0)
-                {
-                    max = t;
-                    cools2.Add(tuple);
-                }
-                else
-                {
-                    double tt = CVlog.Compare(t, max);
-                    if (tt > 0.0)
-                    {
-                        Console.WriteLine("!!!Новый победитель: r = {0} t = {1} m = {2} ({3},{4}) s - {5}", tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple.Item5, tuple.Item6);
-                        max = t;
-                        cools2.Clear();
-                        cools2.Add(tuple);
-                    }
-                    else if (tt == 0.0)
-                    {
-                        cools2.Add(tuple);
-                        Console.WriteLine("Найден такой же хороший как предыдущий {0}", cools2.Count);
-                    }
-                }
-            }
-
-            Console.WriteLine("Список хороших:");
-            var writer = new StreamWriter("best.txt", false);
-            foreach (Tuple<double, double, int, int, int, int> tuple in cools2)
-            {
-                Console.WriteLine("r={0}; t = {1}; m = {2} ({3}, {4}, s - {5})", tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple.Item5, tuple.Item6);
-                writer.WriteLine("r={0}; t = {1}; m = {2} ({3}, {4}), s - {5}", tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple.Item5, tuple.Item6);
-            }
-                
-
-            writer.Close();
-            writer.Dispose();
-            */
             GC.Collect();
             Console.ReadKey();
         }

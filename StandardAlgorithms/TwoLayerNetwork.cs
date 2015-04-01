@@ -1,40 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using AoA;
-using Araneam;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using VectorSpace;
 using IOData;
+using Araneam;
+using AoA;
 
 namespace StandardAlgorithms
 {
-    public class ThreeLayerNetwork : Algorithm
+    public class TwoLayerNetwork : Algorithm
     {
         ClassicNetwork network;
         double r, tm;
         int max;
 
-        int one, two;
+        int l;
 
         double threshold = 0;
 
-        public ThreeLayerNetwork(params object[] p):base(p)
+        public TwoLayerNetwork(params object[] p):base(p)
         {
-            if (p.Length != 5) throw new ArgumentException("Длина не та");
-            Set((double)p[0], (double)p[1], (int)p[2], (int)p[3], (int)p[4]);
+            if (p.Length != 4) throw new ArgumentException("Длина не та");
+            Set((double)p[0], (double)p[1], (int)p[2], (int)p[3]);
         }
 
-        public ThreeLayerNetwork(double rr, double tt, int mmax, int one, int two)
+        public TwoLayerNetwork(double rr, double tt, int mmax, int one)
         {
-            Set(rr, tt, mmax, one, two);
+            Set(rr, tt, mmax, one);
         }
 
-        protected virtual void Set(double rr, double tt, int mmax, int one, int two)
+        protected virtual void Set(double rr, double tt, int mmax, int one)
         {
             r = rr;
             tm = tt;
             max = mmax;
-            this.one = one;
-            this.two = two;
+            l = one;
         }
 
         public override Results Calc(SigmentInputData data)
@@ -86,19 +88,9 @@ namespace StandardAlgorithms
             pvsi.AddRange(nvsi);
  
             int[] counts = new int[] { count, resultDate.Length - count };
-            network = new ClassicNetwork(r, tm, one, two, inputDate[0].Length, resultDate[0].Length);
+            network = new ClassicNetwork(r, tm, new int[] { l }, inputDate[0].Length, resultDate[0].Length);
             network.AddTestDate(pvsi.ToArray(), pvso.ToArray(), counts);
-            network.NewLearn2(false, max);
-            /*
-            int[] lalala = network.UnusedInput(1.0);
-            if (lalala == null || lalala.Length == 0) return;
-            Console.Write("Не используем:");
-            for (int i = 0; i < lalala.Length; i++)
-                Console.Write(" {0},", lalala[i]);
-            Console.WriteLine();
-            */
-            
-            //if (network.haveNaN()) throw new ArithmeticException("Была ошибка в вычислениях");
+            network.NewLearn(false, max);
         }
 
         public override void ChangeThreshold(double th)

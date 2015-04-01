@@ -24,13 +24,15 @@ namespace Metaheuristics
             for (int i = 0; i < p.Length; i++)
             {
                 //m += (p[i].length + 1) * (p[i].length + 1);
-                if (p[i].length>0) m *= 2;
-                double cl = Math.Log((parameters[i].length * parameters[i].length) * (1.0 - 2.0 / parameters[i].length))/d;
+                if (p[i].length > 1) m *= 2;
+                else if (p[i].length > 0) m += 1;
+                int L = parameters[i].length;// +1;
+                double cl = Math.Log((L * L) * (1.0 - 2.0 / L)) / d;
                 temps[i] = () => Math.Exp(-cl * Math.Pow(step, 1.0 / parameters.Length));
             }
 
-            //m = Math.Sqrt(m) / 2;
-            //if (m < 1) m = 1;
+            m = (int)Math.Round(Math.Sqrt(m) / 2);
+            if (m < p.Length) m = p.Length;
             starter = new RandomStart(random, p);
             
             double epsilon = 0.001; //Вероятность перехода в плохое решение на последних шагах алгоритма

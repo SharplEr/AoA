@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Threading.Tasks;
 using IOData;
-using VectorSpace;
-using System.Threading;
-using MyParallel;
 using ArrayHelper;
 
 namespace AoA
@@ -16,10 +8,8 @@ namespace AoA
      * Общие пояснения для тех, кто попытается разобраться:
      * 0) Этот класс - реализация скользящего контроля.
      * 1) Для анализа алгоритма требуется.
-     *      1.1) Вызвать конструктор, для которого требуется задать общую длину всех данных.
-     *      1.2) Присвоить полю algorithm оболочку для тестируемого классификатора
-     *      1.3) Вызвать метод Run()
-     *      1.4) Затем можно записать отчет в файл методом WriteLog()
+     *      1.1) Вызвать конструктор
+     *      1.2) Вызвать метод Run(), который вернет CVlog, который можно сохранить в файл.
     */
     public class Experiments
     {
@@ -28,7 +18,7 @@ namespace AoA
         //Какая часть пойдет на контрольное множество от всех данных
         const double part = 0.25;
         //Точек для ROC кривых
-        const int ROCn = 150;
+        int ROCn = 150;
         //Инициализируем константой для того что бы результат вычислений был повторим
         Random r = new Random(271828314);
         
@@ -72,22 +62,24 @@ namespace AoA
         string name = null;
         #endregion
 
-        public Experiments(Func<Algorithm> getAlg, int mmm, string AlgName)
+        public Experiments(Func<Algorithm> getAlg, int mmm, string AlgName, int rocn)
         {
             m = mmm;
+            ROCn = rocn;
             getAlgorithm = getAlg;
             name = AlgName;
         }
 
-        public Experiments(Func<Algorithm> getAlg, int mmm)
+        public Experiments(Func<Algorithm> getAlg, int mmm, int rocn)
         {
             m = mmm;
+            ROCn = rocn;
             getAlgorithm = getAlg;
         }
 
-        public Experiments(Func<Algorithm> getAlg)
+        public Experiments(Func<Algorithm> getAlg, int rocn)
         {
-            //foundThreshold = new double[m];
+            ROCn = rocn;
             getAlgorithm = getAlg;
         }
 
@@ -100,7 +92,7 @@ namespace AoA
             int i;
             data = d;
             info = new Info[data.Length];
-            info.done();
+            info.Done();
 
             if (data == null) throw new ArgumentNullException();
 
@@ -291,63 +283,66 @@ namespace AoA
 
             errorOfAvgOverLearning = Statist.CalcError(info.Length, overLearningDisp, a);
             //Для ROC кривых
-            for (int i = 0; i < rocs.Length; i++)
+
+            if (rocs != null)
             {
-                rocs[i].refresh();
-                rocs[i].avgFPR = 0.0;
-                rocs[i].avgTPR = 0.0;
-
-                for (int j = 0; j < rocs[i].FPRa.Length; j++)
+                for (int i = 0; i < rocs.Length; i++)
                 {
-                    rocs[i].avgFPR += rocs[i].FPRa[j];
-                }
-                rocs[i].avgFPR /= rocs[i].FPRa.Length;
+                    rocs[i].refresh();
+                    rocs[i].avgFPR = 0.0;
+                    rocs[i].avgTPR = 0.0;
 
-                for (int j = 0; j < rocs[i].TPRa.Length; j++)
-                {
-                    rocs[i].avgTPR += rocs[i].TPRa[j];
-                }
-                rocs[i].avgTPR /= rocs[i].TPRa.Length;
+                    for (int j = 0; j < rocs[i].FPRa.Length; j++)
+                    {
+                        rocs[i].avgFPR += rocs[i].FPRa[j];
+                    }
+                    rocs[i].avgFPR /= rocs[i].FPRa.Length;
 
-                rocs[i].dispFPR = 0.0;
-                rocs[i].dispTPR = 0.0;
+                    for (int j = 0; j < rocs[i].TPRa.Length; j++)
+                    {
+                        rocs[i].avgTPR += rocs[i].TPRa[j];
+                    }
+                    rocs[i].avgTPR /= rocs[i].TPRa.Length;
 
-                for (int j = 0; j < rocs[i].FPRa.Length; j++)
-                {
-                    t = rocs[i].FPRa[j] - rocs[i].avgFPR;
-                    rocs[i].dispFPR += t * t;
-                }
-                rocs[i].dispFPR /= rocs[i].FPRa.Length - 1;
+                    rocs[i].dispFPR = 0.0;
+                    rocs[i].dispTPR = 0.0;
 
-                for (int j = 0; j < rocs[i].TPRa.Length; j++)
-                {
-                    t = rocs[i].TPRa[j] - rocs[i].avgTPR;
-                    rocs[i].dispTPR += t * t;
+                    for (int j = 0; j < rocs[i].FPRa.Length; j++)
+                    {
+                        t = rocs[i].FPRa[j] - rocs[i].avgFPR;
+                        rocs[i].dispFPR += t * t;
+                    }
+                    rocs[i].dispFPR /= rocs[i].FPRa.Length - 1;
+
+                    for (int j = 0; j < rocs[i].TPRa.Length; j++)
+                    {
+                        t = rocs[i].TPRa[j] - rocs[i].avgTPR;
+                        rocs[i].dispTPR += t * t;
+                    }
+                    rocs[i].dispTPR /= rocs[i].TPRa.Length - 1;
                 }
-                rocs[i].dispTPR /= rocs[i].TPRa.Length - 1;
+
+                AUC = 0.0;
+
+                for (int i = 1; i < rocs.Length - 1; i++)
+                    AUC += rocs[i].avgTPR * (rocs[i + 1].avgFPR - rocs[i - 1].avgFPR);
+
+                AUC += rocs[0].avgTPR * (rocs[1].avgFPR - rocs[0].avgFPR) + rocs[rocs.Length - 1].avgTPR * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length - 2].avgFPR);
+
+                AUC *= 0.5;
+
+                errorOfAUC = Statist.CalcQError(rocs[0].TPR.Count, rocs[0].dispTPR, a) * (rocs[1].avgFPR - rocs[0].avgFPR) * (rocs[1].avgFPR - rocs[0].avgFPR);
+                errorOfAUC += Statist.CalcQError(rocs[rocs.Length - 1].TPR.Count, rocs[rocs.Length - 1].dispTPR, a) * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length - 2].avgFPR) * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length - 2].avgFPR);
+                errorOfAUC += Statist.CalcQError(rocs[0].FPR.Count, rocs[0].dispFPR, a) * (rocs[1].avgTPR - rocs[0].avgTPR) * (rocs[1].avgTPR - rocs[0].avgTPR) + Statist.CalcQError(rocs[1].FPR.Count, rocs[1].dispFPR, a) * (rocs[2].avgTPR + rocs[0].avgTPR) * (rocs[2].avgTPR + rocs[0].avgTPR);
+                errorOfAUC += Statist.CalcQError(rocs[rocs.Length - 1].FPR.Count, rocs[rocs.Length - 1].dispFPR, a) * (rocs[rocs.Length - 2].avgTPR + rocs[rocs.Length - 1].avgTPR) * (rocs[rocs.Length - 2].avgTPR + rocs[rocs.Length - 1].avgTPR) + Statist.CalcQError(rocs[rocs.Length - 2].FPR.Count, rocs[rocs.Length - 2].dispFPR, a) * (rocs[rocs.Length - 3].avgTPR - rocs[rocs.Length - 1].avgTPR) * (rocs[rocs.Length - 3].avgTPR - rocs[rocs.Length - 1].avgTPR);
+                for (int i = 1; i < rocs.Length - 1; i++)
+                    errorOfAUC += Statist.CalcQError(rocs[i].TPR.Count, rocs[i].dispTPR, a) * (rocs[i + 1].avgFPR - rocs[i - 1].avgFPR) * (rocs[i + 1].avgFPR - rocs[i - 1].avgFPR);
+
+                for (int i = 2; i < rocs.Length - 2; i++)
+                    errorOfAUC += Statist.CalcQError(rocs[i].FPR.Count, rocs[i].dispFPR, a) * (rocs[i - 1].avgTPR - rocs[i + 1].avgTPR) * (rocs[i - 1].avgTPR - rocs[i + 1].avgTPR);
+
+                errorOfAUC = 0.5 * Math.Sqrt(errorOfAUC);
             }
-
-            AUC = 0.0;
-
-            for (int i = 1; i < rocs.Length - 1; i++)
-                AUC += rocs[i].avgTPR * (rocs[i + 1].avgFPR - rocs[i - 1].avgFPR);
-
-            AUC += rocs[0].avgTPR * (rocs[1].avgFPR - rocs[0].avgFPR) + rocs[rocs.Length - 1].avgTPR * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length - 2].avgFPR);
-
-            AUC *= 0.5;
-
-            errorOfAUC = Statist.CalcQError(rocs[0].TPR.Count, rocs[0].dispTPR, a) * (rocs[1].avgFPR - rocs[0].avgFPR) * (rocs[1].avgFPR - rocs[0].avgFPR);
-            errorOfAUC += Statist.CalcQError(rocs[rocs.Length - 1].TPR.Count, rocs[rocs.Length - 1].dispTPR, a) * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length - 2].avgFPR) * (rocs[rocs.Length - 1].avgFPR - rocs[rocs.Length - 2].avgFPR);
-            errorOfAUC += Statist.CalcQError(rocs[0].FPR.Count, rocs[0].dispFPR, a) * (rocs[1].avgTPR - rocs[0].avgTPR) * (rocs[1].avgTPR - rocs[0].avgTPR) + Statist.CalcQError(rocs[1].FPR.Count, rocs[1].dispFPR, a) * (rocs[2].avgTPR + rocs[0].avgTPR) * (rocs[2].avgTPR + rocs[0].avgTPR);
-            errorOfAUC += Statist.CalcQError(rocs[rocs.Length - 1].FPR.Count, rocs[rocs.Length - 1].dispFPR, a) * (rocs[rocs.Length - 2].avgTPR + rocs[rocs.Length - 1].avgTPR) * (rocs[rocs.Length - 2].avgTPR + rocs[rocs.Length - 1].avgTPR) + Statist.CalcQError(rocs[rocs.Length - 2].FPR.Count, rocs[rocs.Length - 2].dispFPR, a) * (rocs[rocs.Length - 3].avgTPR - rocs[rocs.Length - 1].avgTPR) * (rocs[rocs.Length - 3].avgTPR - rocs[rocs.Length - 1].avgTPR);
-            for (int i = 1; i < rocs.Length - 1; i++)
-                errorOfAUC += Statist.CalcQError(rocs[i].TPR.Count, rocs[i].dispTPR, a) * (rocs[i + 1].avgFPR - rocs[i - 1].avgFPR) * (rocs[i + 1].avgFPR - rocs[i - 1].avgFPR);
-
-            for (int i = 2; i < rocs.Length - 2; i++)
-                errorOfAUC += Statist.CalcQError(rocs[i].FPR.Count, rocs[i].dispFPR, a) * (rocs[i - 1].avgTPR - rocs[i + 1].avgTPR) * (rocs[i - 1].avgTPR - rocs[i + 1].avgTPR);
-
-            errorOfAUC = 0.5 * Math.Sqrt(errorOfAUC);
-
             CVlog log;
             log.avgErrorAtControl = avgErrorAtControl;
             log.errorOfAvgErrorAtControl = errorOfAvgErrorAtControl;

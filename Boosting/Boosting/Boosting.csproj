@@ -63,10 +63,6 @@
       <Project>{82c4c097-83df-4c8a-acf7-bd4cd7fbdbc9}</Project>
       <Name>VectorSpace</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\GenomeNeuralNetwork\GenomeNeuralNetwork.csproj">
-      <Project>{8ed3c145-b2f8-45bb-80f9-0411e2347322}</Project>
-      <Name>GenomeNeuralNetwork</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

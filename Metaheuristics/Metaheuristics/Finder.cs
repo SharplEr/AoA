@@ -66,7 +66,7 @@ namespace Metaheuristics
             {
                 stepWithoutJump++;
 
-                if (stepWithoutJump > 10)
+                if (stepWithoutJump > 50)
                     step++;
             }
         }

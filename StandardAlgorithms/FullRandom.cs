@@ -11,7 +11,7 @@ namespace StandardAlgorithms
 {
     public class FullRandom : Algorithm
     {
-        Random r;
+        Random r = new Random(777);
 
         double th = 0;
         int m = 0;
