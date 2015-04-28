@@ -58,8 +58,11 @@ namespace AoA
 
                 ans.Item2[j] = new SigmentData(data, (int[])controlDate.Clone());
 
+                //Console.WriteLine("Хуй {0}. j = {1}", ans.Item2[j].GetResults().Equable, j);
+
                 //Не самый лучший способ исключить плохие разбиения.
-                if (ans.Item2[j].GetResults().Equable > 1.5) continue;
+                if (ans.Item2[j].GetResults().Equable > 2.2)
+                    continue;
 
                 ans.Item1[j] = new SigmentData(data, (int[])learnDate.Clone());
                 j++;

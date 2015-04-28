@@ -1,4 +1,4 @@
-..\..\..\Data\kidasNewOne.csv
+..\..\..\Data\kidasNewExt.csv
 
 locus0
 locus1
@@ -11,16 +11,6 @@ locus7
 locus8
 locus9
 
-locus0
-locus1
-locus2
-locus3
-locus4
-locus5
-locus6
-locus7
-locus8
-locus9
 
 
 Ans

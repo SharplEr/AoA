@@ -93,7 +93,7 @@ namespace AoARun
             //p[0] = new Parameter(60, 1, "начальный коэффициент", (x) => 0.01);
             p[1] = new Parameter(32, 1, "время обучения", (x) => ir2 * x * 2.0);
             //p[1] = new Parameter(1, 1, "время обучения", (x) => 0.0);
-            p[2] = new Parameter(30, 1, "Эпох обучения", (x) => x);
+            p[2] = new Parameter(1, 1, "Эпох обучения", (x) => x);
             //p[3] = new Parameter(40, 3, "Число в 1 слое", (x) => x);
             //p[4] = new Parameter(40, 3, "Число в 2 слое", (x) => x);
             //p[5] = new Parameter(40, 3, "Число в 3 слое", (x) => x);
@@ -103,9 +103,9 @@ namespace AoARun
             //typeof(AGRNN)//ThreeLayerNetwork//TwoLayerNetwork//MPL///Regression
             int step = 0;
 
-            var finder = new FindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++), type, data, tupleSigment.Item1, tupleSigment.Item2);
+            //var finder = new FindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++), type, data, tupleSigment.Item1, tupleSigment.Item2);
 
-            //var finder = new RandomFindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++), type, data, tupleSigment.Item1, tupleSigment.Item2);
+            var finder = new RandomFindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++), type, data, tupleSigment.Item1, tupleSigment.Item2);
 
             /*
             Parameter[] p = new Parameter[5];
@@ -115,8 +115,11 @@ namespace AoARun
             p[3] = new Parameter(13, 3, "S критерий", (x) => x);
             p[4] = new Parameter(81, 1, "x критерий", (x) => x/20.0);
            */
-            
+
+            Console.WriteLine("Поехали искать");
+
             var ans = finder.Find();
+
             object[] os = ans.Item1;
 
             for (int i = 0; i < os.Length; i++ )
