@@ -4,11 +4,12 @@ using System.IO;
 using Metaheuristics;
 using System.Collections.Generic;
 using System.Globalization;
+using ArrayHelper;
 
 namespace AoA
 {
     [Serializable]
-    public struct CVlog : IQuality<CVlog>
+    public struct CVlog : IQuality<CVlog>, IDisposable
     {
         public string name;
 
@@ -101,15 +102,7 @@ namespace AoA
                             writer.WriteLine("({0}, {1})", x.ToString(NumberFormatInfo.InvariantInfo), y.ToString(NumberFormatInfo.InvariantInfo));
                     }
                     writer.WriteLine("(1, 1)");
-                    /*
-                    writer.WriteLine("FPR:");
-                    for (int i = 0; i < rocs.Length; i++)
-                        writer.WriteLine(rocs[i].avgFPR);
 
-                    writer.WriteLine("TPR:");
-                    for (int i = 0; i < rocs.Length; i++)
-                        writer.WriteLine(rocs[i].avgTPR);
-                    */
                     writer.WriteLine("AUC: {0}", AUC);
                     
                     writer.WriteLine("Ошибка AUC: {0}", errorOfAUC);
@@ -125,6 +118,11 @@ namespace AoA
                 writer.Dispose();
                 return false;
             }
+        }
+
+        public void Dispose()
+        {
+            rocs.Let(x=>x.Dispose());
         }
     }
 }

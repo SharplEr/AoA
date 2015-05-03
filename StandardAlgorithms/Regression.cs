@@ -10,7 +10,7 @@ using AoA;
 
 namespace StandardAlgorithms
 {
-    public class Regression: Algorithm
+    public class Regression: Algorithm, IDisposable
     {
         LMSNetwork network;
         double r, tm;

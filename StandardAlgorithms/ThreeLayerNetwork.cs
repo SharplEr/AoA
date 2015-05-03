@@ -7,7 +7,7 @@ using IOData;
 
 namespace StandardAlgorithms
 {
-    public class ThreeLayerNetwork : Algorithm
+    public class ThreeLayerNetwork : Algorithm, IDisposable
     {
         ClassicNetwork network;
         double r, tm;

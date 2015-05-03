@@ -11,7 +11,7 @@ using ArrayHelper;
 
 namespace StandardAlgorithms
 {
-    public class MLP: Algorithm
+    public class MLP: Algorithm, IDisposable
     {
         ClassicNetwork network;
         double r, tm;

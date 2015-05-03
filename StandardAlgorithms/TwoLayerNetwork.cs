@@ -10,7 +10,7 @@ using AoA;
 
 namespace StandardAlgorithms
 {
-    public class TwoLayerNetwork : Algorithm
+    public class TwoLayerNetwork : Algorithm, IDisposable
     {
         ClassicNetwork network;
         double r, tm;

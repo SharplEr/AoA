@@ -11,7 +11,7 @@ namespace AoA
      *      1.1) Вызвать конструктор
      *      1.2) Вызвать метод Run(), который вернет CVlog, который можно сохранить в файл.
     */
-    public class Experiments
+    public class Experiments: IDisposable
     {
         //Число экспериментов (оптимальные значения 180-32000)
         int m = 1000;
@@ -23,7 +23,7 @@ namespace AoA
         Random r = new Random(271828314);
         
         //информация о том, какова была величина ошибки для каждого элемента, когда он был в контрольном и когда в тестовом множества
-        public Info[] info;
+        Info[] info;
 
         Func<Algorithm> getAlgorithm;
 
@@ -377,5 +377,10 @@ namespace AoA
             return log;
         }
 
+        public void Dispose()
+        {
+            info.Let(x=>x.Dispose());
+            rocs.Let(x => x.Dispose());
+        }
     }
 }
