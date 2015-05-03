@@ -29,4 +29,6 @@ CETP_I405V
 
 Диагноз
 
+classification
+
 standard

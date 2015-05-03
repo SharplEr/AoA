@@ -1,11 +1,12 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 
 namespace AoA
 {
     /// <summary>
     /// Информация об экспериментах над одним примером
     /// </summary>
-    public class Info
+    public class Info : IDisposable
     {
         public BlockingCollection<double> errorControl = new BlockingCollection<double>();
         public BlockingCollection<double> errorLearn = new BlockingCollection<double>();
@@ -17,5 +18,11 @@ namespace AoA
         public int nClass;
 
         public Info() {}
+
+        public void Dispose()
+        {
+            errorControl.Dispose();
+            errorLearn.Dispose();
+        }
     }
 }

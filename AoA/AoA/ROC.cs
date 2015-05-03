@@ -8,9 +8,11 @@ namespace AoA
     /// Одна точка для рок кривой
     /// </summary>
     [Serializable]
-    public class ROC
+    public class ROC : IDisposable
     {
+        [NonSerialized]
         public BlockingCollection<double> FPR = new BlockingCollection<double>();
+        [NonSerialized]
         public BlockingCollection<double> TPR = new BlockingCollection<double>();
         public double[] FPRa;
         public double[] TPRa;
@@ -23,6 +25,12 @@ namespace AoA
         {
             FPRa = FPR.ToArray();
             TPRa = TPR.ToArray();
+        }
+
+        public void Dispose()
+        {
+            FPR.Dispose();
+            TPR.Dispose();
         }
     }
 }

@@ -46,22 +46,14 @@ namespace AoA
                 if (log.Save(writer)) return true;
                 else
                 {
-                    if (writer != null)
-                    {
-                        writer.Close();
-                        writer.Dispose();
-                    }
+                    writer.Dispose();
                     return false;
                 }
             }
 
             catch
             {
-                if (writer != null)
-                {
-                    writer.Close();
-                    writer.Dispose();
-                }
+                writer.Dispose();
                 return false;
             }
         }

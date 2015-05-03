@@ -99,8 +99,8 @@ namespace AoARun
             //p[5] = new Parameter(40, 3, "Число в 3 слое", (x) => x);
             //p[6] = new Parameter(40, 3, "Число в 4 слое", (x) => x);
 
-            Type type = typeof(Neighbour);
-            //typeof(AGRNN)//ThreeLayerNetwork//TwoLayerNetwork//MPL///Regression
+            Type type = typeof(Regression);
+            //typeof(AGRNN)//ThreeLayerNetwork//TwoLayerNetwork//MPL///Regression//Neighbour
             int step = 0;
 
             //var finder = new FindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++), type, data, tupleSigment.Item1, tupleSigment.Item2);

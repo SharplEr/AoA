@@ -116,13 +116,12 @@ namespace AoA
                 }
 
                 writer.WriteLine("Конец отчета.");
-                writer.Close();
+                
                 writer.Dispose();
                 return true;
             }
             catch
             {
-                writer.Close();
                 writer.Dispose();
                 return false;
             }
