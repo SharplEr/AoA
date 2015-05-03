@@ -32,15 +32,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AGRNN.cs">
@@ -62,17 +58,9 @@
       <Project>{46fc5442-371e-4cbb-8e3c-05aeef639b5c}</Project>
       <Name>Araneam</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Araneam\ArrayHelper\ArrayHelper.csproj">
-      <Project>{7c6d1a70-8e63-4c6c-8d2e-eb3a529c198b}</Project>
-      <Name>ArrayHelper</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Araneam\IOData\IOData\IOData.csproj">
       <Project>{8471fc16-ba93-417c-adbc-637139501cc8}</Project>
       <Name>IOData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Araneam\MyParallel\MyParallel\MyParallel.csproj">
-      <Project>{458ccdbc-bf99-4b55-8044-926c317943a0}</Project>
-      <Name>MyParallel</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Araneam\VectorSpace\VectorSpace\VectorSpace.csproj">
       <Project>{82c4c097-83df-4c8a-acf7-bd4cd7fbdbc9}</Project>

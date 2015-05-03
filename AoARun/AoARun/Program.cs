@@ -121,6 +121,7 @@ namespace AoARun
             var ans = finder.Find();
 
             object[] os = ans.Item1;
+            ans.Item2.Dispose();//Второй элемент не нужен
 
             for (int i = 0; i < os.Length; i++ )
                 Console.WriteLine(p[i].name+":"+os[i].ToString());
@@ -143,7 +144,7 @@ namespace AoARun
             var log = exp.Run(data, (x)=>Console.WriteLine("завершающие проценты {0}", x), ts.Item1, ts.Item2);
 
             log.Save(writer);
-
+            log.Dispose();
             GC.Collect();
             Console.ReadKey();
         }

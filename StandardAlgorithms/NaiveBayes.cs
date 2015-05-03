@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VectorSpace;
 using IOData;
-using ArrayHelper;
 using AoA;
 
 namespace StandardAlgorithms

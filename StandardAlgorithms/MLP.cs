@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VectorSpace;
 using IOData;
 using Araneam;
 using AoA;
-using ArrayHelper;
 
 namespace StandardAlgorithms
 {
@@ -38,7 +36,7 @@ namespace StandardAlgorithms
             Set(rr, tt, mmax, l);
         }
 
-        protected virtual void Set(double rr, double tt, int mmax, params int[] l)
+        protected void Set(double rr, double tt, int mmax, params int[] l)
         {
             r = rr;
             tm = tt;
