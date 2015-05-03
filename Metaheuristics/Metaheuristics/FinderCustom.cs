@@ -22,6 +22,7 @@ namespace Metaheuristics
 
             //Дальнейший код дублируется -- когда-то придется его выносить, но как лучше?
             bestPosition = (int[])position.Clone();
+            if (TisDisposable && bestResult != null) ((IDisposable)bestResult).Dispose();
             bestResult = Quality(bestPosition);
             positionResult = bestResult;
             step = 0;

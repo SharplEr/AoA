@@ -23,6 +23,8 @@ namespace Metaheuristics
 
         protected Action<int, int> Whatup;
 
+        protected bool TisDisposable = typeof(IDisposable).IsAssignableFrom(typeof(T));
+
         /// <summary>
         /// Конструктор
         /// </summary>
@@ -42,6 +44,7 @@ namespace Metaheuristics
                 position[i] = parameters[i].min + parameters[i].length / 2;
 
             bestPosition = (int[])position.Clone();
+            if (TisDisposable && bestResult!=null) ((IDisposable)bestResult).Dispose();
             bestResult = Quality(bestPosition);
             positionResult = bestResult;
             step = 0;
@@ -80,6 +83,7 @@ namespace Metaheuristics
             if (jump)
             {
                 position = newPosition;
+                if (TisDisposable && positionResult != null) ((IDisposable)positionResult).Dispose();
                 positionResult = y;
             }
 
@@ -89,9 +93,12 @@ namespace Metaheuristics
             if (best)
             {
                 bestPosition = (int[])newPosition.Clone();
+                if (TisDisposable && bestResult != null) ((IDisposable)bestResult).Dispose();
                 bestResult = y;
                 countBest++;
             }
+
+            if (!jump || !best) ((IDisposable)y).Dispose();
 
             ChangeStep(jump, best);
 
