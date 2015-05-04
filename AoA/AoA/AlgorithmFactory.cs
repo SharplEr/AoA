@@ -21,7 +21,7 @@ namespace AoA
 
         public static Func<object[], Algorithm>[] GetFactory(params Type[] Ts)
         {
-            if (Ts == null) throw new ArgumentNullException();
+            if (Ts == null) throw new ArgumentNullException("Пустой массив типов");
 
             Func<object[], Algorithm>[] ans = new Func<object[],Algorithm>[Ts.Length];
 
@@ -47,6 +47,7 @@ namespace AoA
 
         public static Type[] LoadFromDLL(string[] files)
         {
+            if (files == null || files.Length == 0) new ArgumentNullException("Пустой список файлов");
             List<Type> ans = new List<Type>();
 
             for (int i = 0; i < files.Length; i++)

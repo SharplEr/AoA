@@ -144,6 +144,8 @@ namespace AoARun
             var log = exp.Run(data, (x)=>Console.WriteLine("завершающие проценты {0}", x), ts.Item1, ts.Item2);
 
             log.Save(writer);
+
+            exp.Dispose();
             log.Dispose();
             GC.Collect();
             Console.ReadKey();

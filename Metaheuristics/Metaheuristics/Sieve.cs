@@ -16,7 +16,7 @@ namespace Metaheuristics
 
         /// <param name="p">Параметры</param>
         /// <param name="w">Возвращает глубину, и процент обработки</param>
-        public Sieve(Parameter[] p, Action<int, double> w)
+        protected Sieve(Parameter[] p, Action<int, double> w)
         {
             parameters = p;
             position = new int[parameters.Length];

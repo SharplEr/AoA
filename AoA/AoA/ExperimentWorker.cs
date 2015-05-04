@@ -46,11 +46,7 @@ namespace AoA
         
         override protected void DoFromTo(int start, int finish, Action<double> progr)
         {
-            Algorithm alg;
-            lock (getAlgorithms)
-            {
-                alg = getAlgorithms();
-            }
+            var alg = getAlgorithms();
             for (int i = start; i < finish; i++)
             {
                 alg.Learn(learnDate[i]);

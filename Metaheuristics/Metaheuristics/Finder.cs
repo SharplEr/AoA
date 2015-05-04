@@ -28,7 +28,7 @@ namespace Metaheuristics
         /// Конструктор
         /// </summary>
         /// <param name="p">Список параметров</param>
-        public Finder(Parameter[] p, Action<int, int> w)
+        protected Finder(Parameter[] p, Action<int, int> w)
         {
             parameters = p;
             

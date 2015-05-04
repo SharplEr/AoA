@@ -34,6 +34,12 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>AoASharplEr.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -47,6 +53,7 @@
     <Compile Include="RndA.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="AoASharplEr.pfx" />
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>

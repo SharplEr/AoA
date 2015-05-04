@@ -57,9 +57,9 @@ namespace AoA
             //return log1.AUC - log2.AUC;
         }
 
-        public double CompareTo(CVlog log2)
+        public double CompareTo(CVlog o)
         {
-            return Compare(this, log2);
+            return Compare(this, o);
             //return log2.avgErrorAtLearn - avgErrorAtLearn;
             //return log2.avgErrorAtControl - avgErrorAtControl;
             //return -AUC + log2.AUC;
@@ -67,6 +67,7 @@ namespace AoA
 
         public bool Save(StreamWriter writer)
         {
+            if (writer == null) return false;
             try
             {
                 writer.WriteLine("Средняя ошибка (на контрольном множестве) для всех объектов: {0}. Дисперсия: {1}. Отклонение: {2}", avgErrorAtControl, errorDispAtControl.ToString(NumberFormatInfo.InvariantInfo), errorOfAvgErrorAtControl.ToString(NumberFormatInfo.InvariantInfo));

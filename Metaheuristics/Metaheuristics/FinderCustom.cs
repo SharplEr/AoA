@@ -12,7 +12,8 @@ namespace Metaheuristics
         protected IJump<T> jumper;
         protected INeighborhood neighbor;
 
-        public FinderCustom(Parameter[] p, Action<int, int> w): base(p, w)
+        protected FinderCustom(Parameter[] p, Action<int, int> w)
+            : base(p, w)
         {}
 
         protected override void GoStart()

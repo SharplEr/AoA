@@ -15,7 +15,8 @@ namespace Metaheuristics
         protected Func<double> temp;
         protected Func<double>[] temps;
 
-        public AnnealingFinder(Parameter[] p, Action<int, int> w, double maxDelta, int maxStep): base(p, w)
+        protected AnnealingFinder(Parameter[] p, Action<int, int> w, double maxDelta, int maxStep)
+            : base(p, w)
         {
             double d = Math.Pow(maxStep, 1.0 / parameters.Length);
             temps = new Func<double>[p.Length];

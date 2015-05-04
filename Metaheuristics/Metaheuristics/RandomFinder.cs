@@ -12,7 +12,7 @@ namespace Metaheuristics
 
         Random random = new Random();
 
-        public RandomFinder(Parameter[] p, Action<int, int> w, int mxstep)
+        protected RandomFinder(Parameter[] p, Action<int, int> w, int mxstep)
             : base(p, w)
         {
             maxStep = mxstep;

@@ -48,22 +48,22 @@ namespace AoARun
 
             Vector[] ans = network.Calculation(data.GetMixArray());
             
-            Vector m = new Vector(2);
+            Vector vector = new Vector(2);
             
             /*
             m[0] = +threshold * 0.5;
             m[1] = -threshold * 0.5;
             */
 
-            m[0] = (Math.Sign(threshold) - m[0]) * Math.Abs(threshold/2);
-            m[1] = (-Math.Sign(threshold) - m[1]) * Math.Abs(threshold/2);
+            vector[0] = (Math.Sign(threshold) - vector[0]) * Math.Abs(threshold/2);
+            vector[1] = (-Math.Sign(threshold) - vector[1]) * Math.Abs(threshold/2);
 
             for (int i = 0; i < ans.Length; i++)
             {
-                m[0] = (Math.Sign(threshold) - ans[i][0]) * Math.Abs(threshold);
-                m[1] = (-Math.Sign(threshold) - ans[i][1]) * Math.Abs(threshold);
+                vector[0] = (Math.Sign(threshold) - ans[i][0]) * Math.Abs(threshold);
+                vector[1] = (-Math.Sign(threshold) - ans[i][1]) * Math.Abs(threshold);
 
-                ans[i].Addication(m);
+                ans[i].Addication(vector);
             }
              
             return new Results((i) => new Result(ans[i]), ans.Length); 

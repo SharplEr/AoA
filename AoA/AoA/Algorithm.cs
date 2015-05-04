@@ -14,7 +14,7 @@ namespace AoA
     /// </summary>
     public abstract class Algorithm
     {
-        public Algorithm(params object[] p)
+        protected Algorithm(params object[] p)
         {
 
         }
