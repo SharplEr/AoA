@@ -14,10 +14,9 @@ namespace AoA
     /// </summary>
     public abstract class Algorithm
     {
+        //Конструктор не может быть абстрактным
         protected Algorithm(params object[] p)
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Метод проводит полное обучение данного алгоритма на входных данных

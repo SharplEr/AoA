@@ -75,10 +75,6 @@
       <Project>{82c4c097-83df-4c8a-acf7-bd4cd7fbdbc9}</Project>
       <Name>VectorSpace</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Boosting\Boosting\Boosting.csproj">
-      <Project>{a6a75e83-a724-44d6-9185-d6e148963f6f}</Project>
-      <Name>Boosting</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Metaheuristics\Metaheuristics\Metaheuristics.csproj">
       <Project>{6a5b5aed-b183-429e-9657-c10c25cf7e96}</Project>
       <Name>Metaheuristics</Name>

@@ -19,7 +19,7 @@ namespace StandardAlgorithms
 
         double threshold = 0;
 
-        public MLP(params object[] p):base(p)
+        public MLP(params object[] p)
         {
             if (p.Length <= 4) throw new ArgumentException("Длина не та");
 

@@ -141,8 +141,12 @@ namespace AoARun
 
             var ts = DataManager.GetShuffleFrom(data, 5*mmm, k, new Random(271828314));
 
-            var log = exp.Run(data, (x)=>Console.WriteLine("завершающие проценты {0}", x), ts.Item1, ts.Item2);
+            Stopwatch sw = new Stopwatch();
 
+            sw.Start();
+            var log = exp.Run(data, (x)=>Console.WriteLine("завершающие проценты {0}", x), ts.Item1, ts.Item2);
+            sw.Stop();
+            Console.WriteLine("Последний проход выполнен за {0:F} с", (double)sw.ElapsedMilliseconds/1000);
             log.Save(writer);
 
             exp.Dispose();

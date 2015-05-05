@@ -21,7 +21,7 @@ namespace AoA
 
         public static Func<object[], Algorithm>[] GetFactory(params Type[] Ts)
         {
-            if (Ts == null) throw new ArgumentNullException("Пустой массив типов");
+            if (Ts == null) throw new ArgumentNullException("GetFactory: Пустой массив типов");
 
             Func<object[], Algorithm>[] ans = new Func<object[],Algorithm>[Ts.Length];
 
