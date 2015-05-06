@@ -45,15 +45,58 @@ namespace AoA
             return ans.ToArray();
         }
 
-        public static Type[] LoadFromDLL(string[] files)
+        public static Type[] LoadFromDLL(string file, string name)
         {
-            if (files == null || files.Length == 0) new ArgumentNullException("Пустой список файлов");
+            Assembly a = Assembly.LoadFrom(file);
             List<Type> ans = new List<Type>();
 
-            for (int i = 0; i < files.Length; i++)
-                ans.AddRange(LoadFromDLL(files[i]));
+            foreach (Type t in a.GetExportedTypes())
+            {
+                if (!t.IsAbstract && typeof(Algorithm).IsAssignableFrom(t) && t.ToString()==name)
+                    ans.Add(t);
+            }
 
             return ans.ToArray();
+        }
+        /// <summary>
+        /// Возвращает в первой позиции тип алгоритма, во второй тип границ исследования
+        ///  или null если исследовать не требуется.
+        /// </summary>
+        /// <param name="name">Имя файла метаданных</param>
+        /// <returns></returns>
+        public static Tuple<Type, Type> LoadAlgorithmInfo(string name)
+        {
+            using (var reader = new StreamReader(name))
+            {    
+                //Считываем имя файла для алгоритма
+                string nameDll = reader.ReadLine();
+                reader.ReadLine();
+                //Считываем имя класса
+                string nameType = reader.ReadLine();
+                reader.ReadLine();
+                var t = LoadFromDLL(nameDll, nameType);
+                if (t.Length != 1)
+                    throw new ArgumentException("LoadAlgorithmInfo: неверное число алгоритмов: "+t.Length);
+                Type tAlg = t[0];
+
+                if (reader.EndOfStream)
+
+                //Считываем имя файла для границ параметров
+                nameDll = reader.ReadLine();
+                if (reader.EndOfStream)
+                    return new Tuple<Type, Type>(tAlg,null);
+                reader.ReadLine();
+                //Считываем имя класса для границ параметров
+                nameType = reader.ReadLine();
+
+                t = LoadFromDLL(nameDll, nameType);
+
+                if (t.Length != 1)
+                    throw new ArgumentException("LoadAlgorithmInfo: неверное число сетеров: " + t.Length);
+
+                Type tParam = t[0];
+                return new Tuple<Type, Type>(tAlg,tParam);
+            }
         }
     }
 }
