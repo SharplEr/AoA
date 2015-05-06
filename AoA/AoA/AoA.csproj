@@ -58,7 +58,6 @@
     <Compile Include="SigmentInputData.cs" />
     <Compile Include="SpaceInfo.cs" />
     <Compile Include="Test.cs" />
-    <Compile Include="TestManager.cs" />
     <Compile Include="Triple.cs" />
   </ItemGroup>
   <ItemGroup>
