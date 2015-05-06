@@ -46,6 +46,7 @@
     <Compile Include="NaiveBayes.cs" />
     <Compile Include="Neighbour.cs" />
     <Compile Include="Regression.cs" />
+    <Compile Include="RegSetter.cs" />
     <Compile Include="ThreeLayerNetwork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TwoLayerNetwork.cs" />

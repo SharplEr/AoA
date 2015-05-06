@@ -45,14 +45,14 @@ namespace AoA
             return ans.ToArray();
         }
 
-        public static Type[] LoadFromDLL(string file, string name)
+        public static Type[] LoadFromDLL<T>(string file, string name)
         {
             Assembly a = Assembly.LoadFrom(file);
             List<Type> ans = new List<Type>();
 
             foreach (Type t in a.GetExportedTypes())
             {
-                if (!t.IsAbstract && typeof(Algorithm).IsAssignableFrom(t) && t.ToString()==name)
+                if (!t.IsAbstract && typeof(T).IsAssignableFrom(t) && t.ToString()==name)
                     ans.Add(t);
             }
 
@@ -64,7 +64,7 @@ namespace AoA
         /// </summary>
         /// <param name="name">Имя файла метаданных</param>
         /// <returns></returns>
-        public static Tuple<Type, Type> LoadAlgorithmInfo(string name)
+        public static Tuple<Type, Parameter[]> LoadAlgorithmInfo(string name)
         {
             using (var reader = new StreamReader(name))
             {    
@@ -74,28 +74,33 @@ namespace AoA
                 //Считываем имя класса
                 string nameType = reader.ReadLine();
                 reader.ReadLine();
-                var t = LoadFromDLL(nameDll, nameType);
+                var t = LoadFromDLL<Algorithm>(nameDll, nameType);
                 if (t.Length != 1)
                     throw new ArgumentException("LoadAlgorithmInfo: неверное число алгоритмов: "+t.Length);
                 Type tAlg = t[0];
 
                 if (reader.EndOfStream)
-
+                    return new Tuple<Type, Parameter[]>(tAlg, null);
                 //Считываем имя файла для границ параметров
                 nameDll = reader.ReadLine();
                 if (reader.EndOfStream)
-                    return new Tuple<Type, Type>(tAlg,null);
+                    return new Tuple<Type, Parameter[]>(tAlg, null);
                 reader.ReadLine();
                 //Считываем имя класса для границ параметров
                 nameType = reader.ReadLine();
 
-                t = LoadFromDLL(nameDll, nameType);
+                t = LoadFromDLL<ParametersSeter>(nameDll, nameType);
 
                 if (t.Length != 1)
                     throw new ArgumentException("LoadAlgorithmInfo: неверное число сетеров: " + t.Length);
 
                 Type tParam = t[0];
-                return new Tuple<Type, Type>(tAlg,tParam);
+
+                if (tParam==null) return new Tuple<Type, Parameter[]>(tAlg, null);
+
+                MethodInfo minfo = tParam.GetMethod("GetParameters");
+
+                return new Tuple<Type, Parameter[]>(tAlg, (Parameter[]) minfo.Invoke(null, null));
             }
         }
     }

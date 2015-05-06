@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using StandardAlgorithms;
 using System.Globalization;
+using System.Reflection;
 
 namespace AoARun
 {
@@ -22,7 +23,7 @@ namespace AoARun
             if (!File.Exists(args[0])) return;
 
             Console.WriteLine("Файл описывающий реализацию алгоритма: {0}. Существует: {1}.", args[1], File.Exists(args[1]));
-            //if (!File.Exists(args[1])) return;
+            if (!File.Exists(args[1])) return;
 
             Console.WriteLine("Выходной файл: {0}.", args[2]);
 
@@ -85,7 +86,7 @@ namespace AoARun
             Console.WriteLine("Время: {0} (мс/обучение)", (double)sw.ElapsedMilliseconds/mmm);
             
             */
-
+            /*
             const double ir = Math.PI / 7.0 * 22.0;
             const double ir2 = Math.E * 71.0 / 193.0;
             Parameter[] p = new Parameter[3];
@@ -100,7 +101,14 @@ namespace AoARun
             //p[6] = new Parameter(40, 3, "Число в 4 слое", (x) => x);
 
             Type type = typeof(Regression);
-            //typeof(AGRNN)//ThreeLayerNetwork//TwoLayerNetwork//MPL///Regression//Neighbour
+            //typeof(AGRNN)//ThreeLayerNetwork//TwoLayerNetwork//MPL///Regression//Neighbour*/
+
+            Console.WriteLine("Загружаем алгоритм из dll...");
+            var dll = AlgorithmFactory.LoadAlgorithmInfo(args[1]);
+
+            Parameter[] p = dll.Item2;
+            Type type = dll.Item1;
+            Console.WriteLine("Алгоритм: {0}, параметры: {1}.", type, dll.Item2);
             int step = 0;
 
             var finder = new FindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++), type, data, tupleSigment.Item1, tupleSigment.Item2);

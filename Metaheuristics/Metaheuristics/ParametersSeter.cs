@@ -9,7 +9,7 @@ namespace Metaheuristics
     {
         public static Parameter[] GetParameters()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Not Implemented");
         }
     }
 }

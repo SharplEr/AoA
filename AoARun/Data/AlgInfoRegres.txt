@@ -1,0 +1,7 @@
+StandardAlgorithms.dll
+
+StandardAlgorithms.Regression
+
+StandardAlgorithms.dll
+
+StandardAlgorithms.RegSetter
