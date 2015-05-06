@@ -110,38 +110,36 @@ namespace AoARun
             Type type = dll.Item1;
             Console.WriteLine("Алгоритм: {0}, параметры: {1}.", type, dll.Item2);
             int step = 0;
+            object[] os = null;
 
-            var finder = new FindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++), type, data, tupleSigment.Item1, tupleSigment.Item2);
+            if (p != null)
+            {
 
-            //var finder = new RandomFindAlgorithm(p, (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++), type, data, tupleSigment.Item1, tupleSigment.Item2);
+                var finder = new FindAlgorithm(p,
+                    (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++),
+                    type, data, tupleSigment.Item1, tupleSigment.Item2);
 
-            /*
-            Parameter[] p = new Parameter[5];
-            p[0] = new Parameter(5, 1, "Число в 1 слое", (x) => x);
-            p[1] = new Parameter(10, 1, "Число в 2 слое", (x) => x);
-            p[2] = new Parameter(15, 1, "Итерации обучения", (x) => x);
-            p[3] = new Parameter(13, 3, "S критерий", (x) => x);
-            p[4] = new Parameter(81, 1, "x критерий", (x) => x/20.0);
-           */
+                Console.WriteLine("Поехали искать");
 
-            Console.WriteLine("Поехали искать");
+                var ans = finder.Find();
 
-            var ans = finder.Find();
+                os = ans.Item1;
+                ans.Item2.Dispose(); //Второй элемент не нужен
 
-            object[] os = ans.Item1;
-            ans.Item2.Dispose();//Второй элемент не нужен
-
-            for (int i = 0; i < os.Length; i++ )
-                Console.WriteLine(p[i].name+":"+os[i].ToString());
+                for (int i = 0; i < os.Length; i++)
+                    Console.WriteLine(p[i].name + ":" + os[i].ToString());
+            }
 
             var writer = new StreamWriter(args[2], false);
             writer.WriteLine("      Начало отчета алгоритма {0}", type);
-            writer.WriteLine("Найденные параметры:");
 
-            for (int i = 0; i < os.Length; i++)
-                writer.WriteLine(p[i].name + ":" + os[i].ToString());
-
-            writer.WriteLine("Шагов поиска выполнено: {0}", step);
+            if (os != null)
+            {
+                writer.WriteLine("Найденные параметры:");
+                for (int i = 0; i < os.Length; i++)
+                    writer.WriteLine(p[i].name + ":" + os[i].ToString());
+                writer.WriteLine("Шагов поиска выполнено: {0}", step);
+            }
 
             writer.WriteLine();
 
