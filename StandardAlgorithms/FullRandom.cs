@@ -12,7 +12,7 @@ namespace StandardAlgorithms
     {
         Random r = new Random(777);
 
-        double th = 0;
+        double threshold = 0;
         int m = 0;
 
         public FullRandom(object[] o)
@@ -28,7 +28,7 @@ namespace StandardAlgorithms
             return new Results((i) =>
                 {
                     double l = r.NextDouble();
-                    l += th;
+                    l += threshold;
                     if (l < 0.5) return new Result(0, m);
                     else return new Result(1, m);
                 }, date.Length);
@@ -36,7 +36,7 @@ namespace StandardAlgorithms
 
         public override void ChangeThreshold(double th)
         {
-            this.th = th;
+            this.threshold = th;
         }
     }
 }

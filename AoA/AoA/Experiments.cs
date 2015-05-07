@@ -14,13 +14,13 @@ namespace AoA
     public class Experiments: IDisposable
     {
         //Число экспериментов (оптимальные значения 180-32000)
-        int m = 1000;
+        //int m = 1000;
         //Какая часть пойдет на контрольное множество от всех данных
         const double part = 0.25;
         //Точек для ROC кривых
         int ROCn = 150;
         //Инициализируем константой для того что бы результат вычислений был повторим
-        Random r = new Random(271828314);
+        //Random r = new Random(271828314);
         
         //информация о том, какова была величина ошибки для каждого элемента, когда он был в контрольном и когда в тестовом множества
         Info[] info;
@@ -62,19 +62,11 @@ namespace AoA
         string name = null;
         #endregion
 
-        public Experiments(Func<Algorithm> getAlg, int mmm, string AlgName, int rocn)
+        public Experiments(Func<Algorithm> getAlg, string AlgName, int rocn)
         {
-            m = mmm;
             ROCn = rocn;
             getAlgorithm = getAlg;
             name = AlgName;
-        }
-
-        public Experiments(Func<Algorithm> getAlg, int mmm, int rocn)
-        {
-            m = mmm;
-            ROCn = rocn;
-            getAlgorithm = getAlg;
         }
 
         public Experiments(Func<Algorithm> getAlg, int rocn)
@@ -87,8 +79,6 @@ namespace AoA
 
         public CVlog Run(FullData d, Action<double> f, SigmentData[] learnDate, SigmentData[] controlDate)
         {
-            m = learnDate.Length;
-
             int i;
             data = d;
             info = new Info[data.Length];
@@ -106,7 +96,7 @@ namespace AoA
             worker = new ExperimentWorker(Environment.ProcessorCount, learnDate.Length, info, f);
             #endif
 
-            worker.Run(data, getAlgorithm, learnDate, controlDate, ROCn);
+            worker.Run(getAlgorithm, learnDate, controlDate, ROCn);
 
             rocs = worker.rocs;
 

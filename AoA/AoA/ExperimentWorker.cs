@@ -11,7 +11,7 @@ namespace AoA
 {
     public class ExperimentWorker : ParallelWorkerWithProgress
     {
-        FullData data;
+        //FullData data;
         Func<Algorithm> getAlgorithms;
 
         SigmentData[] learnDate;
@@ -27,9 +27,8 @@ namespace AoA
             info = inf;
         }
 
-        public void Run(FullData fd, Func<Algorithm> algs, SigmentData[] dl, SigmentData[] dc, int ROCn)
+        public void Run(Func<Algorithm> algs, SigmentData[] dl, SigmentData[] dc, int ROCn)
         {
-            data = fd;
             getAlgorithms = algs;
             learnDate = dl;
             controlDate = dc;
