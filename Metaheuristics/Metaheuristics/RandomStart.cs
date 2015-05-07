@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Metaheuristics
 {
     class RandomStart: IGoStart
     {
-        Random random;
-        Parameter[] parameters;
+        readonly Random random;
+        readonly Parameter[] parameters;
 
         public RandomStart(Random r, Parameter[] ps)
         {

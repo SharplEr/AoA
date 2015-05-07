@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Metaheuristics
 {
     class AnnealingNeighborhood: INeighborhood
     {
-        Random random;
-        Parameter[] parameters;
-        Func<double>[] temp;
+        readonly Random random;
+        readonly Parameter[] parameters;
+        readonly Func<double>[] temp;
 
         public AnnealingNeighborhood(Random r, Parameter[] ps, Func<double>[] t)
         {

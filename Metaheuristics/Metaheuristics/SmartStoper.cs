@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Metaheuristics
 {
     class SmartStoper : IDontStop
     {
-        Func<int> Step;
-        Func<int> StepWithoutBest;
-        int maxStep;
-        Func<double> f;
-        double min;
+        readonly Func<int> Step;
+        readonly Func<int> StepWithoutBest;
+        readonly int maxStep;
+        readonly Func<double> f;
+        readonly double min;
         public SmartStoper(Func<int> step, Func<int> stepWithoutBest, int maxS, Func<double> f, double min)
         {
             Step = step;

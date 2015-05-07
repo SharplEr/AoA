@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Metaheuristics
 {
     public class AnnealingJump<T> : IJump<T> where T : IQuality<T>
     {
-        Random random;
-        Func<double> Temp;
+        readonly Random random;
+        readonly Func<double> Temp;
 
         public AnnealingJump(Random r, Func<double> t)
         {

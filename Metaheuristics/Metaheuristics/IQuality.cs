@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Metaheuristics
+﻿namespace Metaheuristics
 {
     //Такое сложное объявление на самом деле имеет глубокий смысл и запрещает неправильное использование
     //Хотя к сожалению не все его варианты

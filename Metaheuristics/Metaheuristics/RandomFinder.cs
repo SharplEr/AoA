@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Metaheuristics
 {
     
     public abstract class RandomFinder<T> : FinderCustom<T> where T : IQuality<T>
     {
-        int maxStep;
+        readonly int maxStep;
 
-        Random random = new Random();
+        readonly Random random = new Random();
 
         protected RandomFinder(Parameter[] p, Action<int, int> w, int mxstep)
             : base(p, w)
