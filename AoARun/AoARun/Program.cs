@@ -63,41 +63,6 @@ namespace AoARun
 
             Console.WriteLine("Итараций скользящего контроля в конце: {0}", m5m);
 
-            //0,21-500-5-24-9
-            /*
-            Experiments experiment = new Experiments(() => new ThreeLayerNetwork(0.02, 50, 3, 24, 9), 150, mmm);
-
-            //1-2-10-6
-            //1-6-1-13-2,05
-            //Experiments experiment = new Experiments(() => new AGRNN(4,8, 7, 3, 2.05), 150, mmm);
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            CVlog v = experiment.Run(data, (x) => { Console.WriteLine("Завершено {0}%", x * 100); }, tupleSigment.Item1, tupleSigment.Item2);
-            sw.Stop();
-
-            if (v.Save(new StreamWriter(@"log.txt", false))) Console.WriteLine("Отчет сформирован");
-            else Console.WriteLine("Не удалось");
-            
-            Console.WriteLine("Время: {0} (мс/обучение)", (double)sw.ElapsedMilliseconds/mmm);
-            
-            */
-            /*
-            const double ir = Math.PI / 7.0 * 22.0;
-            const double ir2 = Math.E * 71.0 / 193.0;
-            Parameter[] p = new Parameter[3];
-            p[0] = new Parameter(500, 1, "начальный коэффициент", (x) => ir * x / 500.0);
-            //p[0] = new Parameter(60, 1, "начальный коэффициент", (x) => 0.01);
-            p[1] = new Parameter(32, 1, "время обучения", (x) => ir2 * x * 2.0);
-            //p[1] = new Parameter(1, 1, "время обучения", (x) => 0.0);
-            p[2] = new Parameter(10, 1, "Эпох обучения", (x) => x);
-            //p[3] = new Parameter(40, 3, "Число в 1 слое", (x) => x);
-            //p[4] = new Parameter(40, 3, "Число в 2 слое", (x) => x);
-            //p[5] = new Parameter(40, 3, "Число в 3 слое", (x) => x);
-            //p[6] = new Parameter(40, 3, "Число в 4 слое", (x) => x);
-
-            Type type = typeof(Regression);
-            //typeof(AGRNN)//ThreeLayerNetwork//TwoLayerNetwork//MPL///Regression//Neighbour*/
-
             Console.WriteLine("Загружаем алгоритм из dll...");
             var dll = AlgorithmFactory.LoadAlgorithmInfo(args[1]);
 
@@ -109,7 +74,6 @@ namespace AoARun
 
             if (p != null)
             {
-
                 var finder = new FindAlgorithm(p,
                     (x, y) => Console.WriteLine("Step without best: {0}. Best count: {1}. All step: {2}", x, y, step++),
                     type, data, tupleSigment.Item1, tupleSigment.Item2);
@@ -141,7 +105,6 @@ namespace AoARun
 
                 using (var exp = new Experiments(() => AlgorithmFactory.GetFactory(type)(os), 150))
                 {
-
                     var ts = DataManager.GetShuffleFrom(data, 5*mmm, k, new Random(271828314));
 
                     Stopwatch sw = new Stopwatch();
