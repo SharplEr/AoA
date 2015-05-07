@@ -1,9 +1,4 @@
-﻿using System;
-using AoA;
-using VectorSpace;
-using IOData;
-
-namespace AoARun
+﻿namespace AoARun
 {
     /*
     public class RndA : Algorithm

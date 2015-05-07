@@ -1,15 +1,10 @@
 ﻿using System;
-using System.IO;
-using IOData;
-using VectorSpace;
-using AoA;
-
-using Metaheuristics;
-using System.Collections.Generic;
 using System.Diagnostics;
-using StandardAlgorithms;
 using System.Globalization;
-using System.Reflection;
+using System.IO;
+using AoA;
+using IOData;
+using Metaheuristics;
 
 namespace AoARun
 {
