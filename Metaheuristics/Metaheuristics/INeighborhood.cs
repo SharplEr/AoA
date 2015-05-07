@@ -7,6 +7,6 @@ namespace Metaheuristics
 {
     public interface INeighborhood
     {
-        int[] Get(int[] x);
+        int[] Take(int[] x);
     }
 }

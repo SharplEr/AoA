@@ -79,6 +79,10 @@ namespace AoA
 
         public CVlog Run(FullData d, Action<double> f, SigmentData[] learnDate, SigmentData[] controlDate)
         {
+            if (d == null) throw new ArgumentException("d is null");
+            if (learnDate == null) throw new ArgumentException("f is null");
+            if (controlDate == null) throw new ArgumentException("f is null");
+
             int i;
             data = d;
             info = new Info[data.Length];

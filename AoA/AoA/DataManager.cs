@@ -21,6 +21,9 @@ namespace AoA
         /// <param name="part">Доля идущая на контроль. Если число примеров идущих на контроль будет меньше или равна 1, будет реализован скользящий контроль с одним оделяемым объектом</param>
         public static Tuple<SigmentData[], SigmentData[]> GetShuffleFrom(FullData data, int m, double part, Random r)
         {
+            if (data==null) throw new ArgumentException("data is null");
+            if (r == null) throw new ArgumentException("r is null");
+
             //Число на контроле
             int k = (int)Math.Round(data.Length * part);
             if (k <= 1) return GetOneFrom(data);
@@ -74,6 +77,8 @@ namespace AoA
         //Возможно эта функция не понадобится. В конце концов слишком уж много будет.
         public static Tuple<SigmentData[], SigmentData[]>[] GetShuffleFrom(FullData[] data, int m, double part)
         {
+            if (data == null) throw new ArgumentException("data is null");
+
             Tuple<SigmentData[], SigmentData[]>[] ans = new Tuple<SigmentData[],SigmentData[]>[data.Length];
 
             for (int i = 0; i < data.Length; i++)
@@ -84,6 +89,8 @@ namespace AoA
 
         public static Tuple<SigmentData[], SigmentData[]> GetOneFrom(FullData data)
         {
+            if (data == null) throw new ArgumentException("data is null");
+
             Tuple<SigmentData[], SigmentData[]> ans = new Tuple<SigmentData[], SigmentData[]>(new SigmentData[data.Length], new SigmentData[data.Length]);
 
             for (int i = 0; i < data.Length; i++)

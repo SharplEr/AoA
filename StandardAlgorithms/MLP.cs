@@ -21,6 +21,7 @@ namespace StandardAlgorithms
 
         public MLP(params object[] p)
         {
+            if (p == null) throw new ArgumentException("p is null");
             if (p.Length <= 4) throw new ArgumentException("Длина не та");
 
             int[] a = new int[p.Length - 3];
@@ -47,6 +48,7 @@ namespace StandardAlgorithms
         public override Results Calc(SigmentInputData data)
         {
             if (network == null) throw new NullReferenceException("Сперва должно пройти обучение");
+            if (data == null) throw new ArgumentException("data is null");
 
             Vector[] ans = network.Calculation(data.GetСontinuousArray());
 
@@ -64,6 +66,7 @@ namespace StandardAlgorithms
         
         public override void Learn(SigmentData data)
         {
+            if (data == null) throw new ArgumentException("data is null");
             threshold = 0;
             Vector[] inputDate = data.GetСontinuousArray();
             Vector[] resultDate = data.GetResults().ToSpectrums();

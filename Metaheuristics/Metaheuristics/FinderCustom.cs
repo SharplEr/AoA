@@ -41,7 +41,7 @@ namespace Metaheuristics
 
         protected override int[] Neighborhood(int[] x)
         {
-            return neighbor.Get(x);
+            return neighbor.Take(x);
         }
     }
 }

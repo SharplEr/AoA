@@ -29,7 +29,7 @@ namespace AoA
             throw new NotImplementedException();
         }
 
-        public abstract Results Calc(SigmentInputData date);
+        public abstract Results Calc(SigmentInputData data);
 
         /// <summary>
         /// Метод варьирующий порог для алгоритма

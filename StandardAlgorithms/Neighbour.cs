@@ -18,6 +18,8 @@ namespace StandardAlgorithms
 
         public override Results Calc(SigmentInputData data)
         {
+            if (data == null) throw new ArgumentException("data is null");
+
             Vector[] x = data.GetСontinuousArray();
             return new Results((i) => Calc(x[i]), x.Length);
         }
@@ -49,6 +51,7 @@ namespace StandardAlgorithms
 
         public override void Learn(SigmentData data)
         {
+            if (data == null) throw new ArgumentException("data is null");
             Vector[] x = data.GetСontinuousArray();
             Results r = data.GetResults();
 

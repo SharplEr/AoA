@@ -16,7 +16,7 @@ namespace Metaheuristics
             parameters = ps;
         }
 
-        public int[] Get(int[] x)
+        public int[] Take(int[] x)
         {
             int[] ans = new int[x.Length];
 
