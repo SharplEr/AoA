@@ -57,7 +57,6 @@
     <Compile Include="RandomFinder.cs" />
     <Compile Include="RandomNeighborhood.cs" />
     <Compile Include="RandomStart.cs" />
-    <Compile Include="Sieve.cs" />
     <Compile Include="SmartStoper.cs" />
     <Compile Include="Stoper.cs" />
     <Compile Include="TrueJumper.cs" />

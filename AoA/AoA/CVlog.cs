@@ -125,5 +125,34 @@ namespace AoA
         {
             rocs.Let(x=>x.Dispose());
         }
+
+        //Точное сравнение
+        public override bool Equals(object obj)
+        {
+            if (!(obj is CVlog)) return false;
+
+            return Equals((CVlog) obj);
+        }
+
+        public bool Equals(CVlog log)
+        {
+            //Если указатели одинаковые, то почти наверняка и сами объекты одинаковые.
+            return rocs == log.rocs;
+        }
+
+        public static bool operator ==(CVlog log1, CVlog log2)
+        {
+            return log1.Equals(log2);
+        }
+
+        public static bool operator !=(CVlog log1, CVlog log2)
+        {
+            return !log1.Equals(log2);
+        }
+
+        public override int GetHashCode()
+        {
+            return rocs.GetHashCode();
+        }
     }
 }
