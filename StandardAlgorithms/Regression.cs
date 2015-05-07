@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using VectorSpace;
-using IOData;
-using Araneam;
 using AoA;
+using Araneam;
+using IOData;
+using VectorSpace;
 
 namespace StandardAlgorithms
 {

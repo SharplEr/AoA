@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using IOData;
 using AoA;
-using VectorSpace;
+using IOData;
 
 namespace StandardAlgorithms
 {
     public class FullRandom : Algorithm
     {
-        Random r = new Random(777);
+        readonly Random r = new Random(777);
 
         double threshold = 0;
         int m = 0;

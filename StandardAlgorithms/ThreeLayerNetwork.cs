@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using AoA;
 using Araneam;
-using VectorSpace;
 using IOData;
+using VectorSpace;
 
 namespace StandardAlgorithms
 {

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using VectorSpace;
-using IOData;
-using AoA;
-
-namespace StandardAlgorithms
+﻿namespace StandardAlgorithms
 {
     /*
     public class NaiveBayes : Algorithm
