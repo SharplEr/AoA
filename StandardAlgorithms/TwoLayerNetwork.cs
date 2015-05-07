@@ -30,7 +30,7 @@ namespace StandardAlgorithms
             Set(rr, tt, mmax, one);
         }
 
-        protected virtual void Set(double rr, double tt, int mmax, int one)
+        protected void Set(double rr, double tt, int mmax, int one)
         {
             r = rr;
             tm = tt;

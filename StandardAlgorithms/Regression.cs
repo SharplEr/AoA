@@ -27,7 +27,7 @@ namespace StandardAlgorithms
             Set(rr, tt, mmax);
         }
 
-        protected virtual void Set(double rr, double tt, int mmax)
+        protected void Set(double rr, double tt, int mmax)
         {
             r = rr;
             tm = tt;
