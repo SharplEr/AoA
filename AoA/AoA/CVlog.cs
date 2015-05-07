@@ -65,7 +65,7 @@ namespace AoA
             //return -AUC + log2.AUC;
         }
 
-        public bool Save(StreamWriter writer)
+        public bool Save(TextWriter writer)
         {
             if (writer == null) return false;
             try
