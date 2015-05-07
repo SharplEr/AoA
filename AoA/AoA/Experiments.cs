@@ -28,7 +28,7 @@ namespace AoA
         Func<Algorithm> getAlgorithm;
 
         #region Информация для отчета
-        public double avgErrorAtControl;
+        double avgErrorAtControl;
         double avgErrorAtLearn;
         double errorOfAvgErrorAtControl;
         double errorOfAvgErrorAtLearn;
