@@ -11,7 +11,7 @@ namespace AoA
     /// <summary>
     /// Набор методов для перемешивания данных
     /// </summary>
-    public class DataManager
+    public static class DataManager
     {
         /// <summary>
         /// Возвращает перемешиваные данные, разбитые на контрольную выборку и на обучающую
