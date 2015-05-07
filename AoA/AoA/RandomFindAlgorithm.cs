@@ -44,8 +44,8 @@ namespace AoA
 
         protected override CVlog Quality(object[] x)
         {
-            Experiments exp = new Experiments(() => getAlg(x), 150);
-            return exp.Run(TestData, f, TestDataSigmentLearn, TestDataSigmentControl);
+            using (var exp = new Experiments(() => getAlg(x), 150))
+                return exp.Run(TestData, f, TestDataSigmentLearn, TestDataSigmentControl);
         }
     }
 }

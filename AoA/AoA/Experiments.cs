@@ -89,19 +89,19 @@ namespace AoA
             for (i = 0; i < info.Length; i++)
                 info[i].nClass = data.Output[i].Number;
 
-            ExperimentWorker worker;
+            
             #if DEBUG
-            worker = new ExperimentWorker(1/*Environment.ProcessorCount*/, learnDate.Length, info, f);
+            int cpu = 1;
             #else
-            worker = new ExperimentWorker(Environment.ProcessorCount, learnDate.Length, info, f);
+            int cpu = Environment.ProcessorCount;
             #endif
+            using (var worker = new ExperimentWorker(cpu, learnDate.Length, info, f))
+            {
+                worker.Run(getAlgorithm, learnDate, controlDate, ROCn);
 
-            worker.Run(getAlgorithm, learnDate, controlDate, ROCn);
-
-            rocs = worker.rocs;
-
-            worker.Dispose();
-            return CalcTotalInfo();
+                rocs = worker.rocs;
+                return CalcTotalInfo();
+            }
         }
 
         CVlog CalcTotalInfo()

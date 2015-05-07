@@ -130,33 +130,35 @@ namespace AoARun
                     Console.WriteLine(p[i].name + ":" + os[i].ToString());
             }
 
-            var writer = new StreamWriter(args[2], false);
-            writer.WriteLine("      Начало отчета алгоритма {0}", type);
-
-            if (os != null)
+            using (var writer = new StreamWriter(args[2], false))
             {
-                writer.WriteLine("Найденные параметры:");
-                for (int i = 0; i < os.Length; i++)
-                    writer.WriteLine(p[i].name + ":" + os[i].ToString());
-                writer.WriteLine("Шагов поиска выполнено: {0}", step);
+                writer.WriteLine("      Начало отчета алгоритма {0}", type);
+
+                if (os != null)
+                {
+                    writer.WriteLine("Найденные параметры:");
+                    for (int i = 0; i < os.Length; i++)
+                        writer.WriteLine(p[i].name + ":" + os[i].ToString());
+                    writer.WriteLine("Шагов поиска выполнено: {0}", step);
+                }
+
+                writer.WriteLine();
+
+                using (var exp = new Experiments(() => AlgorithmFactory.GetFactory(type)(os), 150))
+                {
+
+                    var ts = DataManager.GetShuffleFrom(data, 5*mmm, k, new Random(271828314));
+
+                    Stopwatch sw = new Stopwatch();
+
+                    sw.Start();
+                    var log = exp.Run(data, (x) => Console.WriteLine("завершающие проценты {0}", x), ts.Item1, ts.Item2);
+                    sw.Stop();
+                    Console.WriteLine("Последний проход выполнен за {0:F} с", (double) sw.ElapsedMilliseconds/1000);
+                    log.Save(writer);
+                    log.Dispose();
+                }
             }
-
-            writer.WriteLine();
-
-            Experiments exp = new Experiments(() => AlgorithmFactory.GetFactory(type)(os), 150);
-
-            var ts = DataManager.GetShuffleFrom(data, 5*mmm, k, new Random(271828314));
-
-            Stopwatch sw = new Stopwatch();
-
-            sw.Start();
-            var log = exp.Run(data, (x)=>Console.WriteLine("завершающие проценты {0}", x), ts.Item1, ts.Item2);
-            sw.Stop();
-            Console.WriteLine("Последний проход выполнен за {0:F} с", (double)sw.ElapsedMilliseconds/1000);
-            log.Save(writer);
-
-            exp.Dispose();
-            log.Dispose();
             GC.Collect();
             Console.ReadKey();
         }
