@@ -1,10 +1,9 @@
-﻿using IOData;
-using System;
-using System.IO;
-using Metaheuristics;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
+using System.IO;
 using ArrayHelper;
+using IOData;
+using Metaheuristics;
 
 namespace AoA
 {

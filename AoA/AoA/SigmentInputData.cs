@@ -1,7 +1,5 @@
-﻿using System;
-using IOData;
+﻿using IOData;
 using VectorSpace;
-using ArrayHelper;
 
 namespace AoA
 {

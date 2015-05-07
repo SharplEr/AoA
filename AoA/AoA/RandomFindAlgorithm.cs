@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Metaheuristics;
 using IOData;
+using Metaheuristics;
 
 namespace AoA
 {
     public class RandomFindAlgorithm : RandomFinder<CVlog>
     {
-        Func<object[], Algorithm> getAlg;
-        Action<double> f = (x) => { };
+        readonly Func<object[], Algorithm> getAlg;
+        readonly Action<double> f = (x) => { };
 
-        FullData TestData;
+        readonly FullData TestData;
 
-        SigmentData[] TestDataSigmentLearn;
-        SigmentData[] TestDataSigmentControl;
+        readonly SigmentData[] TestDataSigmentLearn;
+        readonly SigmentData[] TestDataSigmentControl;
 
         const int maxStep = 1;
 

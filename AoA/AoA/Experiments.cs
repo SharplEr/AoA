@@ -1,6 +1,6 @@
 ﻿using System;
-using IOData;
 using ArrayHelper;
+using IOData;
 
 namespace AoA
 {
@@ -18,14 +18,14 @@ namespace AoA
         //Какая часть пойдет на контрольное множество от всех данных
         const double part = 0.25;
         //Точек для ROC кривых
-        int ROCn = 150;
+        readonly int ROCn = 150;
         //Инициализируем константой для того что бы результат вычислений был повторим
         //Random r = new Random(271828314);
         
         //информация о том, какова была величина ошибки для каждого элемента, когда он был в контрольном и когда в тестовом множества
         Info[] info;
 
-        Func<Algorithm> getAlgorithm;
+        readonly Func<Algorithm> getAlgorithm;
 
         #region Информация для отчета
         double avgErrorAtControl;
@@ -59,7 +59,7 @@ namespace AoA
         public double pOfHardUnder;
         //SpaceInfo pinfo, ninfo; // Не уверен в необходимости
 
-        string name = null;
+        readonly string name = null;
         #endregion
 
         public Experiments(Func<Algorithm> getAlg, string AlgName, int rocn)

@@ -1,7 +1,6 @@
 ﻿using System;
-using VectorSpace;
-using MyParallel;
 using ArrayHelper;
+using VectorSpace;
 
 namespace AoA
 {
@@ -11,7 +10,7 @@ namespace AoA
         public double MaxDistanceOfCenter;
         public double AvgDistanceOfCenter;
 
-        Vector[] vectors;
+        readonly Vector[] vectors;
 
         public SpaceInfo(Vector[] vs)
         {

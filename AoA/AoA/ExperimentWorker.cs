@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyParallel;
-using IOData;
 using ArrayHelper;
+using IOData;
+using MyParallel;
 
 namespace AoA
 {

@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using IOData;
-using VectorSpace;
-using ArrayHelper;
-using System.Collections.Concurrent;
 
 namespace AoA
 {
