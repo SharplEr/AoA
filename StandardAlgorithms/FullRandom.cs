@@ -11,8 +11,9 @@ namespace StandardAlgorithms
         double threshold = 0;
         int m = 0;
 
-        public FullRandom(object[] o)
-        {}
+        public FullRandom(object[] o) : base(ProblemMod.classification)
+        {
+        }
 
         public override void Learn(SigmentData data)
         {
@@ -20,7 +21,7 @@ namespace StandardAlgorithms
             m = data.GetResults().MaxNumber;
         }
 
-        public override Results Calc(SigmentInputData data)
+        protected override Results Classification(SigmentInputData data)
         {
             if (data == null) throw new ArgumentException("data is null");
 

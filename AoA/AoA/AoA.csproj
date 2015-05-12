@@ -48,7 +48,7 @@
     <Compile Include="DataManager.cs" />
     <Compile Include="Experiments.cs" />
     <Compile Include="Algorithm.cs" />
-    <Compile Include="ExperimentWorker.cs" />
+    <Compile Include="ClassificationExperimentWorker.cs" />
     <Compile Include="FindAlgorithm.cs" />
     <Compile Include="Info.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

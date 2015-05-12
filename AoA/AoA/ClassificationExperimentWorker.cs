@@ -5,7 +5,7 @@ using MyParallel;
 
 namespace AoA
 {
-    public class ExperimentWorker : ParallelWorkerWithProgress
+    public class ClassificationExperimentWorker : ParallelWorkerWithProgress
     {
         //FullData data;
         Func<Algorithm> getAlgorithms;
@@ -17,8 +17,8 @@ namespace AoA
         
         public ROC[] rocs;
 
-        public ExperimentWorker(int threadCount, int nn, Info[] inf, Action<double> ff)
-            : base(threadCount, nn, @"ExperimentWorker№", ff)
+        public ClassificationExperimentWorker(int threadCount, int nn, Info[] inf, Action<double> ff)
+            : base(threadCount, nn, @"ClassificationExperimentWorker№", ff)
         {
             info = inf;
         }
@@ -46,9 +46,9 @@ namespace AoA
             {
                 alg.Learn(learnDate[i]);
 
-                Results CalcedLearn = alg.Calc(learnDate[i]);
+                Results CalcedLearn = (Results)alg.Calc(learnDate[i]);
 
-                Results CalcedControl = alg.Calc(controlDate[i]);
+                Results CalcedControl = (Results)alg.Calc(controlDate[i]);
 
                 learnDate[i].AddLearnError(CalcedLearn, info);
                 controlDate[i].AddControlError(CalcedControl, info);
@@ -58,7 +58,7 @@ namespace AoA
                 for (int k = 0; k < rocs.Length; k++)
                 {
                     alg.ChangeThreshold(th);
-                    CalcedControl = alg.Calc(controlDate[i]);
+                    CalcedControl = (Results)alg.Calc(controlDate[i]);
 
                     int fpr = 0, tpr = 0;
                     for (int j = 0; j < controlDate[i].Length; j++)

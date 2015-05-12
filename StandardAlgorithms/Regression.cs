@@ -8,12 +8,15 @@ namespace StandardAlgorithms
 {
     public class Regression: Algorithm, IDisposable
     {
+        protected readonly ProblemMod mod = ProblemMod.classification;
+
         LMSNetwork network;
         double r, tm;
         int max;
         double threshold = 0;
 
-        public Regression(params object[] p):base(p)
+        public Regression(params object[] p)
+            : base(ProblemMod.classification)
         {
             if (p == null) throw new ArgumentException("p is null");
             if (p.Length != 3) throw new ArgumentException("Длина не та");
@@ -21,6 +24,7 @@ namespace StandardAlgorithms
         }
 
         public Regression(double rr, double tt, int mmax)
+            : base(ProblemMod.classification)
         {
             Set(rr, tt, mmax);
         }
@@ -32,7 +36,7 @@ namespace StandardAlgorithms
             max = mmax;
         }
 
-        public override Results Calc(SigmentInputData data)
+        protected override Results Classification(SigmentInputData data)
         {
             if (network == null) throw new NullReferenceException("Сперва должно пройти обучение");
             if (data == null) throw new ArgumentException("data is null");

@@ -99,7 +99,7 @@ namespace AoA
             #else
             int cpu = Environment.ProcessorCount;
             #endif
-            using (var worker = new ExperimentWorker(cpu, learnDate.Length, info, f))
+            using (var worker = new ClassificationExperimentWorker(cpu, learnDate.Length, info, f))
             {
                 worker.Run(getAlgorithm, learnDate, controlDate, ROCn);
 

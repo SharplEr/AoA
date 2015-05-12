@@ -12,8 +12,9 @@ namespace AoARun
     {
         static void Main(string[] args)
         {
+            
             Console.WriteLine("Запущенно со следующими параметрами: "+ String.Join(", ", args));
-
+            
             Console.WriteLine("Файл описывающий данные: {0}. Существует: {1}.", args[0], File.Exists(args[0]));
             if (!File.Exists(args[0])) return;
 

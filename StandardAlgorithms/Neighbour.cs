@@ -7,13 +7,17 @@ namespace StandardAlgorithms
 {
     public class Neighbour: Algorithm
     {
+        protected readonly ProblemMod mod = ProblemMod.classification;
+
         Vector[][] obj;
 
         double threshold = 0;
 
-        public Neighbour(params object[] p) : base(p) { }
+        public Neighbour(params object[] p) : base(ProblemMod.classification)
+        {
+        }
 
-        public override Results Calc(SigmentInputData data)
+        protected override Results Classification(SigmentInputData data)
         {
             if (data == null) throw new ArgumentException("data is null");
 
@@ -21,7 +25,7 @@ namespace StandardAlgorithms
             return new Results((i) => Calc(x[i]), x.Length);
         }
 
-        public Result Calc(Vector x)
+        Result Calc(Vector x)
         {
             Vector ans = new Vector(obj.Length);
 

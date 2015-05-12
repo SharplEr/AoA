@@ -15,7 +15,7 @@ namespace AoA
         readonly SigmentData[] TestDataSigmentControl;
 
         const double maxDelta = 0.02;
-        const int maxStep = 10;
+        const int maxStep = 20;
 
         public FindAlgorithm(Parameter[] p, Action<int, int> w,Func<object[], Algorithm> ga, FullData td, SigmentData[] dsl, SigmentData[] dsc)
             : base(p, w, maxDelta, maxStep)

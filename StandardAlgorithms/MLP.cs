@@ -18,6 +18,7 @@ namespace StandardAlgorithms
         double threshold = 0;
 
         public MLP(params object[] p)
+            : base(ProblemMod.classification)
         {
             if (p == null) throw new ArgumentException("p is null");
             if (p.Length <= 4) throw new ArgumentException("Длина не та");
@@ -31,6 +32,7 @@ namespace StandardAlgorithms
         }
 
         public MLP(double rr, double tt, int mmax, params int[] l)
+            : base(ProblemMod.classification)
         {
             Set(rr, tt, mmax, l);
         }
@@ -43,7 +45,7 @@ namespace StandardAlgorithms
             ls = l;
         }
 
-        public override Results Calc(SigmentInputData data)
+        protected override Results Classification(SigmentInputData data)
         {
             if (network == null) throw new NullReferenceException("Сперва должно пройти обучение");
             if (data == null) throw new ArgumentException("data is null");

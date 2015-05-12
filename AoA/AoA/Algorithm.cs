@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using IOData;
 
 namespace AoA
@@ -8,22 +9,44 @@ namespace AoA
     /// </summary>
     public abstract class Algorithm
     {
+        //Должен быть задан в потомке!
+        protected readonly ProblemMod mod;
         //Конструктор не может быть абстрактным
         protected Algorithm(params object[] p)
         { }
 
+        protected Algorithm(ProblemMod m)
+        {
+            mod = m;
+        }
         /// <summary>
         /// Метод проводит полное обучение данного алгоритма на входных данных
         /// </summary>
         /// <param name="data">Данные обучения</param>
         public abstract void Learn(SigmentData data);
 
-        public virtual void Learn(SigmentData data, double[] rating)
+        public Object Calc(SigmentInputData data)
         {
-            throw new NotImplementedException();
+            switch (mod)
+            {
+                case ProblemMod.classification:
+                    return Classification(data);
+                case ProblemMod.regression:
+                    return Regression(data);
+                default:
+                    throw new InvalidOperationException("mod == " + mod.ToString());
+            }
         }
 
-        public abstract Results Calc(SigmentInputData data);
+        protected virtual Results Classification(SigmentInputData data)
+        {
+            throw new NotImplementedException("Have not <Results Calc()>");
+        }
+
+        protected virtual Double[] Regression(SigmentInputData data)
+        {
+            throw new NotImplementedException("Have not <Double[] Calc()>");
+        }
 
         /// <summary>
         /// Метод варьирующий порог для алгоритма

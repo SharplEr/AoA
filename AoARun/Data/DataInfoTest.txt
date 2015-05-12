@@ -1,0 +1,11 @@
+StringToDoubleTest.csv
+
+
+
+In
+
+Out
+
+regression
+
+standard

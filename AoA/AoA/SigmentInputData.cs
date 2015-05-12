@@ -1,4 +1,5 @@
-﻿using IOData;
+﻿using System;
+using IOData;
 using VectorSpace;
 
 namespace AoA
@@ -41,6 +42,11 @@ namespace AoA
         public MixData[] GetMixArray()
         {
             return data.MixInput;
+        }
+
+        public String[][] GetStringsArray()
+        {
+            return data.StringInput;
         }
     }
 }

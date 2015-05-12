@@ -9,6 +9,7 @@ namespace StandardAlgorithms
 {
     public class TwoLayerNetwork : Algorithm, IDisposable
     {
+        protected readonly ProblemMod mod = ProblemMod.classification;
         ClassicNetwork network;
         double r, tm;
         int max;
@@ -17,7 +18,8 @@ namespace StandardAlgorithms
 
         double threshold = 0;
 
-        public TwoLayerNetwork(params object[] p):base(p)
+        public TwoLayerNetwork(params object[] p)
+            : base(ProblemMod.classification)
         {
             if (p == null) throw new ArgumentException("p is null");
             if (p.Length != 4) throw new ArgumentException("Длина не та");
@@ -25,6 +27,7 @@ namespace StandardAlgorithms
         }
 
         public TwoLayerNetwork(double rr, double tt, int mmax, int one)
+            : base(ProblemMod.classification)
         {
             Set(rr, tt, mmax, one);
         }
@@ -37,7 +40,7 @@ namespace StandardAlgorithms
             l = one;
         }
 
-        public override Results Calc(SigmentInputData data)
+        protected override Results Classification(SigmentInputData data)
         {
             if (network == null) throw new NullReferenceException("Сперва должно пройти обучение");
             if (data == null) throw new ArgumentException("data is null");
