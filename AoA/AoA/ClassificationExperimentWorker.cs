@@ -7,7 +7,6 @@ namespace AoA
 {
     public class ClassificationExperimentWorker : ParallelWorkerWithProgress
     {
-        //FullData data;
         Func<Algorithm> getAlgorithms;
 
         SigmentData[] learnDate;

@@ -53,6 +53,7 @@
     <Compile Include="Info.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomFindAlgorithm.cs" />
+    <Compile Include="RegressionExperimentWorker.cs" />
     <Compile Include="ROC.cs" />
     <Compile Include="SigmentData.cs" />
     <Compile Include="SigmentInputData.cs" />
